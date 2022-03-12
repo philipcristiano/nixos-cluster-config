@@ -42,8 +42,9 @@
   };
   services.consul.interface.bind = "enp2s0";
   services.nomad.enable = true;
-  networking.firewall.allowedTCPPorts = [ 8300 8301 8500 8600 ];
+  networking.firewall.allowedTCPPorts = [ 80 8300 8301 8500 8600 ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 4646; to = 4648; }
+    { from = 8080; to = 8081; }
   ];
 }
