@@ -7,7 +7,7 @@ job "storage-node" {
       driver = "docker"
 
       config {
-        image = "democraticcsi/democratic-csi:latest"
+        image = "democraticcsi/democratic-csi:v1.5.4"
 
         args = [
           "--csi-version=1.2.0",
