@@ -11,7 +11,7 @@ job "storage-node" {
 
         args = [
           "--csi-version=1.2.0",
-          "--csi-name=org.democratic-csi.nfs",
+          "--csi-name=org.democratic-csi.node-manual",
           "--driver-config-file=${NOMAD_TASK_DIR}/driver-config-file.yaml",
           "--log-level=debug",
           "--csi-mode=node",
@@ -22,7 +22,7 @@ job "storage-node" {
       }
 
       csi_plugin {
-        id        = "iscsi-manual"
+        id        = "node-manual"
         type      = "node"
         mount_dir = "/csi-data"
       }

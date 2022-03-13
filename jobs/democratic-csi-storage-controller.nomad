@@ -21,7 +21,7 @@ job "storage-controller" {
 
         args = [
           "--csi-version=1.2.0",
-          "--csi-name=org.democratic-csi.nfs",
+          "--csi-name=org.democratic-csi.node-manual",
           "--driver-config-file=${NOMAD_TASK_DIR}/driver-config-file.yaml",
           "--log-level=debug",
           "--csi-mode=controller",
@@ -34,7 +34,7 @@ job "storage-controller" {
       }
 
       csi_plugin {
-        id        = "iscsi-manual"
+        id        = "node-manual"
         type      = "controller"
         mount_dir = "/csi-data"
       }
