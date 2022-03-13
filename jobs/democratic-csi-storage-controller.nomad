@@ -43,7 +43,7 @@ job "storage-controller" {
         destination = "${NOMAD_TASK_DIR}/driver-config-file.yaml"
 
         data = <<EOH
-config
+driver: node-manual
 EOH
       }
 
