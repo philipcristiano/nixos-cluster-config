@@ -34,7 +34,7 @@ job "storage-controller" {
       }
 
       csi_plugin {
-        id        = "truenas"
+        id        = "iscsi-manual"
         type      = "controller"
         mount_dir = "/csi-data"
       }

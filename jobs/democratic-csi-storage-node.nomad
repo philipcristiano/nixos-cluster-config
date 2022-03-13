@@ -22,7 +22,7 @@ job "storage-node" {
       }
 
       csi_plugin {
-        id        = "truenas"
+        id        = "iscsi-manual"
         type      = "node"
         mount_dir = "/csi-data"
       }
