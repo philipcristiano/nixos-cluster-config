@@ -22,7 +22,7 @@ job "storage-node" {
       }
 
       csi_plugin {
-        id        = "node-manual"
+        id        = "org.democratic-csi.node-manual"
         type      = "node"
         mount_dir = "/csi-data"
       }

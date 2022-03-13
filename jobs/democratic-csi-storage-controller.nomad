@@ -34,7 +34,7 @@ job "storage-controller" {
       }
 
       csi_plugin {
-        id        = "node-manual"
+        id        = "org.democratic-csi.node-manual"
         type      = "controller"
         mount_dir = "/csi-data"
       }
