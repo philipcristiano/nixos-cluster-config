@@ -21,6 +21,12 @@ job "storage-node" {
         ]
 
         privileged = true
+        mount {
+          type     = "bind"
+          target   = "/host"
+          source   = "/"
+          readonly = false
+        }
       }
 
       csi_plugin {
