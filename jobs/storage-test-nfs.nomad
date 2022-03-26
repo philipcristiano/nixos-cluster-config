@@ -6,7 +6,7 @@ job "examplenfs" {
 
     volume "example" {
       type            = "csi"
-      source          = "example"
+      source          = "rackstation"
       read_only       = false
       attachment_mode = "file-system"
       access_mode     = "multi-node-multi-writer"
