@@ -4,7 +4,6 @@
                                  pkgs.nfs-utils
                                  pkgs.consul
                                  pkgs.nomad
-                                 pkgs.openiscsi
                                  pkgs.vault];
   services.consul.enable = true;
   services.consul.extraConfig = {
@@ -46,7 +45,7 @@
   services.nomad = {
     enableDocker = true;
     dropPrivileges = false;
-    extraPackages = [ pkgs.cni-plugins pkgs.openiscsi ];
+    extraPackages = [ pkgs.cni-plugins ];
     extraSettingsPaths = [ "/etc/nomad_docker_json" ];
 
     settings = {
