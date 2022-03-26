@@ -27,18 +27,6 @@ job "storage-node" {
           source   = "/"
           readonly = false
         }
-        mount {
-          type     = "bind"
-          target   = "/etc/iscsi"
-          source   = "/etc/iscsi"
-          readonly = false
-        }
-        mount {
-          type     = "bind"
-          target   = "/var/lib/iscsi"
-          source   = "/var/lib/iscsi"
-          readonly = false
-        }
       }
 
       csi_plugin {

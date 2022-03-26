@@ -12,7 +12,7 @@ job "storage-controller" {
         args = [
           "--type=controller",
           "--node-id=${attr.unique.hostname}",
-          "--nfs-server=192.168.1.212:/services", # Adjust accordingly
+          "--nfs-server=192.168.1.212:/volume1/services", # Adjust accordingly
           "--mount-options=defaults", # Adjust accordingly
         ]
 

@@ -1,8 +1,10 @@
 { config, pkgs, ... }:
 
 { environment.systemPackages = [ pkgs.cni-plugins
+                                 pkgs.nfs-utils
                                  pkgs.consul
                                  pkgs.nomad
+                                 pkgs.openiscsi
                                  pkgs.vault];
   services.consul.enable = true;
   services.consul.extraConfig = {
@@ -22,27 +24,29 @@
         };
   };
 
+  services.rpcbind.enable = true;
+
   # systemd.services.consul.serviceConfig.Type = "notify";
 
   environment.etc.nomad_docker_json.text = ''
-    plugin "docker" {
-        config {
-            allow_privileged = true
-            volumes {
-                # required for bind mounting host directories
-                enabled = true
-            }
-        }
-    }
-    client {
-        cni_path = "${pkgs.cni-plugins}/bin"
-    }
-  }'';
+  plugin "docker" {
+      config {
+          allow_privileged = true
+          volumes {
+              # required for bind mounting host directories
+              enabled = true
+          }
+      }
+  }
+  client {
+      cni_path = "${pkgs.cni-plugins}/bin"
+  }
+  '';
 
   services.nomad = {
     enableDocker = true;
     dropPrivileges = false;
-    extraPackages = [ pkgs.cni-plugins];
+    extraPackages = [ pkgs.cni-plugins pkgs.openiscsi ];
     extraSettingsPaths = [ "/etc/nomad_docker_json" ];
 
     settings = {
