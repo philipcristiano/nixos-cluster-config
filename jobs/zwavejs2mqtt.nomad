@@ -4,6 +4,50 @@ job "zwavejs2mqtt" {
 
   group "app" {
 
+    service {
+      name = "zwavejs2mqtt"
+      port = "http"
+
+      tags = [
+        "traefik.enable=true",
+      ]
+
+      check {
+        name     = "alive"
+        type     = "tcp"
+        port     = "http"
+        interval = "10s"
+        timeout  = "2s"
+      }
+    }
+
+    service {
+      name = "zwavejs2mqtt"
+      port = "websocket"
+
+      tags = [
+        "traefik.enable=true",
+      ]
+
+      check {
+        name     = "alive"
+        type     = "tcp"
+        port     = "http"
+        interval = "10s"
+        timeout  = "2s"
+      }
+    }
+
+    network {
+      port "http" {
+  	to = 8091
+      }
+      port "websocket" {
+        to = 3000
+      }
+
+    }
+
     volume "storage" {
       type            = "csi"
       source          = "zwavejs"
@@ -17,6 +61,7 @@ job "zwavejs2mqtt" {
 
       config {
         image = "zwavejs/zwavejs2mqtt:6.2.0"
+        ports = ["http", "websocket"]
 
       }
 
@@ -33,5 +78,6 @@ job "zwavejs2mqtt" {
     }
   }
 }
+
 
 
