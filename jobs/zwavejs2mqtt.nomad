@@ -22,7 +22,7 @@ job "zwavejs2mqtt" {
     }
 
     service {
-      name = "zwavejs2mqtt"
+      name = "zwavejs2mqtt-websocket"
       port = "websocket"
 
       tags = [
@@ -43,7 +43,7 @@ job "zwavejs2mqtt" {
   	to = 8091
       }
       port "websocket" {
-        to = 3000
+	static = 3000
       }
 
     }
@@ -62,6 +62,12 @@ job "zwavejs2mqtt" {
       config {
         image = "zwavejs/zwavejs2mqtt:6.2.0"
         ports = ["http", "websocket"]
+  	devices = [
+         {
+           host_path = "/dev/ttyACM0"
+           container_path = "/dev/ttyACM0"
+         }
+	]
 
       }
 
@@ -73,6 +79,14 @@ job "zwavejs2mqtt" {
       resources {
         cpu    = 500
         memory = 256
+
+        # device "usb" {
+        #    constraint {
+        #     attribute = "${device.vendor_id}"
+        #     value = "0658"
+        #    }
+        # }
+
       }
 
     }
