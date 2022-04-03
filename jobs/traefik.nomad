@@ -5,6 +5,11 @@ job "traefik" {
 
   group "traefik" {
 
+    ephemeral_disk {
+      size    = 500
+      sticky  = true
+    }
+
     network {
       port "http" {
         static = 80
@@ -50,12 +55,24 @@ job "traefik" {
           "local/traefik.toml:/etc/traefik/traefik.toml",
         ]
       }
+      template { 
+	env = true
+        destination = "secrets/file.env"
+        data = <<EOH
+DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
+	EOH	
+      }
 
       template {
         data = <<EOF
 [entryPoints]
     [entryPoints.http]
     address = ":80"
+      [entryPoints.http.http.redirections]
+        [entryPoints.http.http.redirections.entryPoint]
+          to = "https"
+          scheme = "https"
+          permanent = true
     [entryPoints.https]
     address = ":443"
     [entryPoints.traefik]

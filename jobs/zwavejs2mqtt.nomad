@@ -5,11 +5,14 @@ job "zwavejs2mqtt" {
   group "app" {
 
     service {
-      name = "zwavejs2mqtt"
+      name = "zwavejs"
       port = "http"
 
       tags = [
         "traefik.enable=true",
+	"traefik.http.routers.zwavejs.tls=true",
+	"traefik.http.routers.zwavejs.tls.certresolver=home",
+	#"traefik.http.routers.zwavejs.entrypoints=http,https",
       ]
 
       check {
@@ -22,11 +25,14 @@ job "zwavejs2mqtt" {
     }
 
     service {
-      name = "zwavejs2mqtt-websocket"
+      name = "zwavejs-websocket"
       port = "websocket"
 
       tags = [
         "traefik.enable=true",
+	"traefik.http.routers.zwavejs-websocket.tls=true",
+	"traefik.http.routers.zwavejs-websocket.tls.certresolver=home",
+	#"traefik.http.routers.zwavejs-websocket.entrypoints=http,https",
       ]
 
       check {
