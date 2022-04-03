@@ -69,6 +69,7 @@ job "traefik" {
 [providers.consulCatalog]
     prefix           = "traefik"
     exposedByDefault = false
+    defaultRule = "Host(`{{"{{ .Name }}"}}.home.cristiano.cloud`)"
 
     [providers.consulCatalog.endpoint]
       address = "127.0.0.1:8500"
