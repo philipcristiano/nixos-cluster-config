@@ -34,11 +34,17 @@ in
         auto_encrypt = {
             allow_tls = true;
         };
+        addresses = {
+            http = "0.0.0.0";
+        };
         retry_join     = [ "192.168.102.100" "192.168.102.101" "192.168.102.102" ];
         acl  = {
             enabled = false;
             default_policy = "allow";
             enable_token_persistence = true;
+        };
+        ui_config = {
+            enabled = true;
         };
   };
 
@@ -56,16 +62,21 @@ in
           }
       }
   }
+  '';
+  environment.etc.nomad_extras_json.text = ''
   client {
       cni_path = "${pkgs.cni-plugins}/bin"
   }
+
+  plugin_dir = "${nomad_usb_device_plugin}/bin"
+
   '';
 
   services.nomad = {
     enableDocker = true;
     dropPrivileges = false;
     extraPackages = [ pkgs.cni-plugins ];
-    extraSettingsPaths = [ "/etc/nomad_docker_json" ];
+    extraSettingsPaths = [ "/etc/nomad_docker_json" "/etc/nomad_extras_json" ];
 
     settings = {
         server = {
@@ -92,4 +103,5 @@ in
     { from = 4646; to = 4648; }
     { from = 8080; to = 8081; }
   ];
+
 }
