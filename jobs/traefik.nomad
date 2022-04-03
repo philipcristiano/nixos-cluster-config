@@ -1,14 +1,17 @@
 job "traefik" {
   region      = "global"
   datacenters = ["dc1"]
-  type        = "service"
+  type        = "system"
 
   group "traefik" {
-    count = 3
 
     network {
       port "http" {
-        static = 8080
+        static = 80
+      }
+
+      port "https" {
+        static = 443
       }
 
       port "api" {
@@ -20,9 +23,17 @@ job "traefik" {
       name = "traefik"
 
       check {
-        name     = "alive"
+        name     = "alive-http"
         type     = "tcp"
         port     = "http"
+        interval = "10s"
+        timeout  = "2s"
+      }
+
+      check {
+        name     = "alive-https"
+        type     = "tcp"
+        port     = "https"
         interval = "10s"
         timeout  = "2s"
       }
@@ -44,7 +55,9 @@ job "traefik" {
         data = <<EOF
 [entryPoints]
     [entryPoints.http]
-    address = ":8080"
+    address = ":80"
+    [entryPoints.https]
+    address = ":443"
     [entryPoints.traefik]
     address = ":8081"
 
