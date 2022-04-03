@@ -9,18 +9,13 @@ job "hvac-iot" {
 
       config {
         image = "philipcristiano/hvac-iot-mqtt-influx:main"
-
-        args = [
-          "sleep",
-          "infinity",
-        ]
-
+      }
+      env {
+ 	CONFIG_ROOT = "/local"
+        LOG_LEVEL = "debug"
       }
       template {
           data = <<EOF
-          # Read single key from Consul KV.
-          APP_NAME = "{{key "app/name"}}"
-
           [{hvac_iot, [
             {mqtt_host, "{{key "credentials/hvac-iot/mqtt_host"}}"},
             {mqtt_username, "{{key "credentials/hvac-iot/mqtt_username"}}"},
@@ -30,10 +25,10 @@ job "hvac-iot" {
             {influxdb_port, 8086},
             {influxdb_org, "hazzard"},
             {influxdb_bucket, "test_bucket"}
-          ]}]
+          ]}].
           EOF
 
-      destination = "/hvac-iot/app.config"
+      destination = "local/app.config"
       }
 
       resources {
