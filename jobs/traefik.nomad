@@ -44,6 +44,14 @@ job "traefik" {
       }
     }
 
+    #volume "storage" {
+    #  type            = "csi"
+    #  source          = "traefik"
+    #  read_only       = false
+    #  attachment_mode = "file-system"
+    #  access_mode     = "multi-node-multi-writer"
+    #}
+
     task "traefik" {
       driver = "docker"
 
@@ -91,10 +99,22 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     [providers.consulCatalog.endpoint]
       address = "127.0.0.1:8500"
       scheme  = "http"
+[certificatesResolvers]
+    [certificatesResolvers.home]
+        [certificatesResolvers.home.acme]
+	   email = "traefik-dns@philipcristiano.com"
+           storage = "alloc/data/acme.json"
+           [certificatesResolvers.home.acme.dnsChallenge]
+             provider = "dnsimple"
 EOF
 
         destination = "local/traefik.toml"
       }
+
+      # volume_mount {
+      #   volume      = "storage"
+      #   destination = "/letsencrypt"
+      # }
 
       resources {
         cpu    = 100
