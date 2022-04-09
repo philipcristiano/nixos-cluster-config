@@ -66,7 +66,7 @@ job "zwavejs2mqtt" {
       driver = "docker"
 
       config {
-        image = "zwavejs/zwavejs2mqtt:6.2.0"
+        image = "zwavejs/zwavejs2mqtt:6.7.0"
         ports = ["http", "websocket"]
   	devices = [
          {

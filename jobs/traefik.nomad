@@ -85,7 +85,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":443"
     [entryPoints.traefik]
     address = ":8081"
-
+[serversTransport]
+  insecureSkipVerify = true
 [api]
     dashboard = true
     insecure  = true
