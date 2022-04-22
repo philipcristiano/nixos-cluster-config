@@ -49,20 +49,16 @@ job "vernemq" {
  	
       env {
         DOCKER_VERNEMQ_ACCEPT_EULA = "yes"
-	DOCKER_VERNEMQ_ALLOW_ANONYMOUS = "on"
-	VERNEMQ_CONF_LOCAL_FILE = "/local/vernemq.conf"
       }
       template {
+          env = true	
+      	  destination = "local/pwds"
           data = <<EOF
+{{range ls "mqtt/credentials"}}
+DOCKER_VERNEMQ_USER_{{.Key}}={{.Value}}
+{{end}}
           EOF
-
-      	  destination = "local/vernqmq.conf"
       }
-
-      # volume_mount {
-      #   volume      = "storage"
-      #   destination = "/opt/emqx/data/mnesia"
-      # }
 
       resources {
         cpu    = 500
