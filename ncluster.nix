@@ -60,6 +60,10 @@ in
               # required for bind mounting host directories
               enabled = true
           }
+          allow_caps = ["audit_write", "chown", "dac_override", "fowner",
+          "fsetid", "kill", "mknod", "net_bind_service", "setfcap", "setgid",
+          "net_admin",
+          "setpcap", "setuid", "sys_chroot"]
       }
   }
   '';
@@ -71,12 +75,26 @@ in
   plugin_dir = "${nomad_usb_device_plugin}/bin"
 
   '';
+  environment.etc.nomad_usb_json.text = ''
+   plugin "usb" {
+     config {
+       enabled = true
 
+       included_vendor_ids = [0x0658]
+       excluded_vendor_ids = []
+
+       included_product_ids = [0x0200]
+       excluded_product_ids = []
+
+       fingerprint_period = "1m"
+    }
+  }
+  '';
   services.nomad = {
     enableDocker = true;
     dropPrivileges = false;
-    extraPackages = [ pkgs.cni-plugins ];
-    extraSettingsPaths = [ "/etc/nomad_docker_json" "/etc/nomad_extras_json" ];
+    extraPackages = [ pkgs.cni-plugins nomad_usb_device_plugin];
+    extraSettingsPaths = [ "/etc/nomad_extras_json" "/etc/nomad_docker_json"  "/etc/nomad_usb_json" ];
 
     settings = {
         server = {
@@ -98,7 +116,7 @@ in
   services.consul.interface.bind = "enp2s0";
   services.nomad.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 80 8300 8301 8500 8600 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 8300 8301 8500 8600 ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 4646; to = 4648; }
     { from = 8080; to = 8081; }
