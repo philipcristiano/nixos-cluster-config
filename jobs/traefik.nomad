@@ -27,8 +27,14 @@ job "traefik" {
     service {
       name = "traefik"
 
+      tags = [
+	"enable_gocast",
+        "gocast_vip=192.168.102.50/32",
+	"gocast_monitor=consul",
+      ]
+
       check {
-        name     = "alive-http"
+        name     = "traefik"
         type     = "tcp"
         port     = "http"
         interval = "10s"
@@ -111,11 +117,6 @@ EOF
 
         destination = "local/traefik.toml"
       }
-
-      # volume_mount {
-      #   volume      = "storage"
-      #   destination = "/letsencrypt"
-      # }
 
       resources {
         cpu    = 100
