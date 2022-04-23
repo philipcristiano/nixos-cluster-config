@@ -89,6 +89,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
           permanent = true
     [entryPoints.https]
     address = ":443"
+    [entryPoints.mqtt]
+    address = ":1883"
     [entryPoints.traefik]
     address = ":8081"
 [serversTransport]

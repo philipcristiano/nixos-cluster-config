@@ -8,14 +8,13 @@ job "vernemq" {
       name = "vernemq-mqtt"
       port = "mqtt"
 
-      # tags = [
-      #   "traefik.enable=true",
-      #   "traefik.http.routers.emqx.tls=true",
-      #   "traefik.http.routers.emqx.tls.certresolver=home",
-      # ]
+      tags = [
+        "traefik.enable=true",
+        "traefik.tcp.routers.vernemq.entrypoints=mqtt",
+      ]
 
       check {
-        name     = "alive"
+        name     = "vernemq-mqtt"
         type     = "tcp"
         port     = "mqtt"
         interval = "10s"
