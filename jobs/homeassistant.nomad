@@ -43,7 +43,7 @@ job "homeassistant" {
       driver = "docker"
 
       config {
-        image = "homeassistant/home-assistant:2022.4"
+        image = "homeassistant/home-assistant:2022.4.6"
         ports = ["http"]
       }
 
