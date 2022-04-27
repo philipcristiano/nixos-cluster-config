@@ -11,6 +11,7 @@ job "vernemq" {
       tags = [
         "traefik.enable=true",
         "traefik.tcp.routers.vernemq.entrypoints=mqtt",
+        "traefik.tcp.routers.vernemq.rule=HostSNI(`*`)",
       ]
 
       check {
