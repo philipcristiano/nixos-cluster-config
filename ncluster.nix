@@ -74,6 +74,12 @@ in
 
   plugin_dir = "${nomad_usb_device_plugin}/bin"
 
+  telemetry {
+    publish_allocation_metrics = true
+    publish_node_metrics       = true
+    prometheus_metrics         = true
+  }
+
   '';
   environment.etc.nomad_usb_json.text = ''
    plugin "usb" {
