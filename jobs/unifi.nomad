@@ -65,7 +65,7 @@ job "unifi" {
       driver = "docker"
 
       config {
-        image = "jacobalberty/unifi:v7.0.23"
+        image = "jacobalberty/unifi:v7.1.68"
         ports = ["command", "https"]
       }
 
