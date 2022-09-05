@@ -22,6 +22,10 @@ job "traefik" {
       port "api" {
         static = 8081
       }
+
+      port "lorawan-server-udp" {
+        static = 1700
+      }
     }
 
     service {
@@ -62,7 +66,7 @@ job "traefik" {
       driver = "docker"
 
       config {
-        image        = "traefik:v2.2"
+        image        = "traefik:v2.8"
         network_mode = "host"
 
         volumes = [
@@ -89,6 +93,10 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
           permanent = true
     [entryPoints.https]
     address = ":443"
+    [entryPoints.lorawan-server-udp]
+    address = ":1700/udp"
+      [entryPoints.lorawan-server-udp.udp]
+      timeout= "120s"
     [entryPoints.mqtt]
     address = ":1883"
     [entryPoints.traefik]
@@ -98,6 +106,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 [api]
     dashboard = true
     insecure  = true
+[log]
+  level = "INFO"
 
 # Enable Consul Catalog configuration backend.
 [providers.consulCatalog]

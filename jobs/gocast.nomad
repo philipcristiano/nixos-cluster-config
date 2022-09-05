@@ -31,7 +31,7 @@ job "gocast" {
       }
 
       config {
-        image        = "mayuresh82/gocast:v1.1.1"
+        image        = "philipcristiano/gocast:sha-4067c22"
         network_mode = "host"
 
 	args = ["-config=/local/config.yaml", "-logtostderr", "-v=2"]
