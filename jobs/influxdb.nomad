@@ -49,7 +49,7 @@ job "influxdb" {
 
       volume_mount {
         volume      = "storage"
-        destination = "/root/.influxdbv2"
+        destination = "/var/lib/influxdb2"
       }
 
       resources {
