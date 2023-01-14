@@ -6,10 +6,10 @@ nomad_usb_device_plugin = pkgs.buildGoModule {
       src = pkgs.fetchFromGitLab {
           owner = "CarbonCollins";
           repo = "nomad-usb-device-plugin";
-          rev = "0.2.0";
-          sha256 = "sha256:08fjxvxd9zlibk9nvj4skh99k7mklndflxbdy2xjhsxcn32s0v1w";
+          rev = "0.4.0";
+          sha256 = "sha256-k5L07CzQkY80kHszCLhqtZ0LfGGuV07LrHjvdgy04bk=";
       };
-      vendorSha256 = "sha256:1l8ph420974n3rh4cfy1q5gz140ynh96il8a8klxw81jnfiai008";
+      vendorSha256 = "sha256-gf2E7DTAGTjoo3nEjcix3qWjHJHudlR7x9XJODvb2sk=";
       name = "nomad-usb-device-plugin";
       nativeBuildInputs = [ pkgs.pkg-config ];
       buildInputs = [ pkgs.libusb ];
