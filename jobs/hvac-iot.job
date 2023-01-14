@@ -24,7 +24,7 @@ job "hvac-iot" {
             {influxdb_host, "https://influxdb.home.cristiano.cloud"},
             {influxdb_port, 443},
             {influxdb_org, "hazzard"},
-            {influxdb_bucket, "test_bucket"}
+            {influxdb_bucket, "environment"}
           ]}].
           EOF
 
