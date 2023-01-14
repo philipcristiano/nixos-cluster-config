@@ -43,7 +43,7 @@ job "influxdb" {
       driver = "docker"
 
       config {
-        image = "quay.io/influxdb/influxdb:2.1.1"
+        image = "quay.io/influxdb/influxdb:2.2.0"
         ports = ["http"]
       }
 
