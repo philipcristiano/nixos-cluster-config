@@ -54,7 +54,7 @@ job "influxdb" {
 
       resources {
         cpu    = 1000
-        memory = 1024
+        memory = 2048
       }
 
     }
