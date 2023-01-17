@@ -125,6 +125,7 @@ in
   networking.firewall.allowedUDPPorts = [ 1680 1700 ];
   networking.firewall.allowedTCPPorts = [ 80 443 1883 8300 8301 8500 8600 ];
   networking.firewall.allowedTCPPortRanges = [
+    { from = 6379; to = 6390; }
     { from = 4646; to = 4648; }
     { from = 8080; to = 8081; }
   ];
