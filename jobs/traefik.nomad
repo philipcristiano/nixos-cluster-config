@@ -99,6 +99,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
       timeout= "120s"
     [entryPoints.mqtt]
     address = ":1883"
+    [entryPoints.redis-paperless-ngx]
+    address = ":6380"
     [entryPoints.traefik]
     address = ":8081"
 [serversTransport]
