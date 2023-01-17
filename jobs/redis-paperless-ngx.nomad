@@ -1,5 +1,5 @@
 
-job "redis" {
+job "redis-paperless-ngx" {
   # region = "global"
 
   # The "datacenters" parameter specifies the list of datacenters which should
