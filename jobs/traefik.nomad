@@ -73,12 +73,12 @@ job "traefik" {
           "local/traefik.toml:/etc/traefik/traefik.toml",
         ]
       }
-      template { 
+      template {
 	env = true
         destination = "secrets/file.env"
         data = <<EOH
 DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
-	EOH	
+	EOH
       }
 
       template {
