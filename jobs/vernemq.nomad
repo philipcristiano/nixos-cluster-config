@@ -26,7 +26,7 @@ job "vernemq" {
 
     network {
       port "mqtt" {
-  	to = 1883
+  	    to = 1883
       }
     }
 
@@ -46,12 +46,12 @@ job "vernemq" {
         ports = ["mqtt"]
         hostname = "vernmq01"
       }
- 	
+
       env {
         DOCKER_VERNEMQ_ACCEPT_EULA = "yes"
       }
       template {
-          env = true	
+          env = true
       	  destination = "local/pwds"
           data = <<EOF
 {{range ls "mqtt/credentials"}}
