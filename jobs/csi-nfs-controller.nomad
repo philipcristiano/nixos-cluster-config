@@ -7,7 +7,7 @@ job "storage-controller" {
       driver = "docker"
 
       config {
-        image = "registry.gitlab.com/rocketduck/csi-plugin-nfs:0.3.0"
+        image = "registry.gitlab.com/rocketduck/csi-plugin-nfs:0.6.1"
 
         args = [
           "--type=controller",
