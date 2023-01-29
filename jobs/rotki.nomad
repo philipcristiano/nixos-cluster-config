@@ -44,27 +44,30 @@ job "rotki" {
       config {
         image = "rotki/rotki:v1.26.3"
         ports = ["http"]
+
+        mounts = [{
+          type     = "bind"
+          source   = "local"
+          target   = "/config"
+          readonly = true
+        }]
       }
 
       env {
         TZ = "America/New_York"
       }
 
+
       volume_mount {
         volume      = "storage"
         destination = "/data/"
       }
       template {
-	destination = "/config/rotki_config.json"
+	destination = "local/rotki_config.json"
         data =  <<EOF
-
 {
-   "loglevel": "info",
-   "logfromothermodules": true,
-   "sleep-secs": 22,
-   "max_size_in_mb_all_logs": 100,
-   "max_logfiles_num": 3,
-   "sqlite_instructions": 0,
+   "loglevel": "debug",
+   "log-dir": "/data/logs"
 }
 
       EOF
