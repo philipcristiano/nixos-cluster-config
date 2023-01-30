@@ -65,14 +65,24 @@ job "paperless-ngx" {
         memory = 2048
       }
 
+      template {
+          env = true
+          destination = "local/file.env"
+          data = <<EOF
+PAPERLESS_REDIS="redis://redis-paperless-ngx.{{ key "site/domain"}}:6380"
+PAPERLESS_URL="https://paperless-ngx.{{ key "site/domain"}}"
+PAPERLESS_TIKA_GOTENBERG_ENDPOINT=https://gotenberg.{{ key "site/domain"}}
+PAPERLESS_TIKA_ENDPOINT=https://tika.{{ key "site/domain"}}
+EOF
+      }
+
       env {
           PAPERLESS_DATA_DIR = "/data/paperless/data"
           PAPERLESS_CONSUMPTION_DIR = "/data/paperless/consume"
           PAPERLESS_MEDIA_ROOT = "/data/paperless/data"
           PAPERLESS_CONSUMER_POLLING = 10
           PAPERLESS_DBENGINE = "sqlite"
-          PAPERLESS_REDIS = "redis://redis-paperless-ngx.home.cristiano.cloud:6380"
-          PAPERLESS_URL = "https://paperless-ngx.home.cristiano.cloud"
+          PAPERLESS_TIKA_ENABLED = 1
           USERMAP_UID = 0
           USERMAP_GID = 0
       }
