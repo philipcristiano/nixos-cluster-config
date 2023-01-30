@@ -45,6 +45,14 @@ job "paperless-ngx" {
       config {
         image = "paperlessngx/paperless-ngx:1.11"
         ports = ["http"]
+        # entrypoint = ["sleep", "10000"]
+
+        mount = {
+          type     = "bind"
+          source   = "local/docker_prepare.sh"
+          target   = "/sbin/docker-prepare.sh"
+          readonly = true
+        }
       }
 
       volume_mount {
@@ -54,7 +62,7 @@ job "paperless-ngx" {
 
       resources {
         cpu    = 1000
-        memory = 512
+        memory = 2048
       }
 
       env {
@@ -64,7 +72,131 @@ job "paperless-ngx" {
           PAPERLESS_CONSUMER_POLLING = 10
           PAPERLESS_DBENGINE = "sqlite"
           PAPERLESS_REDIS = "redis://redis-paperless-ngx.home.cristiano.cloud:6380"
+          PAPERLESS_URL = "https://paperless-ngx.home.cristiano.cloud"
+          USERMAP_UID = 0
+          USERMAP_GID = 0
       }
+      template {
+        destination = "local/docker_prepare.sh"
+        perms = "655"
+        data = <<EOF
+#!/usr/bin/env bash
+
+set -e
+
+wait_for_postgres() {
+	local attempt_num=1
+	local -r max_attempts=5
+
+	echo "Waiting for PostgreSQL to start..."
+
+	local -r host="$\{PAPERLESS_DBHOST:-localhost}"
+	local -r port="$\{PAPERLESS_DBPORT:-5432}"
+
+	# Disable warning, host and port can't have spaces
+	# shellcheck disable=SC2086
+	while [ ! "$(pg_isready -h ${host} -p ${port})" ]; do
+
+		if [ $attempt_num -eq $max_attempts ]; then
+			echo "Unable to connect to database."
+			exit 1
+		else
+			echo "Attempt $attempt_num failed! Trying again in 5 seconds..."
+		fi
+
+		attempt_num=$(("$attempt_num" + 1))
+		sleep 5
+	done
+}
+
+wait_for_mariadb() {
+	echo "Waiting for MariaDB to start..."
+
+	local -r host="$\{PAPERLESS_DBHOST:=localhost}"
+	local -r port="$\{PAPERLESS_DBPORT:=3306}"
+
+	local attempt_num=1
+	local -r max_attempts=5
+
+	# Disable warning, host and port can't have spaces
+	# shellcheck disable=SC2086
+	while ! true > /dev/tcp/$host/$port; do
+
+		if [ $attempt_num -eq $max_attempts ]; then
+			echo "Unable to connect to database."
+			exit 1
+		else
+			echo "Attempt $attempt_num failed! Trying again in 5 seconds..."
+
+		fi
+
+		attempt_num=$(("$attempt_num" + 1))
+		sleep 5
+	done
+}
+
+wait_for_redis() {
+	# We use a Python script to send the Redis ping
+	# instead of installing redis-tools just for 1 thing
+	if ! python3 /sbin/wait-for-redis.py; then
+		exit 1
+	fi
+}
+
+migrations() {
+	(
+		echo "Apply database migrations..."
+		python3 manage.py migrate --skip-checks --no-input
+	)
+}
+
+django_checks() {
+	# Explicitly run the Django system checks
+	echo "Running Django checks"
+	python3 manage.py check
+}
+
+search_index() {
+
+	local -r index_version=2
+	local -r index_version_file=${DATA_DIR}/.index_version
+
+	if [[ (! -f "${index_version_file}") || $(<"${index_version_file}") != "$index_version" ]]; then
+		echo "Search index out of date. Updating..."
+		python3 manage.py document_index reindex --no-progress-bar
+		echo ${index_version} | tee "${index_version_file}" >/dev/null
+	fi
+}
+
+superuser() {
+	if [[ -n "${PAPERLESS_ADMIN_USER}" ]]; then
+		python3 manage.py manage_superuser
+	fi
+}
+
+do_work() {
+	if [[ "${PAPERLESS_DBENGINE}" == "mariadb" ]]; then
+		wait_for_mariadb
+	elif [[ -n "${PAPERLESS_DBHOST}" ]]; then
+		wait_for_postgres
+	fi
+
+	wait_for_redis
+
+	migrations
+
+	django_checks
+
+	search_index
+
+	superuser
+
+}
+
+do_work
+
+EOF
+    }
 
     }
   }
