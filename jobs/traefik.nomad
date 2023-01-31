@@ -66,7 +66,7 @@ job "traefik" {
       driver = "docker"
 
       config {
-        image        = "traefik:v2.9.6"
+        image        = "traefik:v3.0"
         network_mode = "host"
 
         volumes = [
@@ -111,11 +111,17 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 [log]
   level = "INFO"
 
+[tracing]
+  [tracing.openTelemetry]
+    address = "otel-grpc.{{ key "site/domain" }}:443"
+
+    [tracing.openTelemetry.grpc]
+
 # Enable Consul Catalog configuration backend.
 [providers.consulCatalog]
     prefix           = "traefik"
     exposedByDefault = false
-    defaultRule = "Host(`{{"{{ .Name }}"}}.home.cristiano.cloud`)"
+    defaultRule = "Host(`{{"{{ .Name }}"}}.{{ key "site/domain" }}`)"
 
     [providers.consulCatalog.endpoint]
       address = "127.0.0.1:8500"
