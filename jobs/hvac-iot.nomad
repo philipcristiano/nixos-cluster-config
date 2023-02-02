@@ -8,7 +8,7 @@ job "hvac-iot" {
       driver = "docker"
 
       config {
-        image = "philipcristiano/hvac-iot-mqtt-influx:0.0.6"
+        image = "philipcristiano/hvac-iot-mqtt-influx:0.0.7"
       }
       env {
  	    CONFIG_ROOT = "/local"
