@@ -57,7 +57,6 @@ job "rotki" {
         TZ = "America/New_York"
       }
 
-
       volume_mount {
         volume      = "storage"
         destination = "/data/"
