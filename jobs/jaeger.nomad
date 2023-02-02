@@ -64,8 +64,11 @@ job "jaeger" {
       driver = "docker"
 
       config {
-        image = "jaegertracing/all-in-one:latest"
+        image = "jaegertracing/all-in-one:1.41"
         ports = ["ui", "thrift", "grpc"]
+
+        args = [
+        ]
       }
 
       resources {

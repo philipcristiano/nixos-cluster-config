@@ -117,6 +117,10 @@ exporters:
   jaeger:
     endpoint: jaeger-grpc.{{ key "site/domain" }}:443
 
+  zipkin:
+    endpoint: "https://zipkin.{{ key "site/domain"}}/api/v2/spans"
+    format: proto
+
 processors:
   batch:
 
@@ -133,7 +137,7 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, jaeger]
+      exporters: [logging, jaeger, zipkin]
     metrics:
       receivers: [otlp]
       processors: [batch]
