@@ -39,6 +39,12 @@ job "gotenberg" {
         ports = ["http"]
         # entrypoint = ["sleep", "10000"]
 
+        command = "gotenberg"
+        args = [
+            "uno-listener-restart-threshold",
+            "0",
+        ]
+
       }
 
 
