@@ -8,11 +8,19 @@ job "hvac-iot" {
       driver = "docker"
 
       config {
-        image = "philipcristiano/hvac-iot-mqtt-influx:v0.0.2"
+        image = "philipcristiano/hvac-iot-mqtt-influx:0.0.6"
       }
       env {
- 	CONFIG_ROOT = "/local"
+ 	    CONFIG_ROOT = "/local"
         LOG_LEVEL = "debug"
+      }
+      template {
+          destination = "local/otel.env"
+          env = true
+          data = <<EOF
+OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-grpc.{{ key "site/domain" }}:443
+OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+EOF
       }
       template {
           data = <<EOF
@@ -32,8 +40,8 @@ job "hvac-iot" {
       }
 
       resources {
-        cpu    = 500
-        memory = 256
+        cpu    = 125
+        memory = 512
       }
 
     }
