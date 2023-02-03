@@ -10,8 +10,8 @@ job "mktxp-office" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.mktxp-office.tls=true",
-	"traefik.http.routers.mktxp-office.tls.certresolver=home",
+        "traefik.http.routers.mktxp-office.tls=true",
+        "traefik.http.routers.mktxp-office.tls.certresolver=home",
       ]
 
       check {
@@ -25,8 +25,9 @@ job "mktxp-office" {
 
 
     network {
+      mode = "bridge"
       port "http" {
-  	to = 49090
+    to = 49090
       }
 
     }
@@ -43,8 +44,8 @@ job "mktxp-office" {
       }
 
       resources {
-        cpu    = 500
-        memory = 256
+        cpu    = 50
+        memory = 128
       }
      template {
         data = <<EOTC
@@ -80,5 +81,60 @@ EOTC
       }
 
     }
+
+    task "telegraf" {
+      driver = "docker"
+      config {
+        image        = "telegraf:1.25.1"
+        force_pull   = true
+        entrypoint   = ["telegraf"]
+        args = [
+          "-config",
+          "/local/telegraf.conf",
+        ]
+      }
+
+      template {
+        data = <<EOTC
+# Adding Client class
+# This should be here until https://github.com/hashicorp/nomad/pull/3882 is merged
+{{ $node_class := env "node.class" }}
+[global_tags]
+nomad_client_class = "{{ env "node.class" }}"
+
+[agent]
+  interval = "10s"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "0s"
+  flush_interval = "10s"
+  flush_jitter = "3s"
+  precision = ""
+  debug = true
+  quiet = false
+  hostname = ""
+  omit_hostname = false
+
+[[outputs.influxdb_v2]]
+  urls = ["https://influxdb.{{ key "site/domain" }}"]
+  bucket = "host"
+  organization = "{{key "credentials/mktxp/influxdb_organization"}}"
+  token = "{{key "credentials/mktxp/influxdb_token"}}"
+
+[[inputs.prometheus]]
+  metric_version = 2
+  urls = ["http://127.0.0.1:{{ env "NOMAD_PORT_http" }}/metrics"]
+
+EOTC
+        destination = "local/telegraf.conf"
+      }
+
+      resources {
+        cpu    = 50
+        memory = 64
+      }
+    }
+
   }
 }

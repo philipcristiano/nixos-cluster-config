@@ -39,3 +39,14 @@ Create a token in InfluxDB and add to Consul
 Set:
 
 `credentials/telegraf-system/organization` to match the InfluxDB org
+
+### mktxp / mikrotik monitoring
+
+####
+
+Consul values:
+
+* `credentials/mktxp/influxdb_organization`
+* `credentials/mktxp/influxdb_token`
+* `credentials/mktxp/password`
+* `credentials/mktxp/username`
