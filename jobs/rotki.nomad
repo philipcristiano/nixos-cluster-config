@@ -42,7 +42,7 @@ job "rotki" {
       driver = "docker"
 
       config {
-        image = "rotki/rotki:v1.26.3"
+        image = "rotki/rotki:v1.27.0"
         ports = ["http"]
 
         mounts = [{
