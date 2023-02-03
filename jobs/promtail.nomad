@@ -29,7 +29,7 @@ positions:
   filename: /data/positions.yaml
 
 clients:
-  - url: https://loki.home.cristiano.cloud/loki/api/v1/push
+  - url: https://loki.{{ key "site/domain" }}/loki/api/v1/push
 
 scrape_configs:
 - job_name: 'nomad-logs'
@@ -65,7 +65,7 @@ EOTC
       }
 
       config {
-        image = "grafana/promtail:2.5.0"
+        image = "grafana/promtail:2.7.3"
         ports = ["http"]
         args = [
           "-config.file=/local/promtail.yml",

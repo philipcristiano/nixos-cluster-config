@@ -16,3 +16,26 @@ Add `./ncluster.nix` to the imports
 Expected consul values
 
 `site/domain` - Base domain expected for services.
+
+
+## Jobs
+
+
+### InfluxDB
+
+#### Setup
+
+Create bucket:
+
+`host`
+
+###  Telegraf
+
+#### Setup
+Create a token in InfluxDB and add to Consul
+
+`credentials/telegraf-system/influxdb_token`
+
+Set:
+
+`credentials/telegraf-system/organization` to match the InfluxDB org

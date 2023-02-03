@@ -45,7 +45,7 @@ nomad_client_class = "{{ env "node.class" }}"
   hostname = ""
   omit_hostname = false
 [[outputs.influxdb_v2]]
-  urls = ["https://influxdb.home.cristiano.cloud"]
+  urls = ["https://influxdb.{{ key "site/domain" }}"]
   bucket = "host"
   organization = "{{key "credentials/telegraf-system/organization"}}"
   token = "{{key "credentials/telegraf-system/influxdb_token"}}"

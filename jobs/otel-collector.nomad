@@ -52,8 +52,8 @@ job "otel-collector" {
       port     = "grpc"
       tags     = [
         "traefik.enable=true",
-	    "traefik.http.routers.otel-grpc.tls=true",
-	    "traefik.http.routers.otel-grpc.tls.certresolver=home",
+	      "traefik.http.routers.otel-grpc.tls=true",
+	      "traefik.http.routers.otel-grpc.tls.certresolver=home",
         "traefik.http.services.otel-grpc.loadbalancer.server.scheme=h2c",
       ]
 

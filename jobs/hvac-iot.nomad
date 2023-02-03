@@ -8,7 +8,7 @@ job "hvac-iot" {
       driver = "docker"
 
       config {
-        image = "philipcristiano/hvac-iot-mqtt-influx:0.0.7"
+        image = "philipcristiano/hvac-iot-mqtt-influx:0.0.8"
       }
       env {
  	    CONFIG_ROOT = "/local"
@@ -29,7 +29,7 @@ EOF
             {mqtt_username, "{{key "credentials/hvac-iot/mqtt_username"}}"},
             {mqtt_password, "{{key "credentials/hvac-iot/mqtt_password"}}"},
             {influxdb_token, "{{key "credentials/hvac-iot/influxdb_token"}}"},
-            {influxdb_host, "https://influxdb.home.cristiano.cloud"},
+            {influxdb_host, "https://influxdb.{{ key "site/domain" }}"},
             {influxdb_port, 443},
             {influxdb_org, "hazzard"},
             {influxdb_bucket, "environment"}

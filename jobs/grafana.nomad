@@ -10,8 +10,8 @@ job "grafana" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.grafana.tls=true",
-	"traefik.http.routers.grafana.tls.certresolver=home",
+	    "traefik.http.routers.grafana.tls=true",
+	    "traefik.http.routers.grafana.tls.certresolver=home",
       ]
 
       check {
