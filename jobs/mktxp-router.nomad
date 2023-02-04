@@ -41,6 +41,13 @@ job "mktxp-router" {
         volumes = [
           "local/mktxp.conf:/root/mktxp/mktxp.conf",
         ]
+
+        entrypoint = [
+          "/usr/local/bin/mktxp",
+          "--cfg-dir",
+          "/local",
+          "export",
+        ]
       }
 
       resources {
@@ -62,18 +69,31 @@ job "mktxp-router" {
     no_ssl_certificate = False      # enables API_SSL connect without router SSL certificate
     ssl_certificate_verify = False  # turns SSL certificate verification on / off
 
+    installed_packages = True       # Installed packages
     dhcp = True                     # DHCP general metrics
     dhcp_lease = True               # DHCP lease metrics
+    connections = True              # IP connections metrics
     pool = True                     # Pool metrics
     interface = True                # Interfaces traffic metrics
-    firewall = True                 # Firewall rules traffic metrics
+
+    firewall = True                 # IPv4 Firewall rules traffic metrics
+    ipv6_firewall = False           # IPv6 Firewall rules traffic metrics
+    ipv6_neighbor = False           # Reachable IPv6 Neighbors
+
+    poe = False                     # POE metrics
     monitor = True                  # Interface monitor metrics
-    poe = False                      # POE metrics
+    netwatch = True                 # Netwatch metrics
+    public_ip = True                # Public IP metrics
     route = True                    # Routes metrics
-    wireless = False                 # WLAN general metrics
-    wireless_clients = False         # WLAN clients metrics
-    capsman = False                  # CAPsMAN general metrics
-    capsman_clients = False          # CAPsMAN clients metrics
+    wireless = True                 # WLAN general metrics
+    wireless_clients = True         # WLAN clients metrics
+    capsman = True                  # CAPsMAN general metrics
+    capsman_clients = True          # CAPsMAN clients metrics
+
+    user = True                     # Active Users metrics
+    queue = True                    # Queues metrics
+
+    remote_dhcp_entry = None        # An MKTXP entry for remote DHCP info resolution in capsman/wireless
 
     use_comments_over_names = True  # when available, forces using comments over the interfaces names
 EOTC
