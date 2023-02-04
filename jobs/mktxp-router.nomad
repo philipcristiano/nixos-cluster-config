@@ -36,7 +36,7 @@ job "mktxp-router" {
       driver = "docker"
 
       config {
-        image = "philipcristiano/mktxp:main@sha256:a1cd4cde25a28487d6f1ccbe1eb39b85c617979b28bf362c5686cd369b55e938"
+        image = "ghcr.io/akpw/mktxp:stable-20230117072202"
         ports = ["http"]
         volumes = [
           "local/mktxp.conf:/root/mktxp/mktxp.conf",
