@@ -7,7 +7,7 @@ On the host:
 
 Then
 
-`scp ncluster.nix philipcristiano@TARGET_HOST:/etc/nixos/ncluster.nix`
+`scp ncluster.nix $USER@TARGET_HOST:/etc/nixos/ncluster.nix`
 
 Add `./ncluster.nix` to the imports
 
@@ -50,3 +50,10 @@ Consul values:
 * `credentials/mktxp/influxdb_token`
 * `credentials/mktxp/password`
 * `credentials/mktxp/username`
+
+### Minio / S3-compatible blog storage
+
+Consul values:
+
+* `credentials/minio/root_user`
+* `credentials/minio/root_pass`
