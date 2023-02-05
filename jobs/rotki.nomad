@@ -54,6 +54,7 @@ job "rotki" {
       }
 
       env {
+        ROTKI_ACCEPT_DOCKER_RISK = "1"
         TZ = "America/New_York"
       }
 
