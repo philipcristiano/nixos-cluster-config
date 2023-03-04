@@ -5,6 +5,13 @@ job "traefik" {
 
   group "traefik" {
 
+    restart {
+      attempts = 2
+      interval = "1m"
+      delay    = "10s"
+      mode     = "delay"
+    }
+
     ephemeral_disk {
       size    = 500
       sticky  = true
@@ -23,9 +30,22 @@ job "traefik" {
         static = 8081
       }
 
+      port "bitcoin-rpc-tcp" {
+        static = 8882
+      }
+
+      port "bitcoin-p2p-tcp" {
+        static = 8883
+      }
+
+      port "electrs-tcp" {
+        static = 8884
+      }
+
       port "lorawan-server-udp" {
         static = 1700
       }
+
     }
 
     service {
@@ -103,14 +123,27 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":6380"
     [entryPoints.traefik]
     address = ":8081"
+    [entryPoints.bitcoin-rpc]
+    address = ":8882"
+    [entryPoints.bitcoin-p2p]
+    address = ":8883"
+    [entryPoints.electrs]
+    address = ":8884"
 [serversTransport]
   insecureSkipVerify = true
 [api]
     dashboard = true
     insecure  = true
 [log]
+  format = "json"
   level = "INFO"
+[accessLog]
+  format = "json"
 
+  [accessLog.filters]
+    statusCodes = ["300-302", "400-499"]
+    retryAttempts = true
+    minDuration = "10ms"
 [tracing]
   [tracing.openTelemetry]
     address = "otel-grpc.{{ key "site/domain" }}:443"
