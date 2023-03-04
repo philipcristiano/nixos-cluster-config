@@ -143,7 +143,6 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
   [accessLog.filters]
     statusCodes = ["300-302", "400-499"]
     retryAttempts = true
-    minDuration = "10ms"
 [tracing]
   [tracing.openTelemetry]
     address = "otel-grpc.{{ key "site/domain" }}:443"

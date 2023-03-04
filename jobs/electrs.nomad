@@ -12,7 +12,7 @@ job "electrs" {
         "traefik.enable=true",
 	    "traefik.tcp.routers.electrs.tls.certresolver=home",
         "traefik.tcp.routers.electrs.entrypoints=electrs",
-        "traefik.tcp.routers.electrs.rule=HostSNI(`*`)",
+        "traefik.tcp.routers.electrs.rule=HostSNI(`electrs.home.cristiano.cloud`)",
       ]
 
       check {
