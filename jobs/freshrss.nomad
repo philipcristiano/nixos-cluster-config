@@ -66,7 +66,7 @@ job "freshrss" {
       driver = "docker"
 
       config {
-        image = "freshrss/freshrss:edge@sha256:008e478f5e5b5da599266ad373d213bc1f31afd186628cdecd1f46b1c0568fce"
+        image = "freshrss/freshrss:1.21.0@sha256:55487c0d8eafd986b43e3d3b73b18686664e5823067e738666cf98569d4bb2f4"
         ports = ["http"]
 
       }
