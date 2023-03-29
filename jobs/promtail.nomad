@@ -5,6 +5,13 @@ job "promtail" {
   group "promtail" {
     count = 1
 
+    restart {
+      attempts = 2
+      interval = "1m"
+      delay    = "10s"
+      mode     = "delay"
+    }
+
     network {
       port "http" {
         static = 3200

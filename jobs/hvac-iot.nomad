@@ -4,6 +4,13 @@ job "hvac-iot" {
 
   group "hvac-iot" {
 
+    restart {
+      attempts = 2
+      interval = "1m"
+      delay    = "10s"
+      mode     = "delay"
+    }
+
     task "app" {
       driver = "docker"
 

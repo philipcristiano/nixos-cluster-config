@@ -5,6 +5,13 @@ job "gocast" {
 
   group "gocast" {
 
+    restart {
+      attempts = 2
+      interval = "1m"
+      delay    = "10s"
+      mode     = "delay"
+    }
+
     network {
       port "http" {
         static = 7001
@@ -39,7 +46,7 @@ job "gocast" {
 	cap_add = ["net_admin"]
 
       }
-      template { 
+      template {
         destination = "local/config.yaml"
         data = <<EOF
 agent:

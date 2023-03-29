@@ -4,6 +4,13 @@ job "tika" {
 
   group "app" {
 
+    restart {
+      attempts = 2
+      interval = "1m"
+      delay    = "10s"
+      mode     = "delay"
+    }
+
     service {
       name = "tika"
       port = "http"
