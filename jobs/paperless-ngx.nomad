@@ -50,7 +50,7 @@ job "paperless-ngx" {
       driver = "docker"
 
       config {
-        image = "paperlessngx/paperless-ngx:1.11"
+        image = "paperlessngx/paperless-ngx:1.13.0"
         ports = ["http"]
         # entrypoint = ["sleep", "10000"]
 
