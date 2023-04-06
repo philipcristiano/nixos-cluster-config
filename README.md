@@ -87,3 +87,16 @@ Consul Values
 * `credentials/folio-postgres/USER` - Username for the root user
 * `credentials/folio-postgres/PASSWORD` - Root password
 * `credentials/folio-postgres/DB` - default DB
+
+
+### Frigate
+
+#### Setup
+
+
+Consul Values
+
+* `credentials/frigate/mqtt_host` - MQTT Host IP
+* `credentials/frigate/mqtt_username` - MQTT Username
+* `credentials/frigate/mqtt_password` - MQTT Password
+* `credentials/frigate/cameras/*` - Key: Camera name, Value: input.path for Frigate
