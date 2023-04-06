@@ -35,7 +35,6 @@ job "paperless-ngx" {
       port "http" {
   	    to = 8000
       }
-
     }
 
     volume "storage" {

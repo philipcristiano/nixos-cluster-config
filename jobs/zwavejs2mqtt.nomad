@@ -73,7 +73,7 @@ job "zwavejs2mqtt" {
       driver = "docker"
 
       config {
-        image = "zwavejs/zwave-js-ui:8.6.3"
+        image = "zwavejs/zwave-js-ui:8.13.0"
         ports = ["http", "websocket"]
   	devices = [
          {
