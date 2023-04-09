@@ -60,20 +60,40 @@ job "jaeger" {
       }
     }
 
+    volume "storage" {
+      type            = "csi"
+      source          = "jaeger"
+      read_only       = false
+      attachment_mode = "file-system"
+      access_mode     = "multi-node-multi-writer"
+    }
+
     task "jaeger-all-in-one" {
       driver = "docker"
 
       config {
-        image = "jaegertracing/all-in-one:1.41"
+        image = "jaegertracing/all-in-one:1.43"
         ports = ["ui", "thrift", "grpc"]
 
         args = [
         ]
       }
 
+      env {
+          SPAN_STORAGE_TYPE = "badger"
+          BADGER_EPHEMERAL = "false"
+          BADGER_DIRECTORY_VALUE = "/badger/data"
+          BADGER_DIRECTORY_KEY = "/badger/key"
+      }
+
       resources {
         cpu    = 200
-        memory = 100
+        memory = 500
+      }
+
+      volume_mount {
+        volume      = "storage"
+        destination = "/badger"
       }
     }
   }
