@@ -10,6 +10,14 @@ job "jaeger" {
 
   # Jaeger
   group "jaeger" {
+
+    restart {
+      attempts = 2
+      interval = "1m"
+      delay    = "10s"
+      mode     = "delay"
+    }
+
     network {
       port "ui" {
         to     = 16686
