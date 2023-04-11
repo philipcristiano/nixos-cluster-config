@@ -49,7 +49,7 @@ job "frigate" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/blakeblackshear/frigate:0.12.0-rc2"
+        image = "ghcr.io/blakeblackshear/frigate:0.12.0"
         ports = ["http"]
 
         mount {
