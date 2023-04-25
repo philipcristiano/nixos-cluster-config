@@ -58,29 +58,15 @@ job "traefik" {
       ]
 
       check {
-        name     = "traefik"
-        type     = "tcp"
-        port     = "http"
-        interval = "10s"
-        timeout  = "2s"
-      }
-
-      check {
-        name     = "alive-https"
-        type     = "tcp"
-        port     = "https"
+        name     = "alive-api"
+        type     = "http"
+        port     = "api"
+        protocol = "https"
+        path     = "/"
         interval = "10s"
         timeout  = "2s"
       }
     }
-
-    #volume "storage" {
-    #  type            = "csi"
-    #  source          = "traefik"
-    #  read_only       = false
-    #  attachment_mode = "file-system"
-    #  access_mode     = "multi-node-multi-writer"
-    #}
 
     task "traefik" {
       driver = "docker"
