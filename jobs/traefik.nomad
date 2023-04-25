@@ -91,6 +91,7 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
         data = <<EOF
 [entryPoints]
     [entryPoints.http]
+    asDefault = "true"
     address = ":80"
       [entryPoints.http.http.redirections]
         [entryPoints.http.http.redirections.entryPoint]
@@ -98,6 +99,7 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
           scheme = "https"
           permanent = true
     [entryPoints.https]
+    asDefault = "true"
     address = ":443"
     [entryPoints.lorawan-server-udp]
     address = ":1700/udp"
