@@ -133,6 +133,7 @@ job "bitcoind" {
           destination = "local/bitcoin.conf"
           data = <<EOF
 
+debug=rpc
 txindex=1
 
 {{ range ls "credentials/bitcoind/rpcauth" }}

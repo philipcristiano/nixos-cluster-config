@@ -17,9 +17,9 @@ job "electrs" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.tcp.routers.electrs.tls.certresolver=home",
+	      "traefik.tcp.routers.electrs.tls.certresolver=home",
         "traefik.tcp.routers.electrs.entrypoints=electrs",
-        "traefik.tcp.routers.electrs.rule=HostSNI(`electrs.home.cristiano.cloud`)",
+        "traefik.tcp.routers.electrs.rule=HostSNI(`*`)",
       ]
 
       check {
@@ -30,17 +30,30 @@ job "electrs" {
         timeout  = "2s"
       }
     }
+    service {
+      name = "electrs-prometheus"
+      port = "prometheus"
 
-    restart {
-      attempts = 2
-      interval = "3m"
-      delay    = "30s"
-      mode     = "delay"
+      tags = [
+        "prometheus",
+      ]
+
+      check {
+        name     = "alive"
+        type     = "tcp"
+        port     = "prometheus"
+        interval = "10s"
+        timeout  = "2s"
+      }
     }
 
     network {
       port "electrs" {
   	    to = 50001
+      }
+
+      port "prometheus" {
+  	    to = 4224
       }
 
     }

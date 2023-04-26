@@ -30,7 +30,7 @@ job "traefik" {
         static = 8081
       }
 
-      port "bitcoin-rpc-tcp" {
+      port "bitcoin-rpc" {
         static = 8882
       }
 
@@ -59,10 +59,10 @@ job "traefik" {
 
       check {
         name     = "alive-api"
-        type     = "http"
+        type     = "tcp"
         port     = "api"
-        protocol = "https"
-        path     = "/"
+        # protocol = "https"
+        # path     = "/"
         interval = "10s"
         timeout  = "2s"
       }

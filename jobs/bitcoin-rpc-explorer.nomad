@@ -70,7 +70,9 @@ BTCEXP_BITCOIND_USER={{key "credentials/bitcoin-rpc-explorer/bitcoind_username"}
 BTCEXP_BITCOIND_PASS={{key "credentials/bitcoin-rpc-explorer/bitcoind_password"}}
 BTCEXP_BITCOIND_RPC_TIMEOUT=5000
 
-BTCEXP_ELECTRUM_SERVERS=tls://eletrcs.{{ key "site/domain" }}:8884
+BTCEXP_ADDRESS_API=electrum
+BTCEXP_ELECTRUM_SERVERS=tls://electrs.{{ key "site/domain" }}:8884
+DEBUG=btcexp:*
 
 EOF
       }
