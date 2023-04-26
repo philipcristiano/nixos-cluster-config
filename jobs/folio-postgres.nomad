@@ -54,8 +54,13 @@ job "folio-postgres" {
         hostname = "folio_postgres"
       }
 
-      env {
+      volume_mount {
+        volume      = "storage"
+        destination = "/var/lib/postgresql/data/"
       }
+
+      env {}
+
       template {
           env = true
       	  destination = "secrets/pg"
