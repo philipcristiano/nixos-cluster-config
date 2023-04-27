@@ -59,10 +59,10 @@ job "traefik" {
 
       check {
         name     = "alive-api"
-        type     = "tcp"
+        type     = "http"
         port     = "api"
         # protocol = "https"
-        # path     = "/"
+        path     = "/dashboard"
         interval = "10s"
         timeout  = "2s"
       }
