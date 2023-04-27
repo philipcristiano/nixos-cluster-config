@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "paperlessngx/paperless-ngx:1.14.1"
+}
+
 job "paperless-ngx" {
   datacenters = ["dc1"]
   type        = "service"
@@ -49,9 +55,8 @@ job "paperless-ngx" {
       driver = "docker"
 
       config {
-        image = "paperlessngx/paperless-ngx:1.14.0"
+        image = var.image_id
         ports = ["http"]
-        # entrypoint = ["sleep", "10000"]
 
         mount = {
           type     = "bind"
