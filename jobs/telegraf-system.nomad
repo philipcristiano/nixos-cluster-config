@@ -49,6 +49,10 @@ nomad_client_class = "{{ env "node.class" }}"
   bucket = "host"
   organization = "{{key "credentials/telegraf-system/organization"}}"
   token = "{{key "credentials/telegraf-system/influxdb_token"}}"
+[[inputs.cpu]]
+[[inputs.mem]]
+[[inputs.system]]
+
 [[inputs.nomad]]
 ## URL for the Nomad agent
 url = "http://127.0.0.1:4646"
