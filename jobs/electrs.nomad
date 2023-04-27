@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "philipcristiano/electrs:0.9.13"
+}
+
 job "electrs" {
   datacenters = ["dc1"]
   type        = "service"
@@ -100,7 +106,7 @@ job "electrs" {
       }
 
       config {
-        image = "iangregsondev/electrs:0.9.10@sha256:92dd0dd0d85d4a37eceacccdc3d2e004c92e57be27a8cff03c2906633f8f82ab"
+        image = var.image_id
         ports = ["electrs"]
 
         #entrypoint = ["sleep", "10000"]
