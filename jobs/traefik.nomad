@@ -109,6 +109,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":1883"
     [entryPoints.folio-postgres]
     address = ":5433"
+    [entryPoints.mempool-mariadb]
+    address = ":5434"
     [entryPoints.redis-paperless-ngx]
     address = ":6380"
     [entryPoints.traefik]
