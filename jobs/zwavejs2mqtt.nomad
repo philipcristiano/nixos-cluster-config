@@ -53,10 +53,10 @@ job "zwavejs2mqtt" {
 
     network {
       port "http" {
-  	to = 8091
+  	   to = 8091
       }
       port "websocket" {
-	static = 3000
+	     to = 3000
       }
 
     }
