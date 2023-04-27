@@ -115,6 +115,11 @@ DATABASE_USERNAME="{{key "credentials/mempool/database_username"}}"
 DATABASE_PASSWORD="{{key "credentials/mempool/database_password"}}"
 STATISTICS_ENABLED="true"
 
+MEMPOOL_BACKEND= "electrum"
+ELECTRUM_HOST= "electrs.{{ key "site/domain" }}"
+ELECTRUM_PORT= "8884"
+ELECTRUM_TLS_ENABLED= "true"
+
 EOF
       }
 
