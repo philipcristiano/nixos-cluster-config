@@ -47,6 +47,29 @@ job "loki" {
       access_mode     = "multi-node-multi-writer"
     }
 
+    task "prep-disk" {
+      driver = "docker"
+      volume_mount {
+        volume      = "storage"
+        destination = "/storage"
+        read_only   = false
+      }
+      config {
+        image        = "busybox:latest"
+        command      = "sh"
+        args         = ["-c", "mkdir -p /storage/data && chown -R 10001:10001 /storage && chmod 775 /storage"]
+      }
+      resources {
+        cpu    = 200
+        memory = 128
+      }
+
+      lifecycle {
+        hook    = "prestart"
+        sidecar = false
+      }
+    }
+
     task "app" {
       driver = "docker"
 
