@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "grafana/promtail:2.8.1"
+}
+
 job "promtail" {
   datacenters = ["dc1"]
   type = "system"
@@ -16,12 +22,6 @@ job "promtail" {
       port "http" {
         static = 3200
       }
-    }
-
-    restart {
-      attempts = 3
-      delay    = "20s"
-      mode     = "delay"
     }
 
     task "promtail" {
@@ -72,7 +72,7 @@ EOTC
       }
 
       config {
-        image = "grafana/promtail:2.7.3"
+        image = var.image_id
         ports = ["http"]
         args = [
           "-config.file=/local/promtail.yml",

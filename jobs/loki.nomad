@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "grafana/loki:2.8.1"
+}
+
 job "loki" {
   datacenters = ["dc1"]
   type        = "service"
@@ -28,7 +34,7 @@ job "loki" {
       port "http" {
 	to = 3100
       }
-      port "grpc" { 
+      port "grpc" {
 	to = 9096
       }
     }
@@ -45,7 +51,7 @@ job "loki" {
       driver = "docker"
 
       config {
-        image = "grafana/loki:2.4.2"
+        image = var.image_id
         ports = ["http"]
       }
 
