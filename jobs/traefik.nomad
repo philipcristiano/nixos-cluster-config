@@ -26,6 +26,14 @@ job "traefik" {
         static = 443
       }
 
+      port "folio-postgres" {
+        static = 5433
+      }
+
+      port "mattermost-postgres" {
+        static = 5435
+      }
+
       port "api" {
         static = 8081
       }
@@ -111,6 +119,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":5433"
     [entryPoints.mempool-mariadb]
     address = ":5434"
+    [entryPoints.mattermost-postgres]
+    address = ":5435"
     [entryPoints.redis-paperless-ngx]
     address = ":6380"
     [entryPoints.traefik]
