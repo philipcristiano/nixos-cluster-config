@@ -34,6 +34,10 @@ job "traefik" {
         static = 5435
       }
 
+      port "baserow-postgres" {
+        static = 5436
+      }
+
       port "api" {
         static = 8081
       }
@@ -121,6 +125,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":5434"
     [entryPoints.mattermost-postgres]
     address = ":5435"
+    [entryPoints.baserow-postgres]
+    address = ":5436"
     [entryPoints.redis-paperless-ngx]
     address = ":6380"
     [entryPoints.traefik]
