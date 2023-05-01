@@ -83,9 +83,11 @@ job "baserow" {
           destination = "local/config.env"
           env = true
           data = <<EOF
-#BASEROW_ENABLE_OTEL=true
-#OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-grpc.{{ key "site/domain" }}:443
-#OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+BASEROW_ENABLE_OTEL=true
+OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-http.{{ key "site/domain" }}:443
+OTEL_EXPORTER_OTLP_PROTOCOL=http/json
+OTEL_RESOURCE_ATTRIBUTES="service.name=baserow"
+OTEL_SERVICE_NAME=baserow_servicename
 
 BASEROW_PUBLIC_URL=https://baserow.{{ key "site/domain" }}
 DATABASE_HOST=baserow-postgres.{{ key "site/domain" }}
