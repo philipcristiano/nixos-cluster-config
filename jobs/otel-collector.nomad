@@ -24,6 +24,10 @@ job "otel-collector" {
         to = 4317
       }
 
+      port "http" {
+        to = 4318
+      }
+
       # Extensions
       port "pprof" {
         to     = 1888
@@ -67,6 +71,24 @@ job "otel-collector" {
     }
 
     service {
+      name     = "otel-http"
+      port     = "http"
+      tags     = [
+        "traefik.enable=true",
+	      "traefik.http.routers.otel-http.tls=true",
+	      "traefik.http.routers.otel-http.tls.certresolver=home",
+      ]
+
+      check {
+        name     = "alive"
+        type     = "tcp"
+        port     = "http"
+        interval = "10s"
+        timeout  = "2s"
+      }
+    }
+
+    service {
       name     = "otel-demo-collector"
       port     = "metrics"
       tags     = ["metrics"]
@@ -90,6 +112,7 @@ job "otel-collector" {
           "metrics",
           "prometheus",
           "grpc",
+          "http",
           "health-check",
           "zpages",
         ]
@@ -110,6 +133,7 @@ receivers:
   otlp:
     protocols:
       grpc:
+      http:
 
 exporters:
   logging:
