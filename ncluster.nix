@@ -122,7 +122,7 @@ in
   services.consul.interface.bind = "enp2s0";
   services.nomad.enable = true;
 
-  networking.firewall.allowedUDPPorts = [ 1680 1700 ];
+  networking.firewall.allowedUDPPorts = [ 1680 1700 8301 8600];
   networking.firewall.allowedTCPPorts = [ 80 443 1883 8300 8301 8500 8600 ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 5433; to = 5440; }
