@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "influxdb:2.7.0"
+}
+
 job "influxdb" {
   datacenters = ["dc1"]
   type        = "service"
@@ -50,7 +56,7 @@ job "influxdb" {
       driver = "docker"
 
       config {
-        image = "influxdb:2.6.1"
+        image = var.image_id
         ports = ["http"]
       }
 
