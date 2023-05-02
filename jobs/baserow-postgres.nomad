@@ -2,7 +2,7 @@ job "baserow-postgres" {
   datacenters = ["dc1"]
   type        = "service"
 
-  group "app" {
+  group "db" {
 
     restart {
       attempts = 2

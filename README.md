@@ -58,6 +58,17 @@ Consul values:
 * `credentials/minio/root_user`
 * `credentials/minio/root_pass`
 
+### Baserow
+
+#### Setup
+
+Consul Values
+
+* `credentials/baserow-postgres/USER` - Username for the root user
+* `credentials/baserow-postgres/PASSWORD` - Root password
+* `credentials/baserow-postgres/DB` - default DB
+* `credentials/baserow-redis/password` - Username for the root user
+
 ## Bitcoin (and electrs, bitcoin-rpc-explorer, mempool)
 
 NOT SAFE FOR USAGE AS A WALLET - only using this for an API to bitcoin data

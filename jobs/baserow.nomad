@@ -96,6 +96,11 @@ DATABASE_USER={{ key "credentials/baserow-postgres/USER" }}
 DATABASE_PASSWORD={{ key "credentials/baserow-postgres/PASSWORD" }}
 DATABASE_NAME={{ key "credentials/baserow-postgres/DB" }}
 
+REDIS_HOST=baserow-redis.{{ key "site/domain" }}
+REDIS_PORT=6381
+REDIS_USER=default
+REDIS_PASSWORD={{ key "credentials/baserow-redis/password" }}
+
 EOF
       }
 
