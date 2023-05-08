@@ -1,3 +1,9 @@
+variable "ip" {
+  type        = string
+  description = "The IP address for the floating IP/binding."
+  default     = "192.168.102.50"
+}
+
 job "traefik" {
   region      = "global"
   datacenters = ["dc1"]
@@ -38,6 +44,10 @@ job "traefik" {
         static = 5436
       }
 
+      port "synapse-postgres" {
+        static = 5437
+      }
+
       port "paperless-redis" {
         static = 6380
       }
@@ -48,6 +58,10 @@ job "traefik" {
 
       port "api" {
         static = 8081
+      }
+
+      port "frigate-rtsp" {
+        static = 8554
       }
 
       port "bitcoin-rpc" {
@@ -72,9 +86,9 @@ job "traefik" {
       name = "traefik"
 
       tags = [
-	"enable_gocast",
+	    "enable_gocast",
         "gocast_vip=192.168.102.50/32",
-	"gocast_monitor=consul",
+	    "gocast_monitor=consul",
       ]
 
       check {
@@ -110,6 +124,20 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
       template {
         data = <<EOF
 [entryPoints]
+
+    ## PUBLIC ACCESS ENTRYPOINTS
+
+    address = ":3080"
+      [entryPoints.http-public.http.redirections]
+        [entryPoints.http-public.http.redirections.entryPoint]
+          to = "https-public"
+          scheme = "https"
+          permanent = true
+    [entryPoints.https-public]
+    address = ":3443"
+
+    ## INTERNAL ACCESS ENTRYPOINTS
+
     [entryPoints.http]
     asDefault = "true"
     address = ":80"
@@ -135,10 +163,14 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":5435"
     [entryPoints.baserow-postgres]
     address = ":5436"
+    [entryPoints.synapse-postgres]
+    address = ":5437"
     [entryPoints.redis-paperless-ngx]
     address = ":6380"
     [entryPoints.baserow-redis]
     address = ":6381"
+    [entryPoints.frigate-rtsp]
+    address = ":8554"
     [entryPoints.traefik]
     address = ":8081"
     [entryPoints.bitcoin-rpc]
