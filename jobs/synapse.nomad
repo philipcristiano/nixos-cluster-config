@@ -1,7 +1,13 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "matrixdotorg/synapse:v1.82.0"
+  default     = "matrixdotorg/synapse:v1.83.0"
+}
+
+variable "count" {
+  type        = number
+  description = "Number of instances"
+  default     = 1
 }
 
 job "synapse" {
@@ -9,6 +15,14 @@ job "synapse" {
   type        = "service"
 
   group "app" {
+
+    count = var.count
+
+    update {
+      max_parallel     = 1
+      min_healthy_time = "30s"
+      healthy_deadline = "5m"
+    }
 
     restart {
       attempts = 2
