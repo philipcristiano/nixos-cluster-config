@@ -23,7 +23,6 @@ job "electrs" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.tcp.routers.electrs.tls.certresolver=home",
         "traefik.tcp.routers.electrs.entrypoints=electrs",
         "traefik.tcp.routers.electrs.rule=HostSNI(`*`)",
       ]
@@ -45,7 +44,7 @@ job "electrs" {
       ]
 
       check {
-        name     = "alive"
+        name     = "prometheus"
         type     = "tcp"
         port     = "prometheus"
         interval = "10s"
@@ -107,7 +106,7 @@ job "electrs" {
 
       config {
         image = var.image_id
-        ports = ["electrs"]
+        ports = ["electrs", "prometheus"]
 
         #entrypoint = ["sleep", "10000"]
         args = [
@@ -139,6 +138,8 @@ daemon_rpc_addr = "bitcoin-rpc.{{ key "site/domain"}}:8882"
 
 # The listening P2P address of bitcoind, port is usually 8333
 daemon_p2p_addr = "bitcoin-p2p.{{ key "site/domain"}}:8883"
+
+monitoring_addr = "0.0.0.0:{{ env "NOMAD_PORT_prometheus" }}"
 
 auth="{{key "credentials/electrs/bitcoind_username"}}:{{key "credentials/electrs/bitcoind_password"}}"
 
