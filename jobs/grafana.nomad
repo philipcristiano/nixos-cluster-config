@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "grafana/grafana-oss:9.5.2"
+}
+
 job "grafana" {
   datacenters = ["dc1"]
   type        = "service"
@@ -33,7 +39,7 @@ job "grafana" {
 
     network {
       port "http" {
-  	to = 3000
+  	   to = 3000
       }
 
     }
@@ -50,13 +56,25 @@ job "grafana" {
       driver = "docker"
 
       config {
-        image = "grafana/grafana-oss:9.3.2"
+        image = var.image_id
         ports = ["http"]
       }
 
       volume_mount {
         volume      = "storage"
         destination = "/var/lib/grafana"
+      }
+
+      template {
+          destination = "local/app.env"
+          env = true
+          data = <<EOF
+GF_SERVER_ROOT_URL="https://grafana.{{ key "site/domain" }}"
+GF_RENDERING_SERVER_URL="https://grafana-image-renderer.{{ key "site/domain" }}/render"
+GF_RENDERING_CALLBACK_URL="https://grafana.{{ key "site/domain" }}"
+GF_LOG_FILTERS="rendering:debug"
+
+EOF
       }
 
       resources {
