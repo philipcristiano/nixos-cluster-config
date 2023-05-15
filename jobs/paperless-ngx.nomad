@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "paperlessngx/paperless-ngx:1.14.2"
+  default     = "paperlessngx/paperless-ngx:1.14.5"
 }
 
 job "paperless-ngx" {
@@ -29,8 +29,9 @@ job "paperless-ngx" {
 
       check {
         name     = "alive"
-        type     = "tcp"
+        type     = "http"
         port     = "http"
+        path     = "/"
         interval = "10s"
         timeout  = "2s"
       }
