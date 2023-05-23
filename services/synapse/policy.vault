@@ -1,0 +1,7 @@
+path "pki_int/issue/authentik" {
+  capabilities = ["update"]
+}
+
+path "kv/data/authentik" {
+  capabilities = ["read"]
+}
