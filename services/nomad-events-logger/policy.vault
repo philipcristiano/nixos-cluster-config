@@ -1,0 +1,11 @@
+path "pki_int/issue/nomad-events-logger" {
+  capabilities = ["update"]
+}
+
+path "pki/issuer/default/json" {
+  capabilities = ["read"]
+}
+
+path "kv/data/nomad-events-logger" {
+  capabilities = ["read"]
+}
