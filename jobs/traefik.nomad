@@ -64,6 +64,14 @@ job "traefik" {
         static = 8554
       }
 
+      port "homeassistant-whisper" {
+        static = 8082
+      }
+
+      port "homeassistant-piper" {
+        static = 8083
+      }
+
       port "bitcoin-rpc" {
         static = 8882
       }
@@ -108,6 +116,11 @@ job "traefik" {
       config {
         image        = "traefik:v3.0"
         network_mode = "host"
+
+        ports = [
+            "homeassistant-whisper",
+            "homeassistant-piper",
+        ]
 
         volumes = [
           "local/traefik.toml:/etc/traefik/traefik.toml",
@@ -173,6 +186,10 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":8554"
     [entryPoints.traefik]
     address = ":8081"
+    [entryPoints.homeassistant-whisper]
+    address = ":8082"
+    [entryPoints.homeassistant-piper]
+    address = ":8083"
     [entryPoints.bitcoin-rpc]
     address = ":8882"
     [entryPoints.bitcoin-p2p]

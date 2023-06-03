@@ -1,4 +1,10 @@
-job "homeassistant" {
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "rhasspy/wyoming-piper@sha256:e62fa006b6fccda2f1be2f1fd8229bc6c1139b8adeb2e6d479f411e628bb1c90" # latest as of 2023-05-31
+}
+
+job "homeassistant-piper" {
   datacenters = ["dc1"]
   type        = "service"
 
@@ -12,13 +18,13 @@ job "homeassistant" {
     }
 
     service {
-      name = "homeassistant"
+      name = "homeassistant-piper"
       port = "http"
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.homeassistant.tls=true",
-	"traefik.http.routers.homeassistant.tls.certresolver=home",
+        "traefik.tcp.routers.homeassistant-piper.entrypoints=homeassistant-piper",
+        "traefik.tcp.routers.homeassistant-piper.rule=HostSNI(`*`)",
       ]
 
       check {
@@ -30,17 +36,16 @@ job "homeassistant" {
       }
     }
 
-
     network {
       port "http" {
-  	to = 8123
+  	    to = 10200
       }
 
     }
 
     volume "storage" {
       type            = "csi"
-      source          = "homeassistant"
+      source          = "homeassistant-piper"
       read_only       = false
       attachment_mode = "file-system"
       access_mode     = "multi-node-multi-writer"
@@ -50,18 +55,24 @@ job "homeassistant" {
       driver = "docker"
 
       config {
-        image = "homeassistant/home-assistant:2023.4.0"
+        image = var.image_id
         ports = ["http"]
+
+        args = [
+          "--voice",
+          "en-us-lessac-low",
+        ]
       }
 
       volume_mount {
         volume      = "storage"
-        destination = "/config"
+        destination = "/data"
       }
 
       resources {
         cpu    = 250
         memory = 1024
+        memory_max = 2048
       }
 
     }

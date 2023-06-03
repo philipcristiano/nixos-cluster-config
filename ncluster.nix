@@ -122,13 +122,14 @@ in
   services.consul.interface.bind = "enp2s0";
   services.nomad.enable = true;
 
-  networking.firewall.allowedUDPPorts = [ 1680 1700 8301 8600];
-  networking.firewall.allowedTCPPorts = [ 80 443 1883 8300 8301 8500 8600 ];
+  networking.firewall.allowedUDPPorts = [ 1680 1700 8301];
+  networking.firewall.allowedTCPPorts = [ 80 443 1883 3080 3443 3636 8300 8301 8500 8554 8600 ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 5433; to = 5440; }
     { from = 6379; to = 6390; }
     { from = 4646; to = 4648; }
-    { from = 8080; to = 8081; }
+    { from = 8080; to = 8089; }
+    { from = 8200; to = 8201; } # Vault
     { from = 8882; to = 8884; }
   ];
 

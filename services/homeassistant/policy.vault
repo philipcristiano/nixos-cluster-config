@@ -1,0 +1,11 @@
+path "pki_int/issue/calibre-web" {
+  capabilities = ["update"]
+}
+
+path "pki/issuer/default/json" {
+  capabilities = ["read"]
+}
+
+path "kv/data/calibre-web" {
+  capabilities = ["read"]
+}
