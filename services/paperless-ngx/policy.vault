@@ -1,0 +1,11 @@
+path "pki_int/issue/paperles-ngx" {
+  capabilities = ["update"]
+}
+
+path "pki/issuer/default/json" {
+  capabilities = ["read"]
+}
+
+path "kv/data/paperles-ngx" {
+  capabilities = ["read"]
+}
