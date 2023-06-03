@@ -20,9 +20,12 @@ in
 { environment.systemPackages = [ pkgs.cni-plugins
                                  pkgs.nfs-utils
                                  pkgs.consul
-                                 pkgs.nomad
+                                 pkgs.nomad_1_4
+                                 pkgs.libusb
                                  nomad_usb_device_plugin
-                                 pkgs.vault];
+                                 pkgs.vault
+                                 pkgs.vault-bin];
+
   services.consul.enable = true;
   services.consul.webUi = true;
   services.consul.extraConfig = {
@@ -52,6 +55,25 @@ in
 
   # systemd.services.consul.serviceConfig.Type = "notify";
 
+  environment.etc.nomad_vault_json.text = ''
+vault {
+  enabled     = true
+  ca_path     = "/var/lib/vault/ca/"
+  cert_file   = "/var/lib/vault/certs/vault-cert.pem"
+  key_file    = "/var/lib/vault/certs/vault-key.pem"
+
+  address     = "https://vault.home.cristiano.cloud:8200"
+
+  # Embedding the token in the configuration is discouraged. Instead users
+  # should set the VAULT_TOKEN environment variable when starting the Nomad
+  # agent
+  token       = "hvs.ENTER"
+
+  # Setting the create_from_role option causes Nomad to create tokens for tasks
+  # via the provided role. This allows the role to manage what policies are
+  # allowed and disallowed for use by tasks.
+  create_from_role = "nomad-cluster"
+} '';
   environment.etc.nomad_docker_json.text = ''
   plugin "docker" {
       config {
@@ -60,16 +82,37 @@ in
               # required for bind mounting host directories
               enabled = true
           }
-          allow_caps = ["audit_write", "chown", "dac_override", "fowner",
-          "fsetid", "kill", "mknod", "net_bind_service", "setfcap", "setgid",
-          "net_admin",
-          "setpcap", "setuid", "sys_chroot"]
+          allow_caps = [
+            "audit_write",
+            "chown",
+            "dac_override",
+            "fowner",
+            "fsetid",
+            "kill",
+            "mknod",
+            "net_admin",
+            "net_bind_service",
+            "net_raw",
+            "setfcap",
+            "setgid",
+            "setpcap",
+            "setuid",
+            "sys_chroot"
+         ]
       }
   }
   '';
   environment.etc.nomad_extras_json.text = ''
   client {
       cni_path = "${pkgs.cni-plugins}/bin"
+      cni_config_dir = "/etc/cni/config"
+  }
+  server {
+    default_scheduler_config {
+      scheduler_algorithm = "spread"
+      memory_oversubscription_enabled = true
+
+    }
   }
 
   plugin_dir = "${nomad_usb_device_plugin}/bin"
@@ -100,19 +143,19 @@ in
     enableDocker = true;
     dropPrivileges = false;
     extraPackages = [ pkgs.cni-plugins nomad_usb_device_plugin];
-    extraSettingsPaths = [ "/etc/nomad_extras_json" "/etc/nomad_docker_json"  "/etc/nomad_usb_json" ];
+    extraSettingsPaths = [ "/etc/nomad_extras_json" "/etc/nomad_docker_json"  "/etc/nomad_usb_json" "/etc/nomad_vault_json" ];
 
     settings = {
         server = {
             enabled = true;
             bootstrap_expect = 3;
             server_join = {
-                retry_join     = [ "192.168.102.100" "192.168.102.101" "192.168.102.102" ];
-                retry_max      = 3;
-                retry_interval = "15s";
+                retry_max      = 10;
+                retry_interval = "30s";
             };
         };
         client = {
+            cni_config_dir = "/etc/cni/config";
             cni_path = pkgs.cni-plugins + "/bin";
             enabled = true;
         };
@@ -120,7 +163,77 @@ in
   };
 
   services.consul.interface.bind = "enp2s0";
-  services.nomad.enable = true;
+  services.nomad = {
+    enable = true;
+    package = pkgs.nomad_1_4;
+  };
+
+  # https://github.com/NixOS/nixpkgs/issues/147415
+  # systemd.services.cni-dhcp = {
+  #   description = "CNI DHCP Daemon";
+  #   serviceConfig = {
+  #     Type = "simple";
+  #     ExecStartPre = "${pkgs.coreutils.out}/bin/rm -f /run/cni/dhcp.sock";
+  #     ExecStart = "${pkgs.cni-plugins.out}/bin/dhcp daemon";
+  #     ExecStop = "${pkgs.coreutils.out}/bin/rm -f /run/cni/dhcp.sock";
+  #     Restart = "on-failure";
+  #   };
+  #   wantedBy = [ "default.target" ];
+  # };
+
+  # networking.firewall.enable = false;
+  services.vault = {
+      package = pkgs.vault-bin;
+      enable = true;
+      tlsCertFile = "/var/lib/vault/certs/vault-cert.pem";
+      tlsKeyFile  = "/var/lib/vault/certs/vault-key.pem";
+      address = "0.0.0.0:8200";
+      listenerExtraConfig = "
+  tls_client_ca_file = \"/var/lib/vault/ca/ca-cert.pem\"
+      ";
+
+      storageBackend = "raft";
+      storageConfig = "
+
+storage \"raft\" {
+
+  retry_join {
+    leader_tls_servername   = \"192.168.102.100\"
+    leader_api_addr         = \"https://192.168.102.100:8200\"
+    leader_ca_cert_file     = \"/var/lib/vault/ca/ca_cert.pem\"
+    leader_client_cert_file = \"/var/lib/vault/certs/vault-cert.pem\"
+    leader_client_key_file  = \"/var/lib/vault/certs/vault-key.pem\"
+  }
+  retry_join {
+    leader_tls_servername   = \"192.168.102.101\"
+    leader_api_addr         = \"https://192.168.102.101:8200\"
+    leader_ca_cert_file     = \"/var/lib/vault/ca/ca_cert.pem\"
+    leader_client_cert_file = \"/var/lib/vault/certs/vault-cert.pem\"
+    leader_client_key_file  = \"/var/lib/vault/certs/vault-key.pem\"
+  }
+  retry_join {
+    leader_tls_servername   = \"192.168.102.101\"
+    leader_api_addr         = \"https://192.168.102.101:8200\"
+    leader_ca_cert_file     = \"/var/lib/vault/ca/ca_cert.pem\"
+    leader_client_cert_file = \"/var/lib/vault/certs/vault-cert.pem\"
+    leader_client_key_file  = \"/var/lib/vault/certs/vault-key.pem\"
+  }
+}
+      ";
+      extraConfig = "
+        ui = true
+        cluster_addr = \"https://{{ GetInterfaceIP \\\"enp2s0\\\" }}:8201\"
+        api_addr = \"https://{{ GetInterfaceIP \\\"enp2s0\\\" }}:8200\"
+        log_level = \"debug\"
+
+        service_registration \"consul\" {
+            address      = \"http://127.0.0.1:8500\"
+            service_tags =
+                \"traefik.enable=true,traefik.http.routers.vault.tls=true,traefik.http.routers.vault.tls.certresolver=home,traefik.http.services.vault.loadbalancer.server.scheme=https\"
+        }
+      ";
+  };
+
 
   networking.firewall.allowedUDPPorts = [ 1680 1700 8301];
   networking.firewall.allowedTCPPorts = [ 80 443 1883 3080 3443 3636 8300 8301 8500 8554 8600 ];
