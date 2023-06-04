@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "paperlessngx/paperless-ngx:1.15.0"
+  default     = "paperlessngx/paperless-ngx:1.15.1"
 }
 
 job "paperless-ngx" {
