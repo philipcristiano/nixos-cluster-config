@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "postgres:14.6"
+  default     = "postgres:15.3"
 }
 
 job "synapse-postgres-backup" {
