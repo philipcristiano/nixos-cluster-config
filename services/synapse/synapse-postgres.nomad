@@ -53,6 +53,7 @@ job "synapse-postgres" {
 
     task "app" {
       driver = "docker"
+      kill_timeout = "600s"
 
       config {
         image = var.image_id
