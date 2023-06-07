@@ -1,0 +1,7 @@
+path "pki_int/issue/nostr-rs-relay" {
+  capabilities = ["update"]
+}
+
+path "kv/data/nostr-rs-relay" {
+  capabilities = ["read"]
+}
