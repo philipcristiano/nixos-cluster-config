@@ -44,10 +44,6 @@ job "traefik" {
         static = 5436
       }
 
-      port "synapse-postgres" {
-        static = 5437
-      }
-
       port "paperless-redis" {
         static = 6380
       }
@@ -62,14 +58,6 @@ job "traefik" {
 
       port "frigate-rtsp" {
         static = 8554
-      }
-
-      port "homeassistant-whisper" {
-        static = 8082
-      }
-
-      port "homeassistant-piper" {
-        static = 8083
       }
 
       port "bitcoin-rpc" {
@@ -116,11 +104,6 @@ job "traefik" {
       config {
         image        = "traefik:v3.0"
         network_mode = "host"
-
-        ports = [
-            "homeassistant-whisper",
-            "homeassistant-piper",
-        ]
 
         volumes = [
           "local/traefik.toml:/etc/traefik/traefik.toml",
@@ -176,8 +159,6 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":5435"
     [entryPoints.baserow-postgres]
     address = ":5436"
-    [entryPoints.synapse-postgres]
-    address = ":5437"
     [entryPoints.redis-paperless-ngx]
     address = ":6380"
     [entryPoints.baserow-redis]
@@ -186,16 +167,19 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":8554"
     [entryPoints.traefik]
     address = ":8081"
-    [entryPoints.homeassistant-whisper]
-    address = ":8082"
-    [entryPoints.homeassistant-piper]
-    address = ":8083"
     [entryPoints.bitcoin-rpc]
     address = ":8882"
     [entryPoints.bitcoin-p2p]
     address = ":8883"
     [entryPoints.electrs]
     address = ":8884"
+
+# Consul derived ports
+{{range ls "traefik-ports/"}}
+    [entryPoints.{{.Key}}]
+    address = ":{{.Value}}"
+{{end}}
+
 [serversTransport]
   insecureSkipVerify = true
 [api]

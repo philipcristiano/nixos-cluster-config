@@ -142,7 +142,8 @@ database:
     password: {{ key "credentials/synapse-postgres/PASSWORD" }}
     database: {{ key "credentials/synapse-postgres/DB" }}
     host: synapse-postgres.{{ key "site/domain" }}
-    port: 5437
+    port: {{ key "traefik-ports/synapse-postgres" }}
+
     cp_min: 5
     cp_max: 10
 
