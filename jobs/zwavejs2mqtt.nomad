@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "zwavejs/zwave-js-ui:8.18.0"
+}
+
 job "zwavejs2mqtt" {
   datacenters = ["dc1"]
   type        = "service"
@@ -5,10 +11,15 @@ job "zwavejs2mqtt" {
   group "app" {
 
     restart {
-      attempts = 2
-      interval = "1m"
+      attempts = 1
+      interval = "5m"
       delay    = "10s"
       mode     = "delay"
+    }
+
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value     = "nixos02"
     }
 
     service {
@@ -73,7 +84,7 @@ job "zwavejs2mqtt" {
       driver = "docker"
 
       config {
-        image = "zwavejs/zwave-js-ui:8.13.0"
+        image = var.image_id
         ports = ["http", "websocket"]
   	devices = [
          {
