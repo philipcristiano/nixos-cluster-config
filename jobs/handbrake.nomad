@@ -1,10 +1,10 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "jlesage/handbrake:v23.04.1"
+  default     = "jlesage/handbrake:v23.06.1"
 }
 
-job "handbreak" {
+job "handbrake" {
   datacenters = ["dc1"]
   type        = "service"
 
