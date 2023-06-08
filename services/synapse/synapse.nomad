@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "matrixdotorg/synapse:v1.85.0"
+  default     = "matrixdotorg/synapse:v1.85.2"
 }
 
 variable "count" {
@@ -22,6 +22,9 @@ job "synapse" {
       max_parallel     = 1
       min_healthy_time = "30s"
       healthy_deadline = "5m"
+
+      auto_promote     = true
+      canary           = 1
     }
 
     restart {

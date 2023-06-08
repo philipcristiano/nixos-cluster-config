@@ -46,7 +46,7 @@ job "synapse-postgres-backup" {
 
 PGPASSWORD="{{ key "credentials/synapse-postgres/PASSWORD" }}"
 PGHOST="synapse-postgres.{{ key "site/domain" }}"
-PGPORT=5437
+PGPORT={{ key "traefik-ports/synapse-postgres" }}
 PGUSER="{{ key "credentials/synapse-postgres/USER" }}"
 PGDATABASE="{{ key "credentials/synapse-postgres/DB" }}"
 
