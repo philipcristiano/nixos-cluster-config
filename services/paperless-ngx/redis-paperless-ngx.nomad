@@ -230,11 +230,11 @@ job "redis-paperless-ngx" {
       #     https://www.nomadproject.io/docs/job-specification/service.html
       #
       service {
-        name = "redis-paperless-ngx"
+        name = "paperless-ngx-redis"
         tags = [
           "traefik.enable=true",
-          "traefik.tcp.routers.redis-paperless-ngx.entrypoints=redis-paperless-ngx",
-          "traefik.tcp.routers.redis-paperless-ngx.rule=HostSNI(`*`)",
+          "traefik.tcp.routers.paperless-ngx-redis.entrypoints=redis-paperless-ngx",
+          "traefik.tcp.routers.paperless-ngx-redis.rule=HostSNI(`*`)",
         ]
 
         port = "db"
@@ -256,12 +256,19 @@ job "redis-paperless-ngx" {
       #
       #     https://www.nomadproject.io/docs/job-specification/template.html
       #
-      # template {
-      #   data          = "---\nkey: {{ key \"service/my-key\" }}"
-      #   destination   = "local/file.yml"
-      #   change_mode   = "signal"
-      #   change_signal = "SIGHUP"
-      # }
+
+      template {
+        data          = <<EOF
+
+masteruser default
+requirepass {{ key "credentials/paperless-ngx-redis/password" }}
+
+EOF
+        destination   = "local/redis.conf"
+        change_mode   = "signal"
+        change_signal = "SIGHUP"
+      }
+
 
       # The "template" stanza can also be used to create environment variables
       # for tasks that prefer those to config files. The task will be restarted

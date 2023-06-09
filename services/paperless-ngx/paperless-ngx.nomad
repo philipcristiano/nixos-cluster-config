@@ -51,9 +51,32 @@ job "paperless-ngx" {
       attachment_mode = "file-system"
       access_mode     = "multi-node-multi-writer"
     }
+    task "prep-disk" {
+      driver = "docker"
+      volume_mount {
+        volume      = "storage"
+        destination = "/storage"
+        read_only   = false
+      }
+      config {
+        image        = "busybox:latest"
+        command      = "sh"
+        args         = ["-c", "mkdir -p /storage/data && chown -R 1000:1000 /storage && chmod 775 /storage"]
+      }
+      resources {
+        cpu    = 200
+        memory = 128
+      }
+
+      lifecycle {
+        hook    = "prestart"
+        sidecar = false
+      }
+    }
 
     task "app" {
       driver = "docker"
+      user = 1000
 
       config {
         image = var.image_id
@@ -81,7 +104,9 @@ job "paperless-ngx" {
           env = true
           destination = "local/file.env"
           data = <<EOF
-PAPERLESS_REDIS="redis://redis-paperless-ngx.{{ key "site/domain"}}:6380"
+
+PAPERLESS_DEBUG=no
+PAPERLESS_REDIS="redis://:@{{ key "credentials/paperless-ngx-redis/password" }}@redis-paperless-ngx.{{ key "site/domain"}}:{{ key "traefik-ports/paperless-ngx-redis" }}"
 PAPERLESS_URL="https://paperless-ngx.{{ key "site/domain"}}"
 PAPERLESS_TIKA_GOTENBERG_ENDPOINT=https://gotenberg.{{ key "site/domain"}}
 PAPERLESS_TIKA_ENDPOINT=https://tika.{{ key "site/domain"}}
@@ -95,8 +120,8 @@ EOF
           PAPERLESS_CONSUMER_POLLING = 10
           PAPERLESS_DBENGINE = "sqlite"
           PAPERLESS_TIKA_ENABLED = 1
-          USERMAP_UID = 0
-          USERMAP_GID = 0
+          USERMAP_UID = 1000
+          USERMAP_GID = 1000
       }
       template {
         destination = "local/docker_prepare.sh"
