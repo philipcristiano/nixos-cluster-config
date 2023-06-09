@@ -106,7 +106,7 @@ job "paperless-ngx" {
           data = <<EOF
 
 PAPERLESS_DEBUG=no
-PAPERLESS_REDIS="redis://:@{{ key "credentials/paperless-ngx-redis/password" }}@redis-paperless-ngx.{{ key "site/domain"}}:{{ key "traefik-ports/paperless-ngx-redis" }}"
+PAPERLESS_REDIS="redis://:{{ key "credentials/paperless-ngx-redis/password" }}@redis-paperless-ngx.{{ key "site/domain"}}:{{ key "traefik-ports/paperless-ngx-redis" }}"
 PAPERLESS_URL="https://paperless-ngx.{{ key "site/domain"}}"
 PAPERLESS_TIKA_GOTENBERG_ENDPOINT=https://gotenberg.{{ key "site/domain"}}
 PAPERLESS_TIKA_ENDPOINT=https://tika.{{ key "site/domain"}}
