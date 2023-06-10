@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/electrs:0.9.13"
+  default     = "philipcristiano/electrs:0.9.14"
 }
 
 job "electrs" {
