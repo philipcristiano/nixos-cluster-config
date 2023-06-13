@@ -56,8 +56,10 @@ nomad_client_class = "{{ env "node.class" }}"
   organization = "{{key "credentials/telegraf-system/organization"}}"
   token = "{{key "credentials/telegraf-system/influxdb_token"}}"
 [[inputs.cpu]]
+[[inputs.disk]]
 [[inputs.mem]]
 [[inputs.system]]
+[[inputs.temp]]
 
 [[inputs.nomad]]
 ## URL for the Nomad agent
