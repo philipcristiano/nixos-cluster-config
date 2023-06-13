@@ -1,7 +1,11 @@
-path "pki_int/issue/authentik" {
+path "pki_int/issue/synapse" {
   capabilities = ["update"]
 }
 
-path "kv/data/authentik" {
+path "kv/data/synapse" {
+  capabilities = ["read"]
+}
+
+path "kv/data/heisenbridge" {
   capabilities = ["read"]
 }

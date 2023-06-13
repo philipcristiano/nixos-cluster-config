@@ -98,6 +98,10 @@ job "synapse" {
       driver = "docker"
       user = 1000
 
+      vault {
+        policies = ["service-synapse"]
+      }
+
       config {
         image = var.image_id
         ports = ["http"]
@@ -158,7 +162,7 @@ signing_key_path: "/data/{{ key "site/public_domain" }}.signing.key"
 trusted_key_servers:
   - server_name: "matrix.org"
 
-registration_shared_secret: "shared-secret"
+# registration_shared_secret: "shared-secret"
 
 report_stats: true
 
@@ -166,7 +170,6 @@ report_stats: true
 # Application services
 app_service_config_files:
 - /local/heisenbridge.yaml
-- /local/matrix-hookshot.yaml
 
 EOF
       }
@@ -225,8 +228,12 @@ EOF
 
 id: heisenbridge
 url: https://heisenbridge.{{ key "site/domain" }}
-as_token: 7YH50TEKhiJjzz5JozVysW5lUsZZ6XozBhiocIfzbqUhDtekukhm53tMMgWNAqpt
-hs_token: weWgaUeQZ8brW5uqm2ZtkuAghzJkTwn1ABlcFGkqD25z1RupPkN7lcyZ6Wfk4caP
+
+{{with secret "kv/data/heisenbridge"}}
+as_token: "{{.Data.data.as_token}}"
+hs_token: "{{.Data.data.hs_token}}"
+{{end}}
+
 rate_limited: false
 sender_localpart: heisenbridge
 namespaces:
@@ -235,42 +242,6 @@ namespaces:
       exclusive: true
     aliases: []
     rooms: []
-
-EOF
-      }
-      template {
-          destination = "local/matrix-hookshot.yaml"
-          data = <<EOF
-
-id: matrix-hookshot # This can be anything, but must be unique within your homeserver
-as_token: kam2rty_crx_awq7PDH
-hs_token: yfw5TWU9nde8yuq-wcn
-namespaces:
-  rooms: []
-  users: # In the following, foobar is your homeserver's domain
-    - regex: "@_github_.*:{{ key "site/public_domain" }}"
-      exclusive: true
-    - regex: "@_gitlab_.*:{{ key "site/public_domain" }}"
-      exclusive: true
-    - regex: "@_jira_.*:{{ key "site/public_domain" }}"
-      exclusive: true
-    - regex: "@_webhooks_.*:{{ key "site/public_domain" }}" # Where _webhooks_ is set by userIdPrefix in config.yml
-      exclusive: true
-    - regex: "@feeds:{{ key "site/public_domain" }}" # Matches the localpart of all serviceBots in config.yml
-      exclusive: true
-  aliases:
-    - regex: "#github_.+:{{ key "site/public_domain" }}" # Where foobar is your homeserver's domain
-      exclusive: true
-
-sender_localpart: hookshot
-url: "https://matrix-hookshot.{{ key "site/domain" }}" # This should match the bridge.port in your config file
-rate_limited: false
-
-# If enabling encryption
-de.sorunome.msc2409.push_ephemeral: true
-push_ephemeral: true
-org.matrix.msc3202: true
-
 
 EOF
       }
