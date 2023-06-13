@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "telegraf:1.27.0"
+}
+
 job "telegraf-dc" {
   datacenters = ["dc1"]
   type        = "service"
@@ -14,7 +20,7 @@ job "telegraf-dc" {
     task "telegraf" {
       driver = "docker"
       config {
-        image        = "telegraf:1.22.3"
+        image        = var.image_id
         force_pull   = true
         entrypoint   = ["telegraf"]
         args = [
