@@ -1,0 +1,7 @@
+path "pki_int/issue/lemmy" {
+  capabilities = ["update"]
+}
+
+path "kv/data/lemmy" {
+  capabilities = ["read"]
+}
