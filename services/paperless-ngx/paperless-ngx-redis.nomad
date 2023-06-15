@@ -1,4 +1,10 @@
 
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "redis:7.0.11"
+}
+
 job "paperless-ngx-redis" {
 
   datacenters = ["dc1"]
@@ -41,7 +47,7 @@ job "paperless-ngx-redis" {
       driver = "docker"
 
       config {
-        image = "redis:7.0.7"
+        image = var.image_id
         ports = ["db"]
         args = ["/secrets/redis.conf"]
       }
