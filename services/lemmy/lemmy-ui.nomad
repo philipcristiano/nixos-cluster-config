@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "dessalines/lemmy-ui:0.17.3"
+  default     = "dessalines/lemmy-ui:0.17.4"
 }
 
 variable "count" {
@@ -41,9 +41,9 @@ job "lemmy-ui" {
       tags = [
         "traefik.enable=true",
 	      "traefik.http.routers.lemmy-ui.tls=true",
-        "traefik.http.routers.lemmy-ui.entrypoints=http,https",
+        "traefik.http.routers.lemmy-ui.entrypoints=http,https,http-public,https-public",
 	      "traefik.http.routers.lemmy-ui.tls.certresolver=home",
-        "traefik.http.routers.lemmy-ui.rule=Host(`lemmy.philipcristiano.com`) || Host(`lemmy.home.cristiano.cloud`)",
+        "traefik.http.routers.lemmy-ui.rule=(Host(`lemmy.philipcristiano.com`) || Host(`lemmy.home.cristiano.cloud`)) && !( Method(`POST`) || HeaderRegexp(`Accept`, `(?i)^application/.*$`) || PathRegexp(`^/(api|pictrs|feeds|nodeinfo|.well-known).*`))",
       ]
 
       check {
@@ -89,7 +89,7 @@ job "lemmy-ui" {
           data = <<EOF
 
 LEMMY_UI_LEMMY_INTERNAL_HOST="lemmy.{{ key "site/domain"}}"
-LEMMY_UI_LEMMY_EXTERNAL_HOST="lemmy.{{ key "site/domain"}}"
+LEMMY_UI_LEMMY_EXTERNAL_HOST="lemmy.{{ key "site/public_domain"}}"
 LEMMY_UI_HTTPS=true
 
 EOF
