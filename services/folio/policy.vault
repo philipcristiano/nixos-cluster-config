@@ -1,0 +1,7 @@
+path "pki_int/issue/folio" {
+  capabilities = ["update"]
+}
+
+path "kv/data/folio" {
+  capabilities = ["read"]
+}

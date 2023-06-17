@@ -104,12 +104,12 @@ EOF
           data = <<EOF
 MEMPOOL_BACKEND="none"
 CORE_RPC_HOST="bitcoin-rpc.{{ key "site/domain"}}"
-CORE_RPC_PORT="8882"
+CORE_RPC_PORT="{{ key "traefik-ports/bitcoin-rpc" }}"
 CORE_RPC_USERNAME="{{key "credentials/mempool/bitcoind_username"}}"
 CORE_RPC_PASSWORD="{{key "credentials/mempool/bitcoind_password"}}"
 DATABASE_ENABLED="true"
 DATABASE_HOST="mempool-mariadb.{{ key "site/domain"}}"
-DATABASE_PORT="5434"
+DATABASE_PORT="{{ key "traefik-ports/mempool-mariadb" }}"
 DATABASE_DATABASE="{{key "credentials/mempool/database"}}"
 DATABASE_USERNAME="{{key "credentials/mempool/database_username"}}"
 DATABASE_PASSWORD="{{key "credentials/mempool/database_password"}}"
@@ -117,7 +117,7 @@ STATISTICS_ENABLED="true"
 
 MEMPOOL_BACKEND= "electrum"
 ELECTRUM_HOST= "electrs.{{ key "site/domain" }}"
-ELECTRUM_PORT= "8884"
+ELECTRUM_PORT= "{{ key "traefik-ports/electrs" }}"
 ELECTRUM_TLS_ENABLED= "true"
 
 EOF
@@ -126,6 +126,7 @@ EOF
       resources {
         cpu    = 125
         memory = 1024
+        memory_max = 2048
       }
 
     }

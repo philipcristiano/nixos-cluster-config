@@ -134,10 +134,10 @@ job "electrs" {
           data = <<EOF
 
 # The listening RPC address of bitcoind, port is usually 8332
-daemon_rpc_addr = "bitcoin-rpc.{{ key "site/domain"}}:8882"
+daemon_rpc_addr = "bitcoin-rpc.{{ key "site/domain"}}:{{ key "traefik-ports/bitcoin-rpc" }}"
 
 # The listening P2P address of bitcoind, port is usually 8333
-daemon_p2p_addr = "bitcoin-p2p.{{ key "site/domain"}}:8883"
+daemon_p2p_addr = "bitcoin-p2p.{{ key "site/domain"}}:{{ key "traefik-ports/bitcoin-p2p" }}"
 
 monitoring_addr = "0.0.0.0:{{ env "NOMAD_PORT_prometheus" }}"
 

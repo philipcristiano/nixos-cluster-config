@@ -10,20 +10,31 @@ job "folio" {
       delay    = "10s"
       mode     = "delay"
     }
+
+    update {
+      max_parallel     = 1
+      min_healthy_time = "30s"
+      healthy_deadline = "5m"
+
+      auto_promote     = true
+      canary           = 1
+    }
+
     service {
       name = "folio"
       port = "http"
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.folio.tls=true",
-	      "traefik.http.routers.folio.tls.certresolver=home",
+	    "traefik.http.routers.folio.tls=true",
+	    "traefik.http.routers.folio.tls.certresolver=home",
       ]
 
       check {
         name     = "alive"
-        type     = "tcp"
+        type     = "http"
         port     = "http"
+        path     = "/"
         interval = "10s"
         timeout  = "2s"
       }
@@ -39,7 +50,7 @@ job "folio" {
       driver = "docker"
 
       config {
-        image = "philipcristiano/folio:sha-4ceb65d"
+        image = "philipcristiano/folio:sha-9ee5620"
         ports = ["http"]
       }
       env {
@@ -53,7 +64,7 @@ job "folio" {
 OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-grpc.{{ key "site/domain" }}:443
 OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 PGHOST=folio-postgres.{{ key "site/domain" }}
-PGPORT=5433
+PGPORT={{ key "traefik-ports/folio-postgres" }}
 PGUSER={{ key "credentials/folio-postgres/USER" }}
 PGPASSWORD={{ key "credentials/folio-postgres/PASSWORD" }}
 PGDATABASE={{ key "credentials/folio-postgres/DB" }}

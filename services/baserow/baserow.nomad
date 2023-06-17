@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "baserow/baserow:1.17.0"
+}
+
 job "baserow" {
   datacenters = ["dc1"]
   type        = "service"
@@ -72,7 +78,7 @@ job "baserow" {
 
       config {
         # entrypoint = ["sleep", "10000"]
-        image = "baserow/baserow:1.16.0"
+        image = var.image_id
         ports = ["http"]
       }
       env {
@@ -91,13 +97,13 @@ OTEL_SERVICE_NAME=baserow_servicename
 
 BASEROW_PUBLIC_URL=https://baserow.{{ key "site/domain" }}
 DATABASE_HOST=baserow-postgres.{{ key "site/domain" }}
-DATABASE_PORT=5436
+DATABASE_PORT={{ key "traefik-ports/baserow-postgres" }}
 DATABASE_USER={{ key "credentials/baserow-postgres/USER" }}
 DATABASE_PASSWORD={{ key "credentials/baserow-postgres/PASSWORD" }}
 DATABASE_NAME={{ key "credentials/baserow-postgres/DB" }}
 
 REDIS_HOST=baserow-redis.{{ key "site/domain" }}
-REDIS_PORT=6381
+REDIS_PORT={{ key "traefik-ports/baserow-redis" }}
 REDIS_USER=default
 REDIS_PASSWORD={{ key "credentials/baserow-redis/password" }}
 

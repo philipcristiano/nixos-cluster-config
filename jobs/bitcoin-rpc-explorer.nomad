@@ -65,7 +65,7 @@ job "bitcoin-rpc-explorer" {
 BTCEXP_SECURE_SITE=true
 
 BTCEXP_BITCOIND_HOST="bitcoin-rpc.{{ key "site/domain"}}"
-BTCEXP_BITCOIND_PORT=8882
+BTCEXP_BITCOIND_PORT={{ key "traefik-ports/electrs" }}
 BTCEXP_BITCOIND_USER={{key "credentials/bitcoin-rpc-explorer/bitcoind_username"}}
 BTCEXP_BITCOIND_PASS={{key "credentials/bitcoin-rpc-explorer/bitcoind_password"}}
 BTCEXP_BITCOIND_RPC_TIMEOUT=5000

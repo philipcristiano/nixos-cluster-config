@@ -1,0 +1,7 @@
+path "pki_int/issue/mempool" {
+  capabilities = ["update"]
+}
+
+path "kv/data/mempool" {
+  capabilities = ["read"]
+}
