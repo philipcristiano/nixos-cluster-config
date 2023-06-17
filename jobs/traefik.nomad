@@ -32,40 +32,8 @@ job "traefik" {
         static = 443
       }
 
-      port "folio-postgres" {
-        static = 5433
-      }
-
-      port "mattermost-postgres" {
-        static = 5435
-      }
-
-      port "baserow-postgres" {
-        static = 5436
-      }
-
-      port "baserow-redis" {
-        static = 6381
-      }
-
       port "api" {
         static = 8081
-      }
-
-      port "frigate-rtsp" {
-        static = 8554
-      }
-
-      port "bitcoin-rpc" {
-        static = 8882
-      }
-
-      port "bitcoin-p2p-tcp" {
-        static = 8883
-      }
-
-      port "electrs-tcp" {
-        static = 8884
       }
 
       port "lorawan-server-udp" {
@@ -119,6 +87,7 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 
     ## PUBLIC ACCESS ENTRYPOINTS
 
+    [entryPoints.http-public]
     address = ":3080"
       [entryPoints.http-public.http.redirections]
         [entryPoints.http-public.http.redirections.entryPoint]
@@ -145,28 +114,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     address = ":1700/udp"
       [entryPoints.lorawan-server-udp.udp]
       timeout= "120s"
-    [entryPoints.mqtt]
-    address = ":1883"
-    [entryPoints.folio-postgres]
-    address = ":5433"
-    [entryPoints.mempool-mariadb]
-    address = ":5434"
-    [entryPoints.mattermost-postgres]
-    address = ":5435"
-    [entryPoints.baserow-postgres]
-    address = ":5436"
-    [entryPoints.baserow-redis]
-    address = ":6381"
-    [entryPoints.frigate-rtsp]
-    address = ":8554"
     [entryPoints.traefik]
     address = ":8081"
-    [entryPoints.bitcoin-rpc]
-    address = ":8882"
-    [entryPoints.bitcoin-p2p]
-    address = ":8883"
-    [entryPoints.electrs]
-    address = ":8884"
 
 # Consul derived ports
 {{range ls "traefik-ports/"}}
@@ -194,6 +143,17 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 
     [tracing.openTelemetry.grpc]
 
+
+[metrics]
+  [metrics.influxDB2]
+    address= "influxdb.{{ key "site/domain" }}:443"
+    org = "{{ key "credentials/traefik/influxdb_organization"}}"
+    bucket = "{{ key "credentials/traefik/influxdb_bucket"}}"
+    token = "{{ key "credentials/traefik/influxdb_token"}}"
+    addEntryPointsLabels = true
+    addRoutersLabels = true
+    addServicesLabels = true
+
 # Enable Consul Catalog configuration backend.
 [providers.consulCatalog]
     prefix           = "traefik"
@@ -210,6 +170,14 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
            storage = "alloc/data/acme.json"
            [certificatesResolvers.home.acme.dnsChallenge]
              provider = "dnsimple"
+
+[tls.stores]
+  [tls.stores.default.defaultGeneratedCert]
+    resolver = "home"
+    [tls.stores.default.defaultGeneratedCert.domain]
+      main = "home.cristiano.cloud"
+      sans = ["*.home.cristiano.cloud"]
+
 EOF
 
         destination = "local/traefik.toml"
