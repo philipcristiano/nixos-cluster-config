@@ -1,0 +1,7 @@
+path "pki_int/issue/fasten" {
+  capabilities = ["update"]
+}
+
+path "kv/data/fasten" {
+  capabilities = ["read"]
+}
