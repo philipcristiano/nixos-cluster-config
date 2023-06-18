@@ -1,0 +1,7 @@
+path "pki_int/issue/bitcoin" {
+  capabilities = ["update"]
+}
+
+path "kv/data/bitcoin" {
+  capabilities = ["read"]
+}

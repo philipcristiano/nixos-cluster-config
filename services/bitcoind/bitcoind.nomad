@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "philipcristiano/bitcoin-core:25.0"
+}
+
 job "bitcoind" {
   datacenters = ["dc1"]
   type        = "service"
@@ -57,7 +63,6 @@ job "bitcoind" {
       port "p2p" {
   	    to = 8333
       }
-
     }
 
     volume "bitcoind" {
@@ -95,8 +100,12 @@ job "bitcoind" {
       driver = "docker"
       kill_timeout = "600s"
 
+      vault {
+        policies = ["service-bitcoind"]
+      }
+
       config {
-        image = "ruimarinho/bitcoin-core:23.0"
+        image = var.image_id
         ports = ["rpc", "p2p"]
         args = ["-printtoconsole",
                 "-rpcallowip=0.0.0.0/0",
