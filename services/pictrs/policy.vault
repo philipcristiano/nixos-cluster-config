@@ -1,0 +1,7 @@
+path "pki_int/issue/pictrs" {
+  capabilities = ["update"]
+}
+
+path "kv/data/pictrs" {
+  capabilities = ["read"]
+}
