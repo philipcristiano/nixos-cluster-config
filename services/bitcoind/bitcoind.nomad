@@ -112,6 +112,7 @@ job "bitcoind" {
                 "-rpcbind=0.0.0.0",
                 "-rpccookiefile=/alloc/data/cookiefile",
                 "-conf=/local/bitcoin.conf",
+                "-datadir=/data",
         ]
 
         mount = {

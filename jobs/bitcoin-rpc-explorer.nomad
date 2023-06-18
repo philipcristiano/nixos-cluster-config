@@ -65,13 +65,13 @@ job "bitcoin-rpc-explorer" {
 BTCEXP_SECURE_SITE=true
 
 BTCEXP_BITCOIND_HOST="bitcoin-rpc.{{ key "site/domain"}}"
-BTCEXP_BITCOIND_PORT={{ key "traefik-ports/electrs" }}
+BTCEXP_BITCOIND_PORT={{ key "traefik-ports/bitcoin-rpc" }}
 BTCEXP_BITCOIND_USER={{key "credentials/bitcoin-rpc-explorer/bitcoind_username"}}
 BTCEXP_BITCOIND_PASS={{key "credentials/bitcoin-rpc-explorer/bitcoind_password"}}
 BTCEXP_BITCOIND_RPC_TIMEOUT=5000
 
 BTCEXP_ADDRESS_API=electrum
-BTCEXP_ELECTRUM_SERVERS=tls://electrs.{{ key "site/domain" }}:8884
+BTCEXP_ELECTRUM_SERVERS=tls://electrs.{{ key "site/domain" }}:{{ key "traefik-ports/electrs" }}
 DEBUG=btcexp:*
 
 EOF
