@@ -67,6 +67,10 @@ job "lemmy" {
       driver = "docker"
       user = 1000
 
+      vault {
+        policies = ["service-lemmy"]
+      }
+
       config {
         image = var.image_id
         ports = ["http"]
@@ -74,9 +78,9 @@ job "lemmy" {
       }
 
       resources {
-        cpu    = 100
-        memory = 512
-        memory_max = 1024
+        cpu    = 50
+        memory = 32
+        memory_max = 256
       }
 
       env = {
@@ -110,7 +114,7 @@ job "lemmy" {
     # Address where pictrs is available (for image hosting)
     url: "https://pictrs.{{ key "site/domain"}}/"
     # Set a custom pictrs API key. ( Required for deleting images )
-    api_key: "string"
+    api_key: "{{with secret "kv/data/pictrs"}}{{.Data.data.api_key}}{{end}}"
   }
   # Email sending configuration. All options except login/password are mandatory
   email: {

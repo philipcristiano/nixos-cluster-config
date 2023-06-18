@@ -5,3 +5,7 @@ path "pki_int/issue/lemmy" {
 path "kv/data/lemmy" {
   capabilities = ["read"]
 }
+
+path "kv/data/pictrs" {
+  capabilities = ["read"]
+}
