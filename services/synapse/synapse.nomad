@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "matrixdotorg/synapse:v1.85.2"
+  default     = "matrixdotorg/synapse:v1.86.0"
 }
 
 variable "count" {
