@@ -38,24 +38,24 @@ job "paperless-ngx" {
     }
 
     # Won't work while paperless disables celery mingle/gossip
-    #service {
-    #  name = "paperless-ngx-celery"
+    service {
+      name = "paperless-ngx-celery"
 
-    #  check {
-    #    name     = "alive"
-    #    type     = "script"
-    #    task     = "app"
-    #    command     = "celery"
-    #    args        = [
-    #        "-A",
-    #        "paperless",
-    #        "inspect",
-    #        "ping",
-    #    ]
-    #    interval = "10s"
-    #    timeout  = "2s"
-    #  }
-    #}
+      check {
+        name     = "alive"
+        type     = "script"
+        task     = "app"
+        command     = "celery"
+        args        = [
+            "-A",
+            "paperless",
+            "inspect",
+            "ping",
+        ]
+        interval = "10s"
+        timeout  = "30s"
+      }
+    }
 
     network {
       port "http" {
