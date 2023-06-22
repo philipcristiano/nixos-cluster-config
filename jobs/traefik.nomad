@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "traefik:v3.0.0-beta2"
+}
+
 variable "ip" {
   type        = string
   description = "The IP address for the floating IP/binding."
@@ -66,7 +72,7 @@ job "traefik" {
       driver = "docker"
 
       config {
-        image        = "traefik:v3.0"
+        image        = var.image_id
         network_mode = "host"
 
         volumes = [
