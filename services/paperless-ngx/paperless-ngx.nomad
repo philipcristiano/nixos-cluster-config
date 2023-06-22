@@ -37,11 +37,31 @@ job "paperless-ngx" {
       }
     }
 
+    # Won't work while paperless disables celery mingle/gossip
+    #service {
+    #  name = "paperless-ngx-celery"
+
+    #  check {
+    #    name     = "alive"
+    #    type     = "script"
+    #    task     = "app"
+    #    command     = "celery"
+    #    args        = [
+    #        "-A",
+    #        "paperless",
+    #        "inspect",
+    #        "ping",
+    #    ]
+    #    interval = "10s"
+    #    timeout  = "2s"
+    #  }
+    #}
 
     network {
       port "http" {
   	    to = 8000
       }
+
     }
 
     volume "storage" {
@@ -62,6 +82,7 @@ job "paperless-ngx" {
         image        = "busybox:latest"
         command      = "sh"
         args         = ["-c", "mkdir -p /storage/data && chown -R 1000:1000 /storage && chmod 775 /storage"]
+
       }
       resources {
         cpu    = 200
@@ -82,7 +103,9 @@ job "paperless-ngx" {
         image = var.image_id
         ports = ["http"]
 
-        mount = {
+        # entrypoint = ["sleep", "10000"]
+
+        mount {
           type     = "bind"
           source   = "local/docker_prepare.sh"
           target   = "/sbin/docker-prepare.sh"
@@ -102,29 +125,40 @@ job "paperless-ngx" {
 
       template {
           env = true
+          destination = "secrets/file.env"
+          data = <<EOF
+
+PAPERLESS_REDIS="redis://:{{ key "credentials/paperless-ngx-redis/password" }}@paperless-ngx-redis.{{ key "site/domain"}}:{{ key "traefik-ports/paperless-ngx-redis" }}"
+EOF
+      }
+
+      template {
+          env = true
           destination = "local/file.env"
           data = <<EOF
 
 PAPERLESS_DEBUG=no
 # CELERYD_REDIRECT_STDOUTS_LEVEL=debug
+PAPERLESS_ENABLE_FLOWER=true
 
-PAPERLESS_REDIS="redis://:{{ key "credentials/paperless-ngx-redis/password" }}@paperless-ngx-redis.{{ key "site/domain"}}:{{ key "traefik-ports/paperless-ngx-redis" }}"
+# PAPERLESS_REDIS="redis://paperless-ngx-redis.{{ key "site/domain"}}:{{ key "traefik-ports/paperless-ngx-redis" }}"
 PAPERLESS_URL="https://paperless-ngx.{{ key "site/domain"}}"
 PAPERLESS_TIKA_GOTENBERG_ENDPOINT=https://gotenberg.{{ key "site/domain"}}
 PAPERLESS_TIKA_ENDPOINT=https://tika.{{ key "site/domain"}}
+
+
+PAPERLESS_DATA_DIR = "/data/paperless/data"
+PAPERLESS_CONSUMPTION_DIR = "/data/paperless/consume"
+PAPERLESS_MEDIA_ROOT = "/data/paperless/data"
+PAPERLESS_CONSUMER_POLLING = 10
+PAPERLESS_DBENGINE = "sqlite"
+PAPERLESS_TIKA_ENABLED = 1
+USERMAP_UID = 1000
+USERMAP_GID = 1000
+
 EOF
       }
 
-      env {
-          PAPERLESS_DATA_DIR = "/data/paperless/data"
-          PAPERLESS_CONSUMPTION_DIR = "/data/paperless/consume"
-          PAPERLESS_MEDIA_ROOT = "/data/paperless/data"
-          PAPERLESS_CONSUMER_POLLING = 10
-          PAPERLESS_DBENGINE = "sqlite"
-          PAPERLESS_TIKA_ENABLED = 1
-          USERMAP_UID = 1000
-          USERMAP_GID = 1000
-      }
       template {
         destination = "local/docker_prepare.sh"
         perms = "655"
