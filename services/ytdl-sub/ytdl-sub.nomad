@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "ghcr.io/jmbannon/ytdl-sub@sha256:ff63d940ad3cb71305d5dfef70acbbdfcea58fbfb1fbfd6cac779040fa2f9d3e" # ubuntu-latest as of 2023-06-20
+  default     = "ghcr.io/jmbannon/ytdl-sub@sha256:57f003d8602a03e0633b55e6eec0a374e620fb584b2405cd0fc901866f9528ed" # ubuntu-latest as of 2023-06-22
 }
 
 job "ytdl-sub" {
