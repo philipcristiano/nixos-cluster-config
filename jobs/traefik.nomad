@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "traefik:v3.0.0-beta2"
+  default     = "traefik:v3.0.0-beta3"
 }
 
 variable "ip" {
