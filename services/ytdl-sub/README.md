@@ -1,5 +1,10 @@
 # ytdl-sub
 
+Deploys 2 jobs:
+
+* ytdl-sub: Periodic job with Consul-defined subscription
+* ytdl-sub-once: Parameterized single download of files
+
 ## Consul
 
 `youtube_subscriptions` lists each subscription in the format
@@ -12,3 +17,4 @@
 
     * `tv_show_name` - Name of the show / channel / playlist that you want to be visible
     * `url` - The URL of the Youtube channel/playlist
+

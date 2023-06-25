@@ -3,13 +3,12 @@ variable "image_id" {
   description = "The docker image used for task."
 }
 
-job "ytdl-sub" {
+job "ytdl-sub-once" {
   datacenters = ["dc1"]
   type        = "batch"
 
-  periodic {
-    cron             = "0 22 * * * *"
-    prohibit_overlap = true
+  parameterized {
+    meta_required = ["tv_show_name", "url"]
   }
 
   group "app" {
@@ -76,8 +75,10 @@ job "ytdl-sub" {
 
         args = [
           "-c", "/local/config.yaml",
-          "sub",
-          "/local/subscriptions.yaml"
+          "dl",
+          "--preset", "tv_show",
+          "--overrides.tv_show_name", "${NOMAD_META_tv_show_name}",
+          "--overrides.url", "${NOMAD_META_url}",
         ]
 
       }
@@ -88,16 +89,6 @@ job "ytdl-sub" {
       template {
           destination = "local/subscriptions.yaml"
           data = <<EOF
-
-
-{{ range $key, $pairs := safeTree "youtube_subscriptions" | byKey }}
-
-{{ $key }}:
-  preset:
-    - "tv_show"
-  overrides:
-{{ range $pair := $pairs }}
-    {{ .Key }}: "{{ .Value }}"{{ end }}{{ end }}
 
 EOF
       }
