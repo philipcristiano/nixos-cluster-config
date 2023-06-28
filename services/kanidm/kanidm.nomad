@@ -22,8 +22,8 @@ job "kanidm" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.kanidm.tls=true",
-	    "traefik.http.routers.kanidm.tls.certresolver=home",
+	      "traefik.http.routers.kanidm.tls=true",
+	      "traefik.http.routers.kanidm.tls.certresolver=home",
         "traefik.http.services.kanidm.loadbalancer.server.scheme=https",
       ]
 
