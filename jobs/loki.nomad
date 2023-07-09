@@ -16,8 +16,8 @@ job "loki" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.loki.tls=true",
-	"traefik.http.routers.loki.tls.certresolver=home",
+	      "traefik.http.routers.loki.tls=true",
+	      "traefik.http.routers.loki.tls.certresolver=home",
       ]
 
       check {
@@ -76,6 +76,11 @@ job "loki" {
       config {
         image = var.image_id
         ports = ["http"]
+
+        args = [
+          "-config.file", "local/config.yaml"
+        ]
+
       }
 
       volume_mount {
@@ -83,20 +88,24 @@ job "loki" {
         destination = "/storage/"
       }
       template {
-	destination = "/etc/local-config.yaml"
+	      destination = "local/config.yaml"
         data =  <<EOF
 auth_enabled: false
 
 server:
-  http_listen_port: ${ NOMAD_PORT_http }
-  grpc_listen_port: ${ NOMAD_PORT_grpc }
+  http_listen_port: {{ env "NOMAD_PORT_http" }}
+  grpc_listen_port: {{ env "NOMAD_PORT_grpc" }}
+
+storage_config:
+  filesystem:
+    directory: /storage/loki
+  boltdb_shipper:
+    active_index_directory: /storage/index
+    shared_store: filesystem
+    cache_location: /storage/boltdb-cache
 
 common:
   path_prefix: /storage/loki
-  storage:
-    filesystem:
-      chunks_directory: /storage/loki/chunks
-      rules_directory: /storage/loki/rules
   replication_factor: 1
   ring:
     instance_addr: 127.0.0.1
@@ -113,14 +122,22 @@ schema_config:
         prefix: index_
         period: 24h
 
+limits_config:
+  retention_period: 7d
+
+table_manager:
+  retention_deletes_enabled: true
+  retention_period: 168h
+
 ruler:
   alertmanager_url: http://localhost:9093
-      EOF
+EOF
       }
 
       resources {
-        cpu    = 1000
-        memory = 1024
+        cpu    = 100
+        memory = 256
+        memory_max = 1024
       }
 
     }
