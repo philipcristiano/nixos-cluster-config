@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "registry.gitlab.com/hectorjsmith/grafana-matrix-forwarder:0.7.0"
+  default     = "registry.gitlab.com/hectorjsmith/grafana-matrix-forwarder:0.8.0"
 }
 
 job "grafana-matrix-forwarder" {
