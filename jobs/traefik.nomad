@@ -152,7 +152,7 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 
 [metrics]
   [metrics.influxDB2]
-    address= "influxdb.{{ key "site/domain" }}:443"
+    address= "https://influxdb.{{ key "site/domain" }}:443"
     org = "{{ key "credentials/traefik/influxdb_organization"}}"
     bucket = "{{ key "credentials/traefik/influxdb_bucket"}}"
     token = "{{ key "credentials/traefik/influxdb_token"}}"
