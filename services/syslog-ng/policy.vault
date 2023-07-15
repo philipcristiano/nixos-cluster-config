@@ -1,0 +1,7 @@
+path "pki_int/issue/syslog-ng" {
+  capabilities = ["update"]
+}
+
+path "kv/data/syslog-ng" {
+  capabilities = ["read"]
+}
