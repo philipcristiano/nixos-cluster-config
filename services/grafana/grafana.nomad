@@ -55,6 +55,10 @@ job "grafana" {
     task "app" {
       driver = "docker"
 
+      vault {
+        policies = ["service-grafana"]
+      }
+
       config {
         image = var.image_id
         ports = ["http"]
@@ -73,6 +77,8 @@ GF_SERVER_ROOT_URL="https://grafana.{{ key "site/domain" }}"
 GF_RENDERING_SERVER_URL="https://grafana-image-renderer.{{ key "site/domain" }}/render"
 GF_RENDERING_CALLBACK_URL="https://grafana.{{ key "site/domain" }}"
 GF_LOG_FILTERS="rendering:debug"
+GF_RENDERING_RENDERER_TOKEN="{{with secret "kv/data/grafana"}}{{.Data.data.image_renderer_auth_token}}{{end}}"
+
 
 EOF
       }

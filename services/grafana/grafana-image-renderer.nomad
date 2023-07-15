@@ -47,9 +47,23 @@ job "grafana-image-renderer" {
     task "app" {
       driver = "docker"
 
+      vault {
+        policies = ["service-grafana"]
+      }
+
       config {
         image = var.image_id
         ports = ["http"]
+      }
+
+      template {
+          destination = "local/app.env"
+          env = true
+          data = <<EOF
+
+AUTH_TOKEN="{{with secret "kv/data/grafana"}}{{.Data.data.image_renderer_auth_token}}{{end}}"
+
+EOF
       }
 
       resources {
