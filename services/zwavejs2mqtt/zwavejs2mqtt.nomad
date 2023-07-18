@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "zwavejs/zwave-js-ui:8.18.0"
+  default     = "zwavejs/zwave-js-ui:8.21.0"
 }
 
 job "zwavejs2mqtt" {
@@ -16,10 +16,11 @@ job "zwavejs2mqtt" {
       delay    = "10s"
       mode     = "delay"
     }
-
-    constraint {
-      attribute = "${attr.unique.hostname}"
-      value     = "nixos02"
+    reschedule {
+      delay          = "10s"
+      delay_function = "exponential"
+      max_delay      = "5m"
+      unlimited      = true
     }
 
     service {
@@ -28,9 +29,8 @@ job "zwavejs2mqtt" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.zwavejs.tls=true",
-	"traefik.http.routers.zwavejs.tls.certresolver=home",
-	#"traefik.http.routers.zwavejs.entrypoints=http,https",
+	    "traefik.http.routers.zwavejs.tls=true",
+	    "traefik.http.routers.zwavejs.tls.certresolver=home",
       ]
 
       check {
@@ -101,8 +101,9 @@ job "zwavejs2mqtt" {
       }
 
       resources {
-        cpu    = 500
-        memory = 256
+        cpu    = 50
+        memory = 192
+        memory_max = 512
 
         # device "usb" {
         #    constraint {
