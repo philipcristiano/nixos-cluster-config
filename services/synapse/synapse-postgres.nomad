@@ -83,6 +83,7 @@ POSTGRES_{{.Key}}={{.Value}}
       resources {
         cpu    = 128
         memory = 512
+        memory_max = 2048
       }
 
     }
