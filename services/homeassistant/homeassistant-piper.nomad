@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "rhasspy/wyoming-piper@sha256:e62fa006b6fccda2f1be2f1fd8229bc6c1139b8adeb2e6d479f411e628bb1c90" # latest as of 2023-05-31
+  default     = "rhasspy/wyoming-piper:1.1.0"
 }
 
 job "homeassistant-piper" {

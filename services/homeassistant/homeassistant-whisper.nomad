@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "rhasspy/wyoming-whisper@sha256:785eb53debbb1d1c170f75aa5a3bdf0ea1a57b3a747641ea5f309a2e9dd3bfc4" # latest as of 2023-05-31
+  default     = "rhasspy/wyoming-whisper:0.0.3"
 }
 
 job "homeassistant-whisper" {
