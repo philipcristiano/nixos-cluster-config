@@ -41,9 +41,10 @@ job "gocast" {
         image        = "philipcristiano/gocast:sha-4067c22"
         network_mode = "host"
 
-	args = ["-config=/local/config.yaml", "-logtostderr", "-v=2"]
+	    args = ["-config=/local/config.yaml", "-logtostderr", "-v=2"]
 
-	cap_add = ["net_admin"]
+	    cap_add = ["net_admin", "net_raw"]
+        privileged = true
 
       }
       template {
