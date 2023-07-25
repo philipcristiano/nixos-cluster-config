@@ -10,12 +10,6 @@ job "zwavejs2mqtt" {
 
   group "app" {
 
-    restart {
-      attempts = 1
-      interval = "5m"
-      delay    = "10s"
-      mode     = "delay"
-    }
     reschedule {
       delay          = "10s"
       delay_function = "exponential"
