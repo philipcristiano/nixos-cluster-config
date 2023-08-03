@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "homeassistant/home-assistant:2023.7.3"
+  default     = "homeassistant/home-assistant:2023.8.0"
 }
 
 job "homeassistant" {
