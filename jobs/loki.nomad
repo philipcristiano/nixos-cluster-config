@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/loki:2.8.3"
+  default     = "grafana/loki:2.8.4"
 }
 
 job "loki" {

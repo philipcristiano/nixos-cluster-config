@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/promtail:2.8.2"
+  default     = "grafana/promtail:2.8.4"
 }
 
 job "promtail" {

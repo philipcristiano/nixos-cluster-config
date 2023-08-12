@@ -7,7 +7,7 @@ variable "syslog_image_id" {
 variable "promtail_image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/promtail:2.8.2"
+  default     = "grafana/promtail:2.8.4"
 }
 
 variable "count" {
