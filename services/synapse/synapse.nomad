@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "matrixdotorg/synapse:v1.88.0"
+  default     = "matrixdotorg/synapse:v1.90.0"
 }
 
 variable "count" {
@@ -40,7 +40,7 @@ job "synapse" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.synapse.tls=true",
+	      "traefik.http.routers.synapse.tls=true",
         "traefik.http.routers.synapse.entrypoints=http,https,http-public,https-public",
         "traefik.http.routers.synapse.rule=( Host(`matrix.philipcristiano.com`)  && !PathPrefix(`/_synapse/admin`) && !PathPrefix(`/_synapse/metrics`) ) || Host(`matrix.home.cristiano.cloud`)",
 	    "traefik.http.routers.synapse.tls.certresolver=home",
@@ -81,11 +81,12 @@ job "synapse" {
       config {
         image        = "busybox:latest"
         command      = "sh"
-        args         = ["-c", "mkdir -p /storage/data && chown -R 1000:1000 /storage && chmod 775 /storage"]
+        args         = ["-c", "mkdir -p /storage && chown -R 1000:1000 /storage && chmod 775 /storage"]
       }
       resources {
         cpu    = 200
         memory = 128
+        memory_max = 512
       }
 
       lifecycle {
@@ -130,6 +131,7 @@ job "synapse" {
 # each option, go to docs/usage/configuration/config_documentation.md or
 # https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html
 server_name: "{{ key "site/public_domain" }}"
+public_baseurl: https://matrix.{{ key "site/public_domain"}}/
 pid_file: /homeserver.pid
 listeners:
   - port: {{ env "NOMAD_PORT_http" }}
@@ -153,6 +155,23 @@ database:
 
     cp_min: 5
     cp_max: 10
+
+{{with secret "kv/data/synapse"}}
+oidc_providers:
+  - idp_id: kanidm
+    idp_name: "SSO"
+    issuer: "https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.OAUTH_CLIENT_ID }}"
+    pkce_method: always
+    allow_existing_users: true
+    client_id: "{{.Data.data.OAUTH_CLIENT_ID }}"
+    client_secret: "{{.Data.data.OAUTH_CLIENT_SECRET }}"
+    scopes: ["openid", "profile"]
+    user_mapping_provider:
+      config:
+        localpart_template: "{{"{{"}} user.name {{"}}"}}"
+        display_name_template: "{{"{{"}} user.name {{"}}"}}"
+    # backchannel_logout_enabled: true # Optional
+{{ end }}
 
 enable_metrics: true
 
