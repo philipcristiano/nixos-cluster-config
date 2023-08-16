@@ -77,7 +77,22 @@ GF_SERVER_ROOT_URL="https://grafana.{{ key "site/domain" }}"
 GF_RENDERING_SERVER_URL="https://grafana-image-renderer.{{ key "site/domain" }}/render"
 GF_RENDERING_CALLBACK_URL="https://grafana.{{ key "site/domain" }}"
 GF_LOG_FILTERS="rendering:debug"
-GF_RENDERING_RENDERER_TOKEN="{{with secret "kv/data/grafana"}}{{.Data.data.image_renderer_auth_token}}{{end}}"
+
+{{with secret "kv/data/grafana"}}
+GF_RENDERING_RENDERER_TOKEN="{{.Data.data.image_renderer_auth_token}}"
+
+GF_AUTH_GENERIC_OAUTH_ENABLED=true
+GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP = true
+GF_AUTH_GENERIC_OAUTH_AUTO_LOGIN = false
+GF_AUTH_GENERIC_OAUTH_CLIENT_ID = {{.Data.data.OAUTH_CLIENT_ID }}
+GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET = {{.Data.data.OAUTH_CLIENT_SECRET }}
+GF_AUTH_GENERIC_OAUTH_SCOPES = openid email profile
+GF_AUTH_GENERIC_OAUTH_AUTH_URL = https://kanidm.{{ key "site/domain"}}/ui/oauth2
+GF_AUTH_GENERIC_OAUTH_TOKEN_URL = https://kanidm.{{ key "site/domain"}}/oauth2/token
+GF_AUTH_GENERIC_OAUTH_API_URL = https://kanidm.{{ key "site/domain"}}/oauth2/openid/grafana/userinfo
+GF_AUTH_GENERIC_OAUTH_USE_PKCE = true
+
+{{end}}
 
 
 EOF
