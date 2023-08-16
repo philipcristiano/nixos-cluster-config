@@ -10,12 +10,12 @@ job "calibre-web" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.calibre.tls=true",
-	"traefik.http.routers.calibre.tls.certresolver=home",
+	      "traefik.http.routers.calibre.tls=true",
+	      "traefik.http.routers.calibre.tls.certresolver=home",
       ]
 
       check {
-        name     = "loki"
+        name     = "http"
         type     = "tcp"
         port     = "http"
         interval = "10s"
@@ -72,6 +72,7 @@ job "calibre-web" {
       resources {
         cpu    = 100
         memory = 1000
+        memory_max = 2000
       }
 
       env = {
@@ -95,9 +96,9 @@ EOF
       template {
           destination = "local/ca.pem"
           data = <<EOF
-{{ with secret "/pki/issuer/default/json"}}
-{{ .Data.certificate }}
-{{ end }}
+{{- with secret "/pki/issuer/default/json" -}}
+{{- .Data.certificate -}}
+{{- end -}}
 EOF
       }
     }
