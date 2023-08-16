@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "kanidm/tools:latest"
+  default     = "kanidm/tools:1.1.0-beta.13"
 }
 
 job "kanidm-tools" {

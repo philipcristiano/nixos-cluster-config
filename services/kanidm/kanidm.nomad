@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "kanidm/server:latest"
+  default     = "kanidm/server:1.1.0-beta.13"
 }
 
 job "kanidm" {
@@ -36,12 +36,32 @@ job "kanidm" {
       }
     }
 
-    network {
-      port "http" {
-  	    to = 8443
+    service {
+      name = "kanidm-ldap"
+      port = "ldap"
+
+      tags = [
+        "traefik.enable=true",
+	      "traefik.tcp.routers.kanidm-ldap.tls.passthrough=true",
+        "traefik.tcp.routers.kanidm-ldap.entrypoints=ldap",
+        "traefik.tcp.routers.kanidm-ldap.rule=HostSNI(`*`)",
+      ]
+
+      check {
+        name     = "kanidm-ldap"
+        type     = "tcp"
+        port     = "ldap"
+        interval = "10s"
+        timeout  = "2s"
       }
+    }
+
+    network {
       port "ldap" {
   	    to = 3636
+      }
+      port "http" {
+  	    to = 8443
       }
     }
 
@@ -68,7 +88,7 @@ job "kanidm" {
 
       config {
         image = var.image_id
-        ports = ["http"]
+        ports = ["ldap", "http"]
         #entrypoint = ["sleep" ,"10000"]
         command = "/sbin/kanidmd"
         args = ["server" ,"-c", "local/kanidm.toml"]
@@ -93,7 +113,7 @@ bindaddress = "[::]:{{ env "NOMAD_PORT_http" }}"
 #   will use LDAPS if tls_* is provided. If set to 636
 #   you may require the NET_BIND_SERVICE capability.
 #   Defaults to "" (disabled)
-# ldapbindaddress = "[::]:{{ env "NOMAD_PORT_ldap" }}"
+ldapbindaddress = "[::]:{{ env "NOMAD_PORT_ldap" }}"
 #
 #   HTTPS requests can be reverse proxied by a loadbalancer.
 #   To preserve the original IP of the caller, these systems
@@ -204,7 +224,7 @@ EOF
           destination = "secrets/key.pem"
           data = <<EOF
 
-{{ with secret "pki_int/issue/kanidm" "common_name=kanidm.home.cristiano.cloud" "ttl=24h" "alt_names=localhost" (printf "ip_sans=127.0.0.1,::,%s" (env "attr.unique.network.ip-address"))}}
+{{ with secret "pki_int/issue/kanidm" "common_name=kanidm.home.cristiano.cloud" "ttl=24h" "alt_names=localhost,ldap.home.cristiano.cloud" (printf "ip_sans=127.0.0.1,::,%s" (env "attr.unique.network.ip-address"))}}
 {{ .Data.private_key }}
 {{ end }}
 
@@ -214,7 +234,7 @@ EOF
       template {
           destination = "secrets/chain.pem"
           data = <<EOF
-{{ with secret "pki_int/issue/kanidm" "common_name=kanidm.home.cristiano.cloud" "ttl=24h" "alt_names=localhost" (printf "ip_sans=127.0.0.1,::,%s" (env "attr.unique.network.ip-address"))}}
+{{ with secret "pki_int/issue/kanidm" "common_name=kanidm.home.cristiano.cloud" "ttl=24h" "alt_names=localhost,ldap.home.cristiano.cloud" (printf "ip_sans=127.0.0.1,::,%s" (env "attr.unique.network.ip-address"))}}
 {{ .Data.certificate }}
 {{ .Data.ca_chain }}
 {{ end }}
