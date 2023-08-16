@@ -1,0 +1,11 @@
+path "pki_int/issue/freshrss" {
+  capabilities = ["update"]
+}
+
+path "pki/issuer/default/json" {
+  capabilities = ["read"]
+}
+
+path "kv/data/freshrss" {
+  capabilities = ["read"]
+}

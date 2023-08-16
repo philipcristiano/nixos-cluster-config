@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "freshrss/freshrss@sha256:275a0a497088916bde7b3a96a87cd43074b3fdd8af9a18e7f9092fe60307dffc" # `edge` release as of 2023-08-16
+}
+
 job "freshrss" {
   datacenters = ["dc1"]
   type        = "service"
@@ -17,8 +23,8 @@ job "freshrss" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.freshrss.tls=true",
-	      "traefik.http.routers.freshrss.tls.certresolver=home",
+	    "traefik.http.routers.freshrss.tls=true",
+	    "traefik.http.routers.freshrss.tls.certresolver=home",
       ]
 
       check {
@@ -72,8 +78,12 @@ job "freshrss" {
     task "app" {
       driver = "docker"
 
+      vault {
+        policies = ["service-freshrss"]
+      }
+
       config {
-        image = "freshrss/freshrss:1.21.0@sha256:55487c0d8eafd986b43e3d3b73b18686664e5823067e738666cf98569d4bb2f4"
+        image = var.image_id
         ports = ["http"]
 
       }
@@ -92,6 +102,25 @@ job "freshrss" {
         CRON_MIN = "1,31"
       }
 
+      template {
+          destination = "secrets/app.env"
+          env = true
+          data = <<EOF
+
+{{with secret "kv/data/freshrss"}}
+
+OIDC_ENABLED= 1
+OIDC_PROVIDER_METADATA_URL= "https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.OAUTH_CLIENT_ID }}"/.well-known/openid-configuration
+OIDC_CLIENT_ID= "{{.Data.data.OAUTH_CLIENT_ID }}"
+OIDC_CLIENT_SECRET= "{{.Data.data.OAUTH_CLIENT_SECRET }}"
+OIDC_CLIENT_CRYPTO_KEY= "{{.Data.data.OIDC_CLIENT_CRYPTO_KEY }}"
+OIDC_REMOTE_USER_CLAIM= preferred_username
+OIDC_SCOPES=openid
+OIDC_X_FORWARDED_HEADERS="X-Forwarded-Host X-Forwarded-Port X-Forwarded-Proto"
+{{end}}
+
+EOF
+      }
     }
   }
 }
