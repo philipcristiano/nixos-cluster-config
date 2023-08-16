@@ -1,14 +1,29 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/nomad-events-logger:0.0.3"
+  default     = "philipcristiano/nomad-events-logger:0.1.3"
 }
+
+variable "count" {
+  type        = number
+  description = "Number of instances"
+  default     = 1
+}
+
 
 job "nomad-events-logger" {
   datacenters = ["dc1"]
   type        = "service"
 
   group "app" {
+
+    count = var.count
+
+    update {
+      max_parallel     = 1
+      min_healthy_time = "30s"
+      healthy_deadline = "5m"
+    }
 
     restart {
       attempts = 2
@@ -43,10 +58,6 @@ job "nomad-events-logger" {
       config {
         image = var.image_id
         command = "nomad-events-logger"
-        args = [
-          "--url",
-          "${URL}",
-        ]
       }
 
       template {
@@ -57,7 +68,7 @@ job "nomad-events-logger" {
 OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-grpc.{{ key "site/domain" }}:443
 OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 
-URL="http://nomad.{{ key "site/domain"}}:4646/v1/event/stream"
+NOMAD_BASE_URL="http://nomad.{{ key "site/domain"}}"
 
 EOF
       }
