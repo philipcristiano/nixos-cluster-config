@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/hello_idc:0.0.1"
+  default     = "philipcristiano/hello_idc:0.0.2"
 }
 
 job "hello_idc" {
@@ -84,8 +84,8 @@ EOF
 
       resources {
         cpu    = 5
-        memory = 16
-        memory_max = 64
+        memory = 12
+        memory_max = 24
       }
 
     }
