@@ -91,6 +91,7 @@ GF_AUTH_GENERIC_OAUTH_AUTH_URL = https://kanidm.{{ key "site/domain"}}/ui/oauth2
 GF_AUTH_GENERIC_OAUTH_TOKEN_URL = https://kanidm.{{ key "site/domain"}}/oauth2/token
 GF_AUTH_GENERIC_OAUTH_API_URL = https://kanidm.{{ key "site/domain"}}/oauth2/openid/grafana/userinfo
 GF_AUTH_GENERIC_OAUTH_USE_PKCE = true
+GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH = "contains(scopes[*], 'admin') && 'Admin' || contains(scopes[*], 'editor') && 'Editor' || 'Viewer'"
 
 {{end}}
 
@@ -101,6 +102,7 @@ EOF
       resources {
         cpu    = 500
         memory = 256
+        memory_max = 1024
       }
 
     }
