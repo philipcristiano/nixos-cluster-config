@@ -56,8 +56,8 @@ job "otel-collector" {
       port     = "grpc"
       tags     = [
         "traefik.enable=true",
-	      "traefik.http.routers.otel-grpc.tls=true",
-	      "traefik.http.routers.otel-grpc.tls.certresolver=home",
+        "traefik.http.routers.otel-grpc.tls=true",
+        "traefik.http.routers.otel-grpc.tls.certresolver=home",
         "traefik.http.services.otel-grpc.loadbalancer.server.scheme=h2c",
       ]
 
@@ -75,8 +75,8 @@ job "otel-collector" {
       port     = "http"
       tags     = [
         "traefik.enable=true",
-	      "traefik.http.routers.otel-http.tls=true",
-	      "traefik.http.routers.otel-http.tls.certresolver=home",
+        "traefik.http.routers.otel-http.tls=true",
+        "traefik.http.routers.otel-http.tls.certresolver=home",
       ]
 
       check {
@@ -123,8 +123,9 @@ job "otel-collector" {
       }
 
       resources {
-        cpu    = 200
-        memory = 64
+        cpu    = 50
+        memory = 128
+        memory_max = 256
       }
 
       template {
@@ -141,9 +142,12 @@ exporters:
   jaeger:
     endpoint: jaeger-grpc.{{ key "site/domain" }}:443
 
-  zipkin:
-    endpoint: "https://zipkin.{{ key "site/domain"}}/api/v2/spans"
-    format: proto
+  otlp:
+    endpoint: https://tempo-otlp-grpc.{{key "site/domain"}}:443
+
+  # zipkin:
+  #   endpoint: "https://zipkin.{{ key "site/domain"}}/api/v2/spans"
+  #   format: proto
 
 processors:
   batch:
@@ -157,11 +161,14 @@ extensions:
 
 service:
   extensions: [pprof, zpages, health_check]
+  telemetry:
+    logs:
+      level: "debug"
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, jaeger, zipkin]
+      exporters: [logging, jaeger, otlp]
     metrics:
       receivers: [otlp]
       processors: [batch]

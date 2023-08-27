@@ -1,0 +1,3 @@
+path "kv/data/tempo" {
+  capabilities = ["read"]
+}
