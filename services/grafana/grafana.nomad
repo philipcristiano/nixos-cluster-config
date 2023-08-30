@@ -95,6 +95,9 @@ GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH = "contains(scopes[*], 'admin') && 'Ad
 
 {{end}}
 
+GF_SMTP_ENABLED=true
+GF_SMTP_HOST="smtp.{{ key "site/domain" }}:{{ key "traefik-ports/smtp" }}"
+
 
 EOF
       }

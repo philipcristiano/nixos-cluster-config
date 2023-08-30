@@ -1,0 +1,11 @@
+path "pki_int/issue/postmoogle" {
+  capabilities = ["update"]
+}
+
+path "pki/issuer/default/json" {
+  capabilities = ["read"]
+}
+
+path "kv/data/postmoogle" {
+  capabilities = ["read"]
+}
