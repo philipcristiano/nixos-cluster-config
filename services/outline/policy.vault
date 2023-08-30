@@ -1,0 +1,3 @@
+path "kv/data/outline" {
+  capabilities = ["read"]
+}
