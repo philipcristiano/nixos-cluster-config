@@ -60,7 +60,7 @@ job "baserow" {
       config {
         image        = "busybox:latest"
         command      = "sh"
-        args         = ["-c", "mkdir -p /storage/data && chown -R 9999:0 /storage && chmod 775 /storage"]
+        args         = ["-c", "mkdir -p /storage/data && chown -R 9999:0 /storage && chmod 775 /storage && rm -rf /data/log/*.lock"]
       }
       resources {
         cpu    = 200
