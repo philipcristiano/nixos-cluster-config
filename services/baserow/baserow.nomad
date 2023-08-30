@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "baserow/baserow:1.17.0"
+  default     = "baserow/baserow:1.19.1"
 }
 
 job "baserow" {
