@@ -88,13 +88,20 @@ job "tempo" {
 
     }
 
-    volume "storage" {
-      type            = "csi"
-      source          = "tempo"
-      read_only       = false
-      attachment_mode = "file-system"
-      access_mode     = "multi-node-multi-writer"
+    ephemeral_disk {
+      # Used to store index, cache, WAL
+      # Nomad will try to preserve the disk between job updates
+      size   = 1000
+      sticky = true
     }
+
+    # volume "storage" {
+    #   type            = "csi"
+    #   source          = "tempo"
+    #   read_only       = false
+    #   attachment_mode = "file-system"
+    #   access_mode     = "multi-node-multi-writer"
+    # }
 
     task "app" {
       driver = "docker"
@@ -106,16 +113,16 @@ job "tempo" {
       config {
         image = var.image_id
         ports = ["tempo", "otlp-grpc", "otlp-http"]
-        command = "-config.file=/local/tempo.yaml"
+        command = "-config.file=/secrets/tempo.yaml"
       }
 
-      volume_mount {
-        volume      = "storage"
-        destination = "/storage"
-      }
+      # volume_mount {
+      #   volume      = "storage"
+      #   destination = "/storage"
+      # }
 
       template {
-          destination = "local/tempo.yaml"
+          destination = "secrets/tempo.yaml"
           data = <<EOF
 
 server:
@@ -143,34 +150,19 @@ distributor:
         grpc:
     opencensus:
 
-ingester:
-  max_block_duration: 5m               # cut the headblock when this much time passes. this is being set for demo purposes and should probably be left alone normally
 
-compactor:
-  compaction:
-    block_retention: 1d                # overall Tempo trace retention. set for demo purposes
-
-# metrics_generator:
-#   registry:
-#     external_labels:
-#       source: tempo
-#       cluster: docker-compose
-#   storage:
-#     path: /tmp/tempo/generator/wal
-#     remote_write:
-#       - url: http://prometheus:9090/api/v1/write
-#         send_exemplars: true
-
+{{ with secret "kv/data/tempo" }}
 storage:
   trace:
-    backend: local                     # backend configuration to use
+    backend: s3                        # backend configuration to use
     wal:
       path: /alloc/data/tempo/wal             # where to store the the wal locally
-    local:
-      path: /storage/tempo/blocks
-
-    # metrics_generator:
-    #   processors: [service-graphs, span-metrics] # enables metrics generator
+    s3:
+      bucket: {{.Data.data.bucket}}                    # how to store data in s3
+      endpoint: "s3.{{key "site/domain"}}:443"
+      access_key: "{{.Data.data.ACCESS_KEY}}"
+      secret_key: "{{.Data.data.SECRET_KEY}}"
+{{ end }}
 
 
 EOF
