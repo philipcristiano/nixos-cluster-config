@@ -50,11 +50,30 @@ nomad_client_class = "{{ env "node.class" }}"
   quiet = false
   hostname = ""
   omit_hostname = false
+
 [[outputs.influxdb_v2]]
   urls = ["https://influxdb.{{ key "site/domain" }}"]
   bucket = "dc"
   organization = "{{key "credentials/telegraf-system/organization"}}"
   token = "{{key "credentials/telegraf-system/influxdb_token"}}"
+
+[[outputs.http]]
+  ## URL is the address to send metrics to
+  url = "https://mimir.{{ key "site/domain" }}/api/v1/push"
+
+  ## Optional TLS Config
+  # tls_ca = "/etc/telegraf/ca.pem"
+  # tls_cert = "/etc/telegraf/cert.pem"
+  # tls_key = "/etc/telegraf/key.pem"
+
+  ## Data format to output.
+  data_format = "prometheusremotewrite"
+
+  [outputs.http.headers]
+     Content-Type = "application/x-protobuf"
+     Content-Encoding = "snappy"
+     X-Prometheus-Remote-Write-Version = "0.1.0"
+
 [[inputs.consul]]
   ## Consul server address
   address = "consul.{{ key "site/domain" }}:8500"

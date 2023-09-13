@@ -1,0 +1,34 @@
+# Do not use this configuration in production.
+# It is for demonstration purposes only.
+# Run Mimir in single process mode, with all components running in 1 process.
+target: all,alertmanager,overrides-exporter
+
+# Only use a default tenant
+multitenancy_enabled: false
+# Configure Mimir to use Minio as object storage backend.
+common:
+
+{{ with secret "kv/data/mimir" }}
+  storage:
+    backend: s3
+    s3:
+      endpoint: "s3.{{key "site/domain"}}:443"
+      access_key_id: "{{.Data.data.ACCESS_KEY}}"
+      secret_access_key: "{{.Data.data.SECRET_KEY}}"
+      bucket_name: {{.Data.data.bucket}}                    # how to store data in s3
+
+{{ end }}
+
+
+# Blocks storage requires a prefix when using a common object storage bucket.
+blocks_storage:
+  storage_prefix: blocks
+  tsdb:
+    dir: /data/ingester
+
+ingester:
+  ring:
+    replication_factor: 1
+
+server:
+  log_level: info
