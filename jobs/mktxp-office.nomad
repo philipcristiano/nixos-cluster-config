@@ -23,8 +23,9 @@ job "mktxp-office" {
 
       check {
         name     = "alive"
-        type     = "tcp"
+        type     = "http"
         port     = "http"
+        path     = "/"
         interval = "10s"
         timeout  = "2s"
       }
@@ -43,7 +44,7 @@ job "mktxp-office" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/akpw/mktxp:stable-20230117072202"
+        image = "ghcr.io/akpw/mktxp:stable-20230706091740"
         ports = ["http"]
         volumes = [
           "local/mktxp.conf:/root/mktxp/mktxp.conf",
@@ -148,6 +149,24 @@ nomad_client_class = "{{ env "node.class" }}"
   bucket = "host"
   organization = "{{key "credentials/mktxp/influxdb_organization"}}"
   token = "{{key "credentials/mktxp/influxdb_token"}}"
+
+[[outputs.http]]
+  ## URL is the address to send metrics to
+  url = "https://mimir.{{ key "site/domain" }}/api/v1/push"
+
+  ## Optional TLS Config
+  # tls_ca = "/etc/telegraf/ca.pem"
+  # tls_cert = "/etc/telegraf/cert.pem"
+  # tls_key = "/etc/telegraf/key.pem"
+
+  ## Data format to output.
+  data_format = "prometheusremotewrite"
+
+  [outputs.http.headers]
+     Content-Type = "application/x-protobuf"
+     Content-Encoding = "snappy"
+     X-Prometheus-Remote-Write-Version = "0.1.0"
+
 
 [[inputs.prometheus]]
   metric_version = 2
