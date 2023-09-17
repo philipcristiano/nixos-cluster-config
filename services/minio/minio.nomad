@@ -62,8 +62,12 @@ job "minio" {
     task "app" {
       driver = "docker"
 
+      vault {
+        policies = ["service-minio"]
+      }
+
       config {
-        image = "quay.io/minio/minio:RELEASE.2023-01-31T02-24-19Z"
+        image = "quay.io/minio/minio:RELEASE.2023-09-07T02-05-02Z"
         ports = ["api", "console"]
         command = "server"
 
@@ -72,6 +76,7 @@ job "minio" {
         ]
 
       }
+
       volume_mount {
         volume      = "storage"
         destination = "/storage"
@@ -89,8 +94,27 @@ job "minio" {
       template {
         env = true
         data = <<EOF
-MINIO_ROOT_USER = "{{key "credentials/minio/root_user"}}"
-MINIO_ROOT_PASSWORD = "{{key "credentials/minio/root_pass"}}"
+
+{{ with secret "kv/data/minio" }}
+MINIO_ROOT_USER = "{{.Data.data.ROOT_USER}}"
+MINIO_ROOT_PASSWORD = "{{.Data.data.ROOT_PASSWORD}}"
+
+MINIO_BROWSER_REDIRECT_URL = "https://minio.{{ key "site/domain"}}"
+
+MINIO_IDENTITY_OPENID_CLAIM_NAME=scopes
+
+
+
+MINIO_IDENTITY_OPENID_CONFIG_URL="https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.IDENTITY_OPENID_CLIENT_ID}}/.well-known/openid-configuration"
+MINIO_IDENTITY_OPENID_CLIENT_ID="{{.Data.data.IDENTITY_OPENID_CLIENT_ID}}"
+MINIO_IDENTITY_OPENID_CLIENT_SECRET="{{.Data.data.IDENTITY_OPENID_CLIENT_SECRET}}"
+# MINIO_IDENTITY_OPENID_CLAIM_NAME="<string>"
+# MINIO_IDENTITY_OPENID_CLAIM_PREFIX="<string>"
+# MINIO_IDENTITY_OPENID_SCOPES="<string>"
+# MINIO_IDENTITY_OPENID_REDIRECT_URI="<string>"
+# MINIO_IDENTITY_OPENID_COMMENT="<string>"
+{{ end }}
+
 EOF
         destination = "secrets/file.env"
       }
