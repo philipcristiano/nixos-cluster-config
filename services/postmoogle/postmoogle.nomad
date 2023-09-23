@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "registry.gitlab.com/etke.cc/postmoogle:v0.9.14"
+  default     = "registry.gitlab.com/etke.cc/postmoogle:v0.9.15"
 }
 
 variable "count" {
