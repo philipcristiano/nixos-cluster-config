@@ -1,0 +1,3 @@
+path "kv/data/neon" {
+  capabilities = ["read"]
+}
