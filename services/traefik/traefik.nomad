@@ -1,3 +1,14 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
@@ -14,6 +25,11 @@ job "traefik" {
   region      = "global"
   datacenters = ["dc1"]
   type        = "system"
+
+  update {
+    max_parallel = 1
+    stagger      = "60s"
+  }
 
   group "traefik" {
 
@@ -36,6 +52,14 @@ job "traefik" {
 
       port "https" {
         static = 443
+      }
+
+      port "postgres" {
+        static = 5457
+      }
+
+      port "redis" {
+        static = 6379
       }
 
       port "api" {
@@ -71,9 +95,21 @@ job "traefik" {
     task "traefik" {
       driver = "docker"
 
+      vault {
+        policies = ["service-minio"]
+      }
+
       config {
-        image        = var.image_id
+        image = "${var.image_id}"
         network_mode = "host"
+        ports = [
+          "api",
+          "http",
+          "https",
+          "lorawan-server-udp",
+          "postgres",
+          "redis",
+        ]
 
         volumes = [
           "local/traefik.toml:/etc/traefik/traefik.toml",
@@ -103,6 +139,10 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     [entryPoints.https-public]
     address = ":3443"
 
+    ## POTENTIALLY PUBLIC ENTRYPOINTS
+    [entryPoints.lightning-p2p]
+    address = ":9735"
+
     ## INTERNAL ACCESS ENTRYPOINTS
 
     [entryPoints.http]
@@ -116,10 +156,19 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     [entryPoints.https]
     asDefault = "true"
     address = ":443"
+    [entryPoints.syslog-udp]
+    address = ":1514/udp"
+      [entryPoints.syslog-udp.udp]
+      timeout= "120s"
     [entryPoints.lorawan-server-udp]
     address = ":1700/udp"
       [entryPoints.lorawan-server-udp.udp]
       timeout= "120s"
+
+    [entryPoints.postgres]
+    address = ":{{ env "NOMAD_PORT_postgres" }}"
+    [entryPoints.redis]
+    address = ":{{ env "NOMAD_PORT_redis" }}"
     [entryPoints.traefik]
     address = ":8081"
 
@@ -145,20 +194,22 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     retryAttempts = true
 [tracing]
   [tracing.openTelemetry]
-    address = "otel-grpc.{{ key "site/domain" }}:443"
+    address = "tempo-otlp-grpc.{{ key "site/domain" }}:443"
 
     [tracing.openTelemetry.grpc]
 
 
 [metrics]
   [metrics.influxDB2]
-    address= "https://influxdb.{{ key "site/domain" }}:443"
+    address= "https://influxdb-write.{{ key "site/domain" }}:443"
     org = "{{ key "credentials/traefik/influxdb_organization"}}"
     bucket = "{{ key "credentials/traefik/influxdb_bucket"}}"
     token = "{{ key "credentials/traefik/influxdb_token"}}"
     addEntryPointsLabels = true
     addRoutersLabels = true
     addServicesLabels = true
+    [metrics.influxDB2.additionalLabels]
+      traefik_host = "{{ env "NOMAD_ALLOC_ID" }}"
 
 # Enable Consul Catalog configuration backend.
 [providers.consulCatalog]
