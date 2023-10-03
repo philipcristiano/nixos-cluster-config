@@ -1,3 +1,14 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "ghcr.io/"
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
@@ -50,7 +61,7 @@ job "ytdl-sub" {
       }
 
       config {
-        image        = "busybox:latest"
+        image        = "${var.docker_registry}busybox:latest"
         command      = "sh"
         args         = ["-c", "mkdir -p /storage && chown -R 1000:1000 /storage && chmod 775 /storage"]
       }
@@ -70,7 +81,7 @@ job "ytdl-sub" {
 
       config {
         # entrypoint = ["sleep", "10000"]
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
 
         command = "ytdl-sub"
 
