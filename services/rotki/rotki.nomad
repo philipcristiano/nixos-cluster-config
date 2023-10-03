@@ -1,3 +1,20 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
+variable "image_id" {
+  type        = string
+  description = "The docker image used for compute task."
+  default     = "rotki/rotki:v1.30.2"
+}
+
 job "rotki" {
   datacenters = ["dc1"]
   type        = "service"
@@ -49,7 +66,7 @@ job "rotki" {
       driver = "docker"
 
       config {
-        image = "rotki/rotki:v1.27.1"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
 
         mounts = [{
@@ -81,8 +98,9 @@ job "rotki" {
       }
 
       resources {
-        cpu    = 500
+        cpu    = 100
         memory = 512
+        memory_max = 2048
       }
 
     }
