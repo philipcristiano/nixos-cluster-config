@@ -172,6 +172,10 @@ schema_config:
 
 limits_config:
   retention_period: 7d
+  split_queries_by_interval: 24h
+
+frontend:
+  max_outstanding_per_tenant: 4096
 
 ruler:
   alertmanager_url: http://localhost:9093

@@ -11,14 +11,62 @@ Then
 
 Add `./ncluster.nix` to the imports
 
+## Cluster bootstrapping
+
+### Vault
+
+See [vault/README.md](vault/README.md)
+
 ## Consul Value
 
 Expected consul values
 
 `site/domain` - Base domain expected for services.
 
+## Networking
 
-## Jobs
+### VLANs
+
+VLANs are used to provide separate interfaces for applications.
+This is meant to work around limitations in macvlan interfaces in linux where the host cannot reach the macvlan'd interfaces.
+
+In your nixos/configuration
+
+```
+  networking.vlans = {
+	vlan110 = { id=110; interface="enp2s0"; };
+  };
+  networking.interfaces.vlan110.useDHCP = true;
+```
+
+### BGP
+
+BGP is used with GoCast to advertise floating IPs
+
+
+## Site configuration
+
+### `nomad_job.vars`
+
+`domain` Internal domain for services
+`docker_registry` Custom registry to use, should be equal to `docker-registry.$DOMAIN` if you are using this docker registry
+
+## Services
+
+### Storage
+
+Minio for S3-compatible storage that can be hosted on each node.
+
+NFS (hosted outside this cluster) is used for services that cannot use S3
+
+### Database
+
+Postgres is preferred database solution with [Neon](https://neon.tech) being used for it's S3-compatible interfaces
+
+
+### Reverse-Proxy
+
+Traefik and Let's Encrypt for certs
 
 
 ### InfluxDB
@@ -75,12 +123,6 @@ NOT SAFE FOR USAGE AS A WALLET - only using this for an API to bitcoin data
 
 Mempool also requires MariaDB
 
-### Auth
-
-Generate credentials with
-
-`curl 'https://raw.githubusercontent.com/bitcoin/bitcoin/master/share/rpcauth/rpcauth.py' | python3 /dev/stdin [USERNAME]`
-
 
 
 Consul Values
@@ -121,6 +163,11 @@ Consul Values
 * `credentials/frigate/mqtt_password` - MQTT Password
 * `credentials/frigate/cameras/*` - Key: Camera name, Value: input.path for Frigate
 
+### Matrix
+
+#### Matrix-Hookshot
+
+* `credentials/matrix-hookshot/passkey.pem` - passkey.pem from `openssl genpkey -out passkey.pem -outform PEM -algorithm RSA -pkeyopt rsa_keygen_bits:4096`
 
 # Nomad Admin
 
