@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "zwavejs/zwave-js-ui:9.0.3"
+  default     = "zwavejs/zwave-js-ui:9.1.0"
 }
 
 job "zwavejs2mqtt" {
