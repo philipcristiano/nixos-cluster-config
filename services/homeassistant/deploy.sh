@@ -11,6 +11,6 @@ vault write pki_int/roles/homeassistant \
 # nomad volume create homeassistant.volume
 # nomad volume create homeassistant-whisper.volume
 # nomad volume create homeassistant-piper.volume
-nomad run homeassistant.nomad
-nomad run homeassistant-whisper.nomad
-nomad run homeassistant-piper.nomad
+nomad run -var-file=../../nomad_job.vars homeassistant.nomad
+nomad run -var-file=../../nomad_job.vars homeassistant-whisper.nomad
+nomad run -var-file=../../nomad_job.vars homeassistant-piper.nomad

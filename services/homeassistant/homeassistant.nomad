@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "homeassistant/home-assistant:2023.9.2"
+  default     = "homeassistant/home-assistant:2023.10.1"
 }
 
 job "homeassistant" {
@@ -57,7 +68,7 @@ job "homeassistant" {
       driver = "docker"
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
       }
 
