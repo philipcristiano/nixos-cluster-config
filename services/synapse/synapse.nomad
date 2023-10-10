@@ -50,12 +50,17 @@ job "synapse" {
       port = "http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
 	    "traefik.http.routers.synapse.tls=true",
         "traefik.http.routers.synapse.entrypoints=http,https,http-public,https-public",
         "traefik.http.routers.synapse.rule=( Host(`matrix.philipcristiano.com`)  && !PathPrefix(`/_synapse/admin`) && !PathPrefix(`/_synapse/metrics`) ) || Host(`matrix.home.cristiano.cloud`)",
 	    "traefik.http.routers.synapse.tls.certresolver=home",
       ]
+
+      meta {
+        metrics_path = "/_synapse/metrics"
+      }
 
       check {
         name     = "alive"
