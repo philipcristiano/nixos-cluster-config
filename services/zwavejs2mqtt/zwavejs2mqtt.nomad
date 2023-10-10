@@ -21,6 +21,13 @@ job "zwavejs2mqtt" {
 
   group "app" {
 
+    restart {
+      attempts = 1
+      interval = "5m"
+      delay    = "10s"
+      mode     = "fail"
+    }
+
     reschedule {
       delay          = "10s"
       delay_function = "exponential"
@@ -53,9 +60,9 @@ job "zwavejs2mqtt" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.zwavejs-websocket.tls=true",
-	"traefik.http.routers.zwavejs-websocket.tls.certresolver=home",
-	#"traefik.http.routers.zwavejs-websocket.entrypoints=http,https",
+	    "traefik.http.routers.zwavejs-websocket.tls=true",
+	    "traefik.http.routers.zwavejs-websocket.tls.certresolver=home",
+	    #"traefik.http.routers.zwavejs-websocket.entrypoints=http,https",
       ]
 
       check {
@@ -89,14 +96,14 @@ job "zwavejs2mqtt" {
       driver = "docker"
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http", "websocket"]
-  	devices = [
+  	    devices = [
          {
            host_path = "/dev/ttyACM0"
            container_path = "/dev/ttyACM0"
          }
-	]
+	    ]
 
       }
 
@@ -111,10 +118,10 @@ job "zwavejs2mqtt" {
         memory_max = 512
 
         # device "usb" {
-        #    constraint {
-        #     attribute = "${device.vendor_id}"
-        #     value = "0658"
-        #    }
+        #   constraint {
+        #     attribute = "${device.vendor}"
+        #     value = "1624"
+        #   }
         # }
 
       }
