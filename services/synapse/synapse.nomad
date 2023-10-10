@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "matrixdotorg/synapse:v1.91.3"
+  default     = "matrixdotorg/synapse:v1.94.0"
 }
 
 variable "count" {
@@ -50,7 +61,7 @@ job "synapse" {
         name     = "alive"
         type     = "http"
         port     = "http"
-        path     = "_matrix/static/"
+        path     = "/health"
         interval = "10s"
         timeout  = "2s"
       }
@@ -79,9 +90,9 @@ job "synapse" {
         read_only   = false
       }
       config {
-        image        = "busybox:latest"
+        image        = "${var.docker_registry}busybox:latest"
         command      = "sh"
-        args         = ["-c", "mkdir -p /storage && chown -R 1000:1000 /storage && chmod 775 /storage"]
+        args         = ["-c", "mkdir -p /storage && chown 1000:1000 /storage && chmod 775 /storage"]
       }
       resources {
         cpu    = 200
@@ -104,9 +115,8 @@ job "synapse" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
-        # entrypoint = ["sleep", "10000"]
       }
 
       volume_mount {
