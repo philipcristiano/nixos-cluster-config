@@ -13,7 +13,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for cluster tasks."
-  default     = "neondatabase/neon:3798"
+  default     = "neondatabase/neon:3841"
 }
 
 variable "safekeeper_count" {
@@ -111,7 +111,8 @@ job "neon" {
 
       resources {
         cpu    = 100
-memory = 512
+        memory = 1024
+        memory_max = 4096
       }
 
       template {
@@ -218,9 +219,8 @@ EOF
 
     update {
       max_parallel = 1
-      stagger      = "60s"
+      stagger      = "300s"
     }
-
 
     constraint {
         operator  = "distinct_hosts"

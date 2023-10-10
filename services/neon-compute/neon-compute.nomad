@@ -8,7 +8,7 @@ variable "docker_registry" {
 variable "image_id" {
   type        = string
   description = "The docker image used for compute task."
-  default     = "neondatabase/compute-node-v16:3797"
+  default     = "neondatabase/compute-node-v16:3841"
 }
 
 variable "count" {
@@ -40,7 +40,14 @@ job "JOB_NAME-postgres" {
       attempts = 2
       interval = "1m"
       delay    = "10s"
-      mode     = "delay"
+      mode     = "fail"
+    }
+
+    reschedule {
+      delay          = "30s"
+      delay_function = "exponential"
+      max_delay      = "300s"
+      unlimited      = true
     }
 
     service {
@@ -61,6 +68,12 @@ job "JOB_NAME-postgres" {
         port     = "pg"
         interval = "10s"
         timeout  = "2s"
+      }
+
+      check_restart {
+        limit = 3
+        grace = "90s"
+        ignore_warnings = false
       }
     }
 
