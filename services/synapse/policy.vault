@@ -6,6 +6,10 @@ path "kv/data/synapse" {
   capabilities = ["read"]
 }
 
+path "kv/data/synapse-postgres" {
+  capabilities = ["read"]
+}
+
 path "kv/data/heisenbridge" {
   capabilities = ["read"]
 }

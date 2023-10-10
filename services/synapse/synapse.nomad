@@ -40,7 +40,7 @@ job "synapse" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.synapse.tls=true",
+	    "traefik.http.routers.synapse.tls=true",
         "traefik.http.routers.synapse.entrypoints=http,https,http-public,https-public",
         "traefik.http.routers.synapse.rule=( Host(`matrix.philipcristiano.com`)  && !PathPrefix(`/_synapse/admin`) && !PathPrefix(`/_synapse/metrics`) ) || Host(`matrix.home.cristiano.cloud`)",
 	    "traefik.http.routers.synapse.tls.certresolver=home",
@@ -130,7 +130,9 @@ job "synapse" {
 # For more information on how to configure Synapse, including a complete accounting of
 # each option, go to docs/usage/configuration/config_documentation.md or
 # https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html
+
 server_name: "{{ key "site/public_domain" }}"
+
 public_baseurl: https://matrix.{{ key "site/public_domain"}}/
 pid_file: /homeserver.pid
 listeners:
@@ -144,17 +146,19 @@ listeners:
         compress: false
 
 # Postgres DB
+{{with secret "kv/data/synapse-postgres"}}
 database:
   name: psycopg2
   args:
-    user: {{ key "credentials/synapse-postgres/USER" }}
-    password: {{ key "credentials/synapse-postgres/PASSWORD" }}
-    database: {{ key "credentials/synapse-postgres/DB" }}
+    user: {{.Data.data.postgres_username}}
+    password: {{ .Data.data.postgres_password }}
+    database: {{.Data.data.postgres_username}}
     host: synapse-postgres.{{ key "site/domain" }}
-    port: {{ key "traefik-ports/synapse-postgres" }}
+    port: 5457
 
     cp_min: 5
     cp_max: 10
+{{ end }}
 
 {{with secret "kv/data/synapse"}}
 oidc_providers:

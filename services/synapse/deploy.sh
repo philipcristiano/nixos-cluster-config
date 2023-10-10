@@ -8,8 +8,5 @@ vault write pki_int/roles/synapse \
      allow_subdomains=true \
      max_ttl="720h"
 
-# nomad volume create synapse-postgres.volume
 # nomad volume create synapse.volume
-nomad run synapse-postgres-backup.nomad
-nomad run synapse-postgres.nomad
-nomad run synapse.nomad
+nomad run -var-file=../../nomad_job.vars synapse.nomad
