@@ -1,0 +1,11 @@
+path "pki_int/issue/docker-prefetch-image" {
+  capabilities = ["update"]
+}
+
+path "pki/issuer/default/json" {
+  capabilities = ["read"]
+}
+
+path "kv/data/docker-prefetch-image" {
+  capabilities = ["read"]
+}

@@ -1,7 +1,29 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "philipcristiano/gocast:sha-a00e6fd"
+}
+
 job "gocast" {
   region      = "global"
   datacenters = ["dc1"]
   type        = "system"
+
+  update {
+    max_parallel = 1
+    stagger      = "300s"
+  }
 
   group "gocast" {
 
@@ -38,7 +60,7 @@ job "gocast" {
       }
 
       config {
-        image        = "philipcristiano/gocast:sha-a00e6fd"
+        image = "${var.docker_registry}${var.image_id}"
         network_mode = "host"
 
 	    args = ["-config=/local/config.yaml", "-logtostderr", "-v=2"]
@@ -46,6 +68,7 @@ job "gocast" {
 	    cap_add = ["net_admin"]
 
       }
+
       template {
         destination = "local/config.yaml"
         data = <<EOF
