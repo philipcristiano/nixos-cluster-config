@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "homeassistant/home-assistant:2023.10.1"
+  default     = "homeassistant/home-assistant:2023.10.2"
 }
 
 job "homeassistant" {
