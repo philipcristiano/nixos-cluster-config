@@ -66,7 +66,7 @@ job "docker-prefetch-image" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
 
         args = [
           "-c", "local/config.toml"
@@ -99,7 +99,7 @@ EOF
 image = "docker-registry.{{ key "site/domain" }}/busybox:latest"
 
 [[image]]
-image = "docker-registry.{{ key "site/domain" }}/traefik:v3.0.0-beta3"
+image = "docker-registry.{{ key "site/domain" }}/traefik:v3.0.0-beta4"
 
 [[image]]
 image = "docker-registry.{{ key "site/domain" }}/minio/minio:RELEASE.2023-09-23T03-47-50Z"

@@ -6,13 +6,13 @@ variable "docker_registry" {
 
 variable "domain" {
   type        = string
-  description = "Name of this instance of Neon Compute Postgres"
+  description = "Domain of this instance"
 }
 
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "traefik:v3.0.0-beta3"
+  default     = "traefik:v3.0.0-beta4"
 }
 
 variable "ip" {
@@ -28,7 +28,7 @@ job "traefik" {
 
   update {
     max_parallel = 1
-    stagger      = "60s"
+    stagger      = "300s"
   }
 
   group "traefik" {
@@ -76,9 +76,9 @@ job "traefik" {
       name = "traefik"
 
       tags = [
-	    "enable_gocast",
+	      "enable_gocast",
         "gocast_vip=192.168.102.50/32",
-	    "gocast_monitor=consul",
+	      "gocast_monitor=consul",
       ]
 
       check {
@@ -87,7 +87,7 @@ job "traefik" {
         port     = "api"
         # protocol = "https"
         path     = "/dashboard"
-        interval = "10s"
+        interval = "3s"
         timeout  = "2s"
       }
     }
@@ -95,12 +95,9 @@ job "traefik" {
     task "traefik" {
       driver = "docker"
 
-      vault {
-        policies = ["service-minio"]
-      }
-
       config {
-        image = "${var.image_id}"
+        #image = "${var.image_id}"
+        image = "${var.docker_registry}${var.image_id}"
         network_mode = "host"
         ports = [
           "api",
@@ -243,6 +240,7 @@ EOF
       resources {
         cpu    = 100
         memory = 128
+        memory_max = 512
       }
     }
   }
