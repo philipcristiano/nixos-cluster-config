@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "ghcr.io/"
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/loki:2.9.0"
+  default     = "grafana/loki:2.9.2"
 }
 
 job "loki" {
@@ -32,58 +43,35 @@ job "loki" {
 
     network {
       port "http" {
-	to = 3100
+	      to = 3100
       }
       port "grpc" {
-	to = 9096
+	      to = 9096
       }
     }
 
-    # volume "storage" {
-    #   type            = "csi"
-    #   source          = "loki"
-    #   read_only       = false
-    #   attachment_mode = "file-system"
-    #   access_mode     = "multi-node-multi-writer"
-    # }
-
-    # task "prep-disk" {
-
-    #   driver = "docker"
-    #   # volume_mount {
-    #   #   volume      = "storage"
-    #   #   destination = "/storage"
-    #   #   read_only   = false
-    #   # }
-    #   config {
-    #     image        = "busybox:latest"
-    #     command      = "sh"
-    #     args         = ["-c", "mkdir -p /storage/data && chown -R 10001:10001 /storage && chmod 775 /storage"]
-    #   }
-    #   resources {
-    #     cpu    = 200
-    #     memory = 128
-    #   }
-
-    #   lifecycle {
-    #     hook    = "prestart"
-    #     sidecar = false
-    #   }
-    # }
+    ephemeral_disk {
+      # Used to store index, cache, WAL
+      # Nomad will try to preserve the disk between job updates
+      size   = 1000
+      sticky = true
+    }
 
     task "app" {
       driver = "docker"
+      kill_timeout = "180s"
 
       vault {
         policies = ["service-loki"]
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
 
         args = [
-          "-config.file", "secrets/config.yaml"
+          "-config.file", "secrets/config.yaml",
+          "-config.expand-env=true",
         ]
 
       }
@@ -113,16 +101,6 @@ auth_enabled: false
 server:
   http_listen_port: {{ env "NOMAD_PORT_http" }}
   grpc_listen_port: {{ env "NOMAD_PORT_grpc" }}
-#
-# Filesystem storage
-#
-#storage_config:
-#  filesystem:
-#    directory: /storage/loki
-#  boltdb_shipper:
-#    active_index_directory: /storage/index
-#    shared_store: filesystem
-#    cache_location: /storage/boltdb-cache
 
 #
 # Minio Storage
@@ -153,7 +131,7 @@ storage_config:
     shared_store: s3
 
 common:
-  path_prefix: /alloc/data/loki
+  path_prefix: {{ env "NOMAD_ALLOC_DIR" }}/data/loki
   replication_factor: 1
   ring:
     instance_addr: 127.0.0.1

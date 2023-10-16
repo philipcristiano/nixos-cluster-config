@@ -2,4 +2,4 @@ set -ex
 
 vault policy write service-loki policy.vault
 
-nomad run loki.nomad
+nomad run -var-file=../../nomad_job.vars loki.nomad
