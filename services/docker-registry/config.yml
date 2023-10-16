@@ -1,0 +1,33 @@
+version: 0.1
+http:
+  addr: 0.0.0.0:5000
+  headers:
+    Access-Control-Allow-Headers: ['Authorization', 'Accept', 'Cache-Control']
+    Access-Control-Allow-Methods: ['HEAD', 'GET', 'OPTIONS', 'DELETE']
+    Access-Control-Allow-Origin: ['https://docker-registry-ui.{{ key "site/domain" }}']
+    Access-Control-Expose-Headers: ['Docker-Content-Digest']
+
+{{ with secret "kv/data/docker-registry" }}
+http:
+  secret: {{ .Data.data.http_secret }}
+
+storage:
+  cache:
+    blobdescriptor: inmemory
+  delete:
+      enabled: true
+  s3:
+    accesskey: {{.Data.data.AWS_ACCESS_KEY_ID}}
+    secretkey: {{.Data.data.AWS_SECRET_ACCESS_KEY}}
+    region: us-west-1
+    regionendpoint: https://s3.{{ key "site/domain" }}
+    bucket: {{.Data.data.bucket}}
+    encrypt: false
+    secure: true
+    chunksize: 5242880
+    multipartcopychunksize: 33554432
+    multipartcopymaxconcurrency: 100
+    multipartcopythresholdsize: 33554432
+    rootdirectory: "/"
+
+{{ end }}

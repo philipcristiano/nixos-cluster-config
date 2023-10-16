@@ -10,25 +10,21 @@ variable "domain" {
   description = "Name of this instance of Neon Compute Postgres"
 }
 
-variable "count" {
-  type        = number
-  description = "The number of compute containers to run."
-  default     = "2"
-}
-
 variable "image_id" {
   type        = string
   description = "The docker image used for compute task."
-  default     = "registry:2.8.3"
 }
 
-job "docker-registry" {
+job "docker-registry-garbage-collect" {
   datacenters = ["dc1"]
-  type        = "service"
+  type        = "batch"
+
+  periodic {
+    cron             = "0 22 * * * *"
+    prohibit_overlap = true
+  }
 
   group "app" {
-
-    count = var.count
 
     restart {
       attempts = 2
@@ -37,38 +33,20 @@ job "docker-registry" {
       mode     = "delay"
     }
 
-    update {
-      max_parallel     = 1
-      min_healthy_time = "90s"
-      healthy_deadline = "5m"
-    }
-
     service {
-      name = "docker-registry"
-      port = "http"
-
-      tags = [
-        "traefik.enable=true",
-	      "traefik.http.routers.docker-registry.tls=true",
-	      "traefik.http.routers.docker-registry.tls.certresolver=home",
-      ]
+      name = "docker-registry-garbage-collect"
 
       check {
-        name     = "alive"
-        type     = "http"
-        port     = "http"
-        path     = "/"
+        name     = "docker-registry-garbage-collect"
+        type     = "script"
+        task     = "app"
+        command   = "registry"
+        args      = ["-h"]
         interval = "10s"
         timeout  = "2s"
       }
     }
 
-    network {
-      port "http" {
-        to = 5000
-      }
-
-    }
 
     task "app" {
       driver = "docker"
@@ -79,11 +57,11 @@ job "docker-registry" {
 
       config {
         image = "${var.docker_registry}${var.image_id}"
-        ports = ["http"]
 
         args = [
           "registry",
-          "serve",
+          "garbage-collect",
+          "--dry-run",
           "/secrets/config.yml"
         ]
 

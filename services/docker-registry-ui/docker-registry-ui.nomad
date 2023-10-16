@@ -97,6 +97,7 @@ job "docker-registry-ui" {
 REGISTRY_TITLE=My Private Docker Registry
 REGISTRY_URL=https://docker-registry.{{ key "site/domain"}}
 SINGLE_REGISTRY=true
+DELETE_IMAGES=true
 
 EOF
       }
