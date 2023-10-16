@@ -61,7 +61,7 @@ job "docker-registry-garbage-collect" {
         args = [
           "registry",
           "garbage-collect",
-          "--dry-run",
+          # "--dry-run",
           "/secrets/config.yml"
         ]
 
