@@ -31,6 +31,8 @@ job "telegraf-prometheus" {
       }
 
       template {
+        change_mode   = "signal"
+        change_signal = "SIGHUP"
         data = <<EOTC
 # Adding Client class
 # This should be here until https://github.com/hashicorp/nomad/pull/3882 is merged
