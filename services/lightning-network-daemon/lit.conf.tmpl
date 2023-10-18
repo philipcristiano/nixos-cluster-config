@@ -1,0 +1,9 @@
+httpslisten=0.0.0.0:8443
+pool.rpclisten=0.0.0.0:12009
+lit-dir=/storage/lit
+{{ with secret "kv/data/lightning-terminal" }}
+remote.lnd.rpcserver=127.0.0.1:10009
+remote.lnd.macaroonpath=/alloc/data/chain/bitcoin/mainnet/admin.macaroon
+remote.lnd.tlscertpath=/alloc/data/tls/tls.cert
+uipassword="{{ .Data.data.ui_password }}"
+{{end }}
