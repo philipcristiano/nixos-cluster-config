@@ -78,7 +78,7 @@ agent:
   # Interval for health check
   monitor_interval: 10s
   # Time to flush out inactive apps
-  cleanup_timer: 15m
+  cleanup_timer: 15s
   # Consul api addr for dynamic discovery
   consul_addr: http://localhost:8500/v1
   # interval to query consul for app discovery
