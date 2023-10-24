@@ -9,4 +9,4 @@ vault write pki_int/roles/freshrss \
      max_ttl="720h"
 
 # nomad volume create freshrss.volume
-nomad run freshrss.nomad
+nomad run -var-file=../../nomad_job.vars freshrss.nomad

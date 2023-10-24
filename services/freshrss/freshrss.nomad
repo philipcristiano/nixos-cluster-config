@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "freshrss/freshrss@sha256:275a0a497088916bde7b3a96a87cd43074b3fdd8af9a18e7f9092fe60307dffc" # `edge` release as of 2023-08-16
+  default     = "freshrss/freshrss:1.22.0"
 }
 
 job "freshrss" {
@@ -83,7 +94,7 @@ job "freshrss" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
 
       }
