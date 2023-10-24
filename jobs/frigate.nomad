@@ -1,3 +1,9 @@
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "ghcr.io/blakeblackshear/frigate:0.12.1"
+}
+
 job "frigate" {
   datacenters = ["dc1"]
   type        = "service"
@@ -30,10 +36,32 @@ job "frigate" {
       }
     }
 
+    service {
+      name = "frigate-rtsp"
+      port = "rtsp"
+
+      tags = [
+        "traefik.enable=true",
+        "traefik.tcp.routers.frigate-rtsp.entrypoints=frigate-rtsp",
+        "traefik.tcp.routers.frigate-rtsp.rule=HostSNI(`*`)",
+      ]
+
+      check {
+        name     = "alive"
+        type     = "tcp"
+        port     = "rtsp"
+        interval = "10s"
+        timeout  = "2s"
+      }
+    }
 
     network {
       port "http" {
-  	to = 5000
+  	   to = 5000
+      }
+
+      port "rtsp" {
+  	   to = 8554
       }
 
     }
@@ -49,8 +77,9 @@ job "frigate" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/blakeblackshear/frigate:0.12.0"
-        ports = ["http"]
+        image = var.image_id
+        # entrypoint = ["sleep", "6000"]
+        ports = ["http", "rtsp"]
 
         mount {
           type     = "bind"
@@ -68,6 +97,13 @@ job "frigate" {
           readonly = false
 
         }
+
+  	    devices = [
+         {
+           host_path = "/dev/apex_0"
+           container_path = "/dev/apex_0"
+         }
+	    ]
 
       }
 
@@ -106,7 +142,13 @@ cameras:
     detect:
       width: 1280 # <---- update for your camera's resolution
       height: 720 # <---- update for your camera's resolution
+
 {{ end }}
+
+detectors:
+  coral1:
+    type: edgetpu
+    device: pci
 
 record:
   enabled: True
