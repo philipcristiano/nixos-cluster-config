@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/bitcoin-core:25.0"
+  default     = "btcpayserver/bitcoin:25.0"
 }
 
 job "bitcoind" {
@@ -81,9 +92,9 @@ job "bitcoind" {
         read_only   = false
       }
       config {
-        image        = "busybox:latest"
+        image        = "${var.docker_registry}busybox:latest"
         command      = "sh"
-        args         = ["-c", "mkdir -p /storage/data && chown -R 1000:0 /storage && chmod 775 /storage"]
+        args         = ["-c", "mkdir -p /storage && chown -R 1000:0 /storage && chmod 775 /storage"]
       }
       resources {
         cpu    = 200
@@ -105,22 +116,16 @@ job "bitcoind" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["rpc", "p2p"]
-        args = ["-printtoconsole",
+        args = ["bitcoind",
                 "-rpcallowip=0.0.0.0/0",
                 "-rpcbind=0.0.0.0",
                 "-rpccookiefile=/alloc/data/cookiefile",
                 "-conf=/local/bitcoin.conf",
                 "-datadir=/data",
+                # "-reindex",
         ]
-
-        mount = {
-          type     = "bind"
-          source   = "local/bitcoin.conf"
-          target   = "/data/bitcoin.conf"
-          readonly = false
-        }
 
       }
 
@@ -151,6 +156,14 @@ rpcauth={{ .Key }}:{{ .Value }}
 
 # Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Use [permissions]address for permissions. Uses same permissions as Whitelist Bound IP Address. Can be specified multiple times. Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool. Useful for a gateway node.
 whitelist=192.168.102.0/24
+
+# Enable settings to use for remote Neutrino nodes
+blockfilterindex=1
+peerblockfilters=1
+
+# Don't advertise as a remote node
+discover=0
+
 EOF
       }
 
