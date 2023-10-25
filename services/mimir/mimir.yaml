@@ -24,7 +24,7 @@ common:
 blocks_storage:
   storage_prefix: blocks
   tsdb:
-    dir: /data/ingester
+    dir: {{ env "NOMAD_ALLOC_DIR" }}/data
 
 ingester:
   ring:
