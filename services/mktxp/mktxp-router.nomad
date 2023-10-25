@@ -1,3 +1,19 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+variable "image_id" {
+  type        = string
+  description = "The docker image used for lnd."
+  default     = "philipcristiano/mktxp:1.2.1-p02"
+}
+
 job "mktxp-router" {
   datacenters = ["dc1"]
   type        = "service"
@@ -16,9 +32,10 @@ job "mktxp-router" {
       port = "http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
-	"traefik.http.routers.mktxp-router.tls=true",
-	"traefik.http.routers.mktxp-router.tls.certresolver=home",
+	      "traefik.http.routers.mktxp-router.tls=true",
+	      "traefik.http.routers.mktxp-router.tls.certresolver=home",
       ]
 
       check {
@@ -45,7 +62,7 @@ job "mktxp-router" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/akpw/mktxp:stable-20230706091740"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
         volumes = [
           "local/mktxp.conf:/root/mktxp/mktxp.conf",
@@ -88,6 +105,8 @@ job "mktxp-router" {
     firewall = True                 # IPv4 Firewall rules traffic metrics
     ipv6_firewall = False           # IPv6 Firewall rules traffic metrics
     ipv6_neighbor = False           # Reachable IPv6 Neighbors
+    connection_stats = True
+    check_for_updates = True
 
     poe = False                     # POE metrics
     monitor = True                  # Interface monitor metrics
@@ -107,78 +126,6 @@ job "mktxp-router" {
     use_comments_over_names = True  # when available, forces using comments over the interfaces names
 EOTC
         destination = "local/mktxp.conf"
-      }
-    }
-
-    task "telegraf" {
-      driver = "docker"
-      config {
-        image        = "telegraf:1.25.1"
-        force_pull   = true
-        entrypoint   = ["telegraf"]
-        args = [
-          "-config",
-          "/local/telegraf.conf",
-        ]
-      }
-
-      template {
-        data = <<EOTC
-# Adding Client class
-# This should be here until https://github.com/hashicorp/nomad/pull/3882 is merged
-{{ $node_class := env "node.class" }}
-[global_tags]
-nomad_client_class = "{{ env "node.class" }}"
-
-[agent]
-  interval = "10s"
-  round_interval = true
-  metric_batch_size = 1000
-  metric_buffer_limit = 10000
-  collection_jitter = "0s"
-  flush_interval = "10s"
-  flush_jitter = "3s"
-  precision = ""
-  debug = false
-  quiet = false
-  hostname = ""
-  omit_hostname = false
-
-[[outputs.influxdb_v2]]
-  urls = ["https://influxdb.{{ key "site/domain" }}"]
-  bucket = "host"
-  organization = "{{key "credentials/mktxp/influxdb_organization"}}"
-  token = "{{key "credentials/mktxp/influxdb_token"}}"
-
-[[outputs.http]]
-  ## URL is the address to send metrics to
-  url = "https://mimir.{{ key "site/domain" }}/api/v1/push"
-
-  ## Optional TLS Config
-  # tls_ca = "/etc/telegraf/ca.pem"
-  # tls_cert = "/etc/telegraf/cert.pem"
-  # tls_key = "/etc/telegraf/key.pem"
-
-  ## Data format to output.
-  data_format = "prometheusremotewrite"
-
-  [outputs.http.headers]
-     Content-Type = "application/x-protobuf"
-     Content-Encoding = "snappy"
-     X-Prometheus-Remote-Write-Version = "0.1.0"
-
-
-[[inputs.prometheus]]
-  metric_version = 2
-  urls = ["http://127.0.0.1:{{ env "NOMAD_PORT_http" }}/metrics"]
-
-EOTC
-        destination = "local/telegraf.conf"
-      }
-
-      resources {
-        cpu    = 50
-        memory = 64
       }
     }
   }
