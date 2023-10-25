@@ -105,7 +105,7 @@ job "mktxp-router" {
     firewall = True                 # IPv4 Firewall rules traffic metrics
     ipv6_firewall = False           # IPv6 Firewall rules traffic metrics
     ipv6_neighbor = False           # Reachable IPv6 Neighbors
-    connection_stats = True
+    connection_stats = False
     check_for_updates = True
 
     poe = False                     # POE metrics
