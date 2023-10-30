@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "matrixdotorg/synapse:v1.94.0"
+  default     = "philipcristiano/synapse-omni:1.95.0"
 }
 
 variable "count" {
@@ -79,41 +79,41 @@ job "synapse" {
       }
     }
 
-    volume "storage" {
-      type            = "csi"
-      source          = "synapse"
-      read_only       = false
-      attachment_mode = "file-system"
-      access_mode     = "multi-node-multi-writer"
-    }
+    # volume "storage" {
+    #   type            = "csi"
+    #   source          = "synapse"
+    #   read_only       = false
+    #   attachment_mode = "file-system"
+    #   access_mode     = "multi-node-multi-writer"
+    # }
 
-    task "prep-disk" {
-      driver = "docker"
-      volume_mount {
-        volume      = "storage"
-        destination = "/storage"
-        read_only   = false
-      }
-      config {
-        image        = "${var.docker_registry}busybox:latest"
-        command      = "sh"
-        args         = ["-c", "mkdir -p /storage && chown 1000:1000 /storage && chmod 775 /storage"]
-      }
-      resources {
-        cpu    = 200
-        memory = 128
-        memory_max = 512
-      }
+    # task "prep-disk" {
+    #   driver = "docker"
+    #   volume_mount {
+    #     volume      = "storage"
+    #     destination = "/storage"
+    #     read_only   = false
+    #   }
+    #   config {
+    #     image        = "${var.docker_registry}busybox:latest"
+    #     command      = "sh"
+    #     args         = ["-c", "mkdir -p /storage && chown 1000:1000 /storage && chmod 775 /storage"]
+    #   }
+    #   resources {
+    #     cpu    = 200
+    #     memory = 128
+    #     memory_max = 512
+    #   }
 
-      lifecycle {
-        hook    = "prestart"
-        sidecar = false
-      }
-    }
+    #   lifecycle {
+    #     hook    = "prestart"
+    #     sidecar = false
+    #   }
+    # }
 
     task "app" {
       driver = "docker"
-      user = 1000
+      user = 991
 
       vault {
         policies = ["service-synapse"]
@@ -124,10 +124,10 @@ job "synapse" {
         ports = ["http"]
       }
 
-      volume_mount {
-        volume      = "storage"
-        destination = "/data"
-      }
+      # volume_mount {
+      #   volume      = "storage"
+      #   destination = "/data"
+      # }
 
       resources {
         cpu    = 100
@@ -136,11 +136,11 @@ job "synapse" {
       }
 
       env = {
-        SYNAPSE_CONFIG_PATH = "local/synapse.config"
+        SYNAPSE_CONFIG_PATH = "secrets/synapse.config"
       }
 
       template {
-          destination = "local/synapse.config"
+          destination = "secrets/synapse.config"
           data = <<EOF
 # For more information on how to configure Synapse, including a complete accounting of
 # each option, go to docs/usage/configuration/config_documentation.md or
@@ -176,6 +176,9 @@ database:
 {{ end }}
 
 {{with secret "kv/data/synapse"}}
+
+signing_key: "{{.Data.data.SIGNING_KEY }}"
+
 oidc_providers:
   - idp_id: kanidm
     idp_name: "SSO"
@@ -194,9 +197,8 @@ oidc_providers:
 
 enable_metrics: true
 
-log_config: "local/log.config"
-media_store_path: /data/media_store
-signing_key_path: "/data/{{ key "site/public_domain" }}.signing.key"
+log_config: "/local/log.config"
+media_store_path: "/tmp"
 trusted_key_servers:
   - server_name: "matrix.org"
 
@@ -208,6 +210,23 @@ report_stats: true
 # Application services
 app_service_config_files:
 - /local/heisenbridge.yaml
+
+media_storage_providers:
+# S3 Storage provider
+{{with secret "kv/data/synapse"}}
+- module: s3_storage_provider.S3StorageProviderBackend
+  store_local: True
+  store_remote: True
+  store_synchronous: True
+  config:
+    bucket: "{{ .Data.data.BUCKET_NAME }}"
+    # All of the below options are optional, for use with non-AWS S3-like
+    # services, or to specify access tokens here instead of some external method.
+    endpoint_url: "https://s3.{{ key "site/domain"}}:443"
+    access_key_id: "{{ .Data.data.ACCESS_KEY_ID }}"
+    secret_access_key: "{{ .Data.data.SECRET_ACCESS_KEY }}"
+{{ end }}
+
 
 EOF
       }
