@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "ghcr.io/"
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "ghcr.io/blakeblackshear/frigate:0.12.1"
+  default     = "blakeblackshear/frigate:0.13.0-beta4"
 }
 
 job "frigate" {
@@ -12,10 +23,18 @@ job "frigate" {
 
     restart {
       attempts = 2
-      interval = "1m"
+      interval = "5m"
       delay    = "10s"
-      mode     = "delay"
+      mode     = "fail"
     }
+
+    reschedule {
+      delay          = "10s"
+      delay_function = "exponential"
+      max_delay      = "5m"
+      unlimited      = true
+    }
+
 
     service {
       name = "frigate"
@@ -23,8 +42,8 @@ job "frigate" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.frigate.tls=true",
-	"traefik.http.routers.frigate.tls.certresolver=home",
+	      "traefik.http.routers.frigate.tls=true",
+	      "traefik.http.routers.frigate.tls.certresolver=home",
       ]
 
       check {
@@ -77,7 +96,7 @@ job "frigate" {
       driver = "docker"
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         # entrypoint = ["sleep", "6000"]
         ports = ["http", "rtsp"]
 
@@ -117,22 +136,44 @@ job "frigate" {
         memory = 2048
       }
 
+      env {
+        LIBVA_DRIVER_NAME=radeonsi
+      }
+
     template {
         destination = "local/config.yml"
         data = <<EOF
+
+database:
+  path: /media/frigate/frigate.db
 
 mqtt:
   host: {{key "credentials/frigate/mqtt_host"}}
   user: {{key "credentials/frigate/mqtt_username"}}
   password: "{{key "credentials/frigate/mqtt_password"}}"
 
+objects:
+  # Optional: list of objects to track from labelmap.txt
+  track:
+    - person
+    - bird
+    - dog
+    - cat
+go2rtc:
+  streams:
+
+{{ range ls "credentials/frigate/cameras" }}
+    {{ .Key }}: # <------ Name the camera
+    - ffmpeg:{{ .Value }}
+
+{{ end }}
 
 cameras:
 {{ range ls "credentials/frigate/cameras" }}
   {{ .Key }}: # <------ Name the camera
     ffmpeg:
       inputs:
-        - path: {{.Value}}  # <----- Update for your camera
+        - path: rtsp://127.0.0.1:8554/{{ .Key }}
           roles:
             - detect
             - record
@@ -159,6 +200,7 @@ record:
     retain:
       default: 14
       mode: active_objects
+
 
 EOF
 }
