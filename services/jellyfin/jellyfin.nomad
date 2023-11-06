@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "ghcr.io/"
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "jellyfin/jellyfin:10.8.10"
+  default     = "jellyfin/jellyfin:10.8.12"
 }
 
 job "jellyfin" {
@@ -67,12 +78,20 @@ job "jellyfin" {
       access_mode     = "multi-node-multi-writer"
     }
 
+    volume "youtube_shows" {
+      type            = "csi"
+      source          = "yt_tvshows"
+      read_only       = false
+      attachment_mode = "file-system"
+      access_mode     = "multi-node-multi-writer"
+    }
+
 
     task "app" {
       driver = "docker"
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
 
         mount = {
@@ -96,6 +115,11 @@ job "jellyfin" {
       volume_mount {
         volume      = "tvshows"
         destination = "/tvshows"
+      }
+
+      volume_mount {
+        volume      = "youtube_shows"
+        destination = "/youtube_shows"
       }
 
       env {
@@ -126,7 +150,7 @@ job "jellyfin" {
       resources {
         cpu        = 500
         memory     = 1024
-        memory_max = 3072
+        memory_max = 6000
       }
 
     }
