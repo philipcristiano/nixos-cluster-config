@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/electrs:0.9.14"
+  default     = "philipcristiano/electrs:0.10.1"
 }
 
 job "electrs" {
@@ -80,7 +91,7 @@ job "electrs" {
         read_only   = false
       }
       config {
-        image        = "busybox:latest"
+        image        = "${var.docker_registry}busybox:latest"
         command      = "sh"
         args         = ["-c", "mkdir -p /storage/data && chown -R 1000:0 /storage && chmod 775 /storage"]
       }
@@ -105,7 +116,7 @@ job "electrs" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["electrs", "prometheus"]
 
         #entrypoint = ["sleep", "10000"]
