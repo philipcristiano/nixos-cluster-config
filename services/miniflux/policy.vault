@@ -1,0 +1,11 @@
+path "pki_int/issue/miniflux" {
+  capabilities = ["update"]
+}
+
+path "kv/data/miniflux" {
+  capabilities = ["read"]
+}
+
+path "kv/data/miniflux-postgres" {
+  capabilities = ["read"]
+}
