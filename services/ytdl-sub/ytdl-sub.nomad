@@ -171,12 +171,16 @@ presets:
     #   cookiefile: "/config/cookie_file.txt"  # replace with actual cookie file path
       maintain_download_archive: true
 
+    output_options:
+      keep_max_files: "{keep_max_files}"
+
     overrides:
       tv_show_directory: "/tv_shows"  # replace with path to tv show directory
       # Fields in the prebuilt preset that can be changed:
       #
       # episode_title: "{upload_date_standardized} - {title}"
       # episode_plot: "{webpage_url}"  # source variable for the video description is {description}
+      keep_max_files: 0
 
 
 EOF

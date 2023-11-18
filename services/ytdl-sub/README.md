@@ -17,4 +17,4 @@ Deploys 2 jobs:
 
     * `tv_show_name` - Name of the show / channel / playlist that you want to be visible
     * `url` - The URL of the Youtube channel/playlist
-
+    * `keep_max_files` - Set the number of files to keep. Defaults to not removing any files. Setting to "10" would keep the 10 latest files
