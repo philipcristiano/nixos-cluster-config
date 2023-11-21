@@ -11,13 +11,13 @@ variable "domain" {
 variable "lnd_image_id" {
   type        = string
   description = "The docker image used for lnd."
-  default     = "lightninglabs/lnd:v0.17.0-beta"
+  default     = "lightninglabs/lnd:v0.17.2-beta"
 }
 
 variable "terminal_image_id" {
   type        = string
   description = "The docker image used for lightning terminal."
-  default     = "lightninglabs/lightning-terminal:v0.11.0-alpha"
+  default     = "lightninglabs/lightning-terminal:v0.12.1-alpha"
 }
 
 variable "tor_image_id" {
