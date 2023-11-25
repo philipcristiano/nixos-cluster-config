@@ -6,13 +6,13 @@ variable "docker_registry" {
 
 variable "domain" {
   type        = string
-  description = "Name of this instance of Neon Compute Postgres"
+  description = ""
 }
 
 variable "image_id" {
   type        = string
   description = "The docker image used for compute task."
-  default     = "rotki/rotki:v1.30.2"
+  default     = "rotki/rotki:v1.31.0"
 }
 
 job "rotki" {
