@@ -33,6 +33,7 @@ job "jellyfin" {
       port = "http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
 	      "traefik.http.routers.jellyfin.tls=true",
 	      "traefik.http.routers.jellyfin.tls.certresolver=home",
