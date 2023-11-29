@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "jellyfin/jellyfin:10.8.12"
+  default     = "jellyfin/jellyfin:10.8.13"
 }
 
 job "jellyfin" {
