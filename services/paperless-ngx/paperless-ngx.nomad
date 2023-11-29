@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "paperlessngx/paperless-ngx:1.17.3"
+  default     = "paperlessngx/paperless-ngx:2.0.0"
 }
 
 job "paperless-ngx" {
@@ -99,6 +99,10 @@ job "paperless-ngx" {
       driver = "docker"
       user = 1000
 
+      vault {
+        policies = ["service-paperless-ngx"]
+      }
+
       config {
         image = var.image_id
         ports = ["http"]
@@ -128,7 +132,10 @@ job "paperless-ngx" {
           destination = "secrets/file.env"
           data = <<EOF
 
-PAPERLESS_REDIS="redis://:{{ key "credentials/paperless-ngx-redis/password" }}@paperless-ngx-redis.{{ key "site/domain"}}:{{ key "traefik-ports/paperless-ngx-redis" }}"
+{{ with secret "kv/data/paperless-ngx-redis" }}
+PAPERLESS_REDIS="rediss://:{{.Data.data.password}}@paperless-ngx-redis.{{ key "site/domain"}}:6379"
+
+{{ end }}
 EOF
       }
 
@@ -141,7 +148,6 @@ PAPERLESS_DEBUG=no
 # CELERYD_REDIRECT_STDOUTS_LEVEL=debug
 PAPERLESS_ENABLE_FLOWER=true
 
-# PAPERLESS_REDIS="redis://paperless-ngx-redis.{{ key "site/domain"}}:{{ key "traefik-ports/paperless-ngx-redis" }}"
 PAPERLESS_URL="https://paperless-ngx.{{ key "site/domain"}}"
 PAPERLESS_TIKA_GOTENBERG_ENDPOINT=https://gotenberg.{{ key "site/domain"}}
 PAPERLESS_TIKA_ENDPOINT=https://tika.{{ key "site/domain"}}

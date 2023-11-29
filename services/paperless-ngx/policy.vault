@@ -9,3 +9,7 @@ path "pki/issuer/default/json" {
 path "kv/data/paperles-ngx" {
   capabilities = ["read"]
 }
+
+path "kv/data/paperless-ngx-redis" {
+  capabilities = ["read"]
+}
