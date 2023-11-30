@@ -1,3 +1,14 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
@@ -19,8 +30,13 @@ job "telegraf-prometheus" {
 
     task "telegraf" {
       driver = "docker"
+
+      vault {
+        policies = ["service-telegraf-prometheus"]
+      }
+
       config {
-        image        = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         network_mode = "host"
         entrypoint   = ["telegraf"]
 
@@ -44,7 +60,7 @@ nomad_client_class = "{{ env "node.class" }}"
   interval = "10s"
   round_interval = true
   metric_batch_size = 1000
-  metric_buffer_limit = 10000
+  metric_buffer_limit = 100000
   collection_jitter = "0s"
   flush_interval = "10s"
   flush_jitter = "3s"
@@ -95,8 +111,8 @@ EOTC
 
       resources {
         cpu    = 50
-        memory = 64
-        memory_max = 256
+        memory = 128
+        memory_max = 512
       }
     }
   }

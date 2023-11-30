@@ -1,0 +1,11 @@
+path "pki_int/issue/telegraf-prometheus" {
+  capabilities = ["update"]
+}
+
+path "kv/data/telegraf-prometheus" {
+  capabilities = ["read"]
+}
+
+path "kv/data/telegraf-prometheus-tokens/*" {
+  capabilities = ["read"]
+}
