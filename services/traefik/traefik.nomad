@@ -9,10 +9,11 @@ variable "domain" {
   description = "Domain of this instance"
 }
 
+// Update services/docker-prefetch-image when this changes
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "traefik:v3.0.0-beta4"
+  default     = "traefik:v3.0.0-beta5"
 }
 
 variable "ip" {

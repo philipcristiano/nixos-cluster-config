@@ -99,7 +99,7 @@ EOF
 image = "docker-registry.{{ key "site/domain" }}/busybox:latest"
 
 [[image]]
-image = "docker-registry.{{ key "site/domain" }}/traefik:v3.0.0-beta4"
+image = "docker-registry.{{ key "site/domain" }}/traefik:v3.0.0-beta5"
 
 [[image]]
 image = "docker-registry.{{ key "site/domain" }}/minio/minio:RELEASE.2023-09-23T03-47-50Z"
