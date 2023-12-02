@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "jlesage/handbrake:v23.11.4"
+  default     = "jlesage/handbrake:v23.11.5"
 }
 
 job "handbrake" {
@@ -103,10 +103,13 @@ job "handbrake" {
       }
 
       template {
-	destination = "/etc/local-config.yaml"
+	      destination = "/local/app.env"
+        env = true
         data =  <<EOF
 
-      EOF
+AUTOMATED_CONVERSION_OUTPUT_DIR=/storage/out
+
+EOF
       }
 
 
