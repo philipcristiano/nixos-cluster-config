@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "zwavejs/zwave-js-ui:9.5.0"
+  default     = "zwavejs/zwave-js-ui:9.5.1"
 }
 
 job "zwavejs2mqtt" {
