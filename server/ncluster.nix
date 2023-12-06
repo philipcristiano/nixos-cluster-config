@@ -2,6 +2,7 @@
 
 let
 
+
 nomad_usb_device_plugin = pkgs.buildGoModule {
       src = pkgs.fetchFromGitLab {
           owner = "CarbonCollins";
@@ -20,11 +21,17 @@ in
 { environment.systemPackages = [ pkgs.cni-plugins
                                  pkgs.nfs-utils
                                  pkgs.consul
+                                 pkgs.gasket # libedgetpu driver
                                  pkgs.nomad_1_4
                                  pkgs.libusb
                                  nomad_usb_device_plugin
                                  pkgs.vault
                                  pkgs.vault-bin];
+
+
+  boot.extraModulePackages = [ (pkgs.gasket.override { kernel = config.boot.kernelPackages.kernel; }) ];
+
+  # boot.kernel.sysctl."fs.inotify.max_user_watches" = 524288;
 
   services.consul.enable = true;
   services.consul.webUi = true;
@@ -67,7 +74,7 @@ vault {
   # Embedding the token in the configuration is discouraged. Instead users
   # should set the VAULT_TOKEN environment variable when starting the Nomad
   # agent
-  token       = "hvs.ENTER"
+  token       = "hvs.CAESIHzUgT2NTrWKbUgdXg9CJ_-414_uBTWWU3Ge61YSCeZrGh4KHGh2cy4xVnM4MzJEMFhoZFZrcnhJMm9OQlRZeWg"
 
   # Setting the create_from_role option causes Nomad to create tokens for tasks
   # via the provided role. This allows the role to manage what policies are
@@ -81,6 +88,9 @@ vault {
           volumes {
               # required for bind mounting host directories
               enabled = true
+          }
+          gc = {
+            image_delay = "24h"
           }
           allow_caps = [
             "audit_write",
@@ -106,7 +116,17 @@ vault {
   client {
       cni_path = "${pkgs.cni-plugins}/bin"
       cni_config_dir = "/etc/cni/config"
+      host_network "services" {
+        cidr = "192.168.110.0/24"
+        reserved_ports = ""
+      }
+
+      host_volume "minio" {
+        path      = "/opt/minio"
+        read_only = false
+      }
   }
+
   server {
     default_scheduler_config {
       scheduler_algorithm = "spread"
@@ -129,16 +149,20 @@ vault {
      config {
        enabled = true
 
-       included_vendor_ids = [0x0658]
+       included_vendor_ids = []
        excluded_vendor_ids = []
 
-       included_product_ids = [0x0200]
+       included_product_ids = []
        excluded_product_ids = []
 
        fingerprint_period = "1m"
     }
   }
   '';
+  systemd.tmpfiles.rules = [
+    "d /opt/minio - - - - "
+  ];
+
   services.nomad = {
     enableDocker = true;
     dropPrivileges = false;
@@ -212,8 +236,8 @@ storage \"raft\" {
     leader_client_key_file  = \"/var/lib/vault/certs/vault-key.pem\"
   }
   retry_join {
-    leader_tls_servername   = \"192.168.102.101\"
-    leader_api_addr         = \"https://192.168.102.101:8200\"
+    leader_tls_servername   = \"192.168.102.102\"
+    leader_api_addr         = \"https://192.168.102.102:8200\"
     leader_ca_cert_file     = \"/var/lib/vault/ca/ca_cert.pem\"
     leader_client_cert_file = \"/var/lib/vault/certs/vault-cert.pem\"
     leader_client_key_file  = \"/var/lib/vault/certs/vault-key.pem\"
@@ -236,7 +260,7 @@ storage \"raft\" {
 
 
   networking.firewall.allowedUDPPorts = [ 1514 1680 1700 1812 1813 8301];
-  networking.firewall.allowedTCPPorts = [ 80 443 1883 3080 3443 3636 8300 8301 8500 8554 8600 9735 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 1883 3080 3443 3636 8300 8301 8500 8554 8600 9000 9090 9735 ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 5433; to = 5500; } # Static port range for Traefik services
     { from = 5501; to = 5510; } # Static port range for Nomad tasks

@@ -1,0 +1,5 @@
+# Manage k/v secrets
+path "/kv/*" {
+    capabilities = ["create", "read", "update", "delete", "list"]
+}
+EOF
