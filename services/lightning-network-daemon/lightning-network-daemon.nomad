@@ -11,7 +11,7 @@ variable "domain" {
 variable "lnd_image_id" {
   type        = string
   description = "The docker image used for lnd."
-  default     = "lightninglabs/lnd:v0.17.2-beta"
+  default     = "lightninglabs/lnd:v0.17.3-beta"
 }
 
 variable "terminal_image_id" {
