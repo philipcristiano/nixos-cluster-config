@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/hello_idc:0.0.2"
+  default     = "philipcristiano/hello_idc:0.1.1"
 }
 
 job "hello_idc" {
@@ -10,12 +21,15 @@ job "hello_idc" {
 
   group "app" {
 
+    count = 2
+
     restart {
       attempts = 2
       interval = "1m"
       delay    = "10s"
       mode     = "delay"
     }
+
     update {
       max_parallel     = 1
       min_healthy_time = "30s"
@@ -57,11 +71,22 @@ job "hello_idc" {
 
       config {
         # entrypoint = ["sleep", "10000"]
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
         args = [
-        "--bind-addr", "0.0.0.0:3000",
-        "--config-file", "/local/config.toml"]
+          "--bind-addr", "0.0.0.0:3000",
+          "--config-file", "/local/config.toml",
+          "--log-level", "INFO",
+        ]
+      }
+      template {
+          destination = "local/otel.env"
+          env = true
+          data = <<EOF
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://tempo-otlp-grpc.{{ key "site/domain" }}:443
+OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+
+EOF
       }
 
       template {
