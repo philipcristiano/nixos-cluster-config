@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "paperlessngx/paperless-ngx:2.0.1"
+  default     = "paperlessngx/paperless-ngx:2.1.0"
 }
 
 job "paperless-ngx" {
@@ -104,7 +115,7 @@ job "paperless-ngx" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
 
         # entrypoint = ["sleep", "10000"]
