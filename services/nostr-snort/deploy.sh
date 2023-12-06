@@ -8,4 +8,4 @@ vault write pki_int/roles/nostr-snort \
      allow_subdomains=true \
      max_ttl="720h"
 
-nomad run nostr-snort.nomad
+nomad run -var-file=../../nomad_job.vars nostr-snort.nomad

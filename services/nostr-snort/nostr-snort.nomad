@@ -1,7 +1,17 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "ghcr.io/v0l/snort:v0.1.9"
+  default     = "dockurr/snort:0.1.23"
 }
 
 variable "count" {
@@ -37,8 +47,8 @@ job "nostr-snort" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.snort.tls=true",
-	    "traefik.http.routers.snort.tls.certresolver=home",
+	      "traefik.http.routers.snort.tls=true",
+	      "traefik.http.routers.snort.tls.certresolver=home",
       ]
 
       check {
@@ -61,7 +71,7 @@ job "nostr-snort" {
       driver = "docker"
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
         # entrypoint = ["sleep", "10000"]
 
