@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "codeberg.org/"
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "codeberg.org/forgejo/forgejo:1.20"
+  default     = "forgejo/forgejo:1.20.5-0"
 }
 
 job "forgejo" {
@@ -78,13 +89,14 @@ job "forgejo" {
 
     task "prep-disk" {
       driver = "docker"
+
       volume_mount {
         volume      = "storage"
         destination = "/storage"
         read_only   = false
       }
       config {
-        image        = "busybox:latest"
+        image        = "${var.docker_registry}busybox:latest"
         command      = "sh"
         args         = ["-c", "mkdir -p /storage && chown -R 9999:0 /storage && chmod 775 /storage"]
       }
@@ -102,9 +114,13 @@ job "forgejo" {
     task "app" {
       driver = "docker"
 
+      vault {
+        policies = ["service-forgejo"]
+      }
+
       config {
         # entrypoint = ["sleep", "10000"]
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http", "ssh"]
       }
       env {
@@ -118,11 +134,14 @@ job "forgejo" {
 OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-http.{{ key "site/domain" }}:443
 OTEL_EXPORTER_OTLP_PROTOCOL=http/json
 
+{{ with secret "kv/data/forgejo-postgres" }}
 FORGEJO__database__DB_TYPE=postgres
-FORGEJO__database__HOST=forgejo-postgres.{{ key "site/domain" }}:{{ key "traefik-ports/forgejo-postgres" }}
-FORGEJO__database__NAME={{ key "credentials/forgejo-postgres/DB" }}
-FORGEJO__database__USER={{ key "credentials/forgejo-postgres/USER" }}
-FORGEJO__database__PASSWD={{ key "credentials/forgejo-postgres/PASSWORD" }}
+FORGEJO__database__HOST=forgejo-postgres.{{ key "site/domain" }}:5457
+FORGEJO__database__SSL_MODE=require
+FORGEJO__database__NAME={{.Data.data.postgres_username}}
+FORGEJO__database__USER={{.Data.data.postgres_username}}
+FORGEJO__database__PASSWD={{ .Data.data.postgres_password }}
+{{ end }}
 
 FORGEJO__server__SSH_DOMAIN=git.{{ key "site/domain"}}
 
