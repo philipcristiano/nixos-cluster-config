@@ -5,3 +5,7 @@ path "pki_int/issue/nostr-rs-relay" {
 path "kv/data/nostr-rs-relay" {
   capabilities = ["read"]
 }
+
+path "kv/data/nostr-rs-relay-postgres" {
+  capabilities = ["read"]
+}

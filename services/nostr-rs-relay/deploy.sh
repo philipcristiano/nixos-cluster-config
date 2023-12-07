@@ -9,6 +9,6 @@ vault write pki_int/roles/nostr-rs-relay \
      max_ttl="720h"
 
 # nomad volume create nostr-rs-relay-postgres.volume
-nomad run nostr-rs-relay-postgres-backup.nomad
-nomad run nostr-rs-relay-postgres.nomad
+#nomad run nostr-rs-relay-postgres-backup.nomad
+#nomad run nostr-rs-relay-postgres.nomad
 nomad run nostr-rs-relay.nomad

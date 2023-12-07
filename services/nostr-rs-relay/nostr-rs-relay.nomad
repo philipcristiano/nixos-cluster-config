@@ -63,6 +63,10 @@ job "nostr-rs-relay" {
     task "app" {
       driver = "docker"
 
+      vault {
+        policies = ["service-nostr-rs-relay"]
+      }
+
       config {
         image = var.image_id
         ports = ["http"]
@@ -140,7 +144,10 @@ engine = "postgres"
 
 # Database connection string.  Required for postgres; not used for
 # sqlite.
-connection = "postgresql://{{ key "credentials/nostr-rs-relay-postgres/USER" }}:{{ key "credentials/nostr-rs-relay-postgres/PASSWORD" }}@nostr-rs-relay-postgres.{{ key "site/domain" }}:{{ key "traefik-ports/nostr-rs-relay-postgres" }}/{{ key "credentials/nostr-rs-relay-postgres/DB" }}"
+{{with secret "kv/data/nostr-rs-relay-postgres"}}
+connection = "postgresql://{{.Data.data.postgres_username}}:{{ .Data.data.postgres_password }}@nostr-rs-relay-postgres.{{ key "site/domain" }}:5457/{{.Data.data.postgres_username}}"
+
+{{ end }}
 
 # Optional database connection string for writing.  Use this for
 # postgres clusters where you want to separate reads and writes to
