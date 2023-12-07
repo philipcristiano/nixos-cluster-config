@@ -33,10 +33,15 @@ job "homeassistant" {
       port = "http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
-	    "traefik.http.routers.homeassistant.tls=true",
-	    "traefik.http.routers.homeassistant.tls.certresolver=home",
+	      "traefik.http.routers.homeassistant.tls=true",
+	      "traefik.http.routers.homeassistant.tls.certresolver=home",
       ]
+
+      meta {
+        metrics_path = "/api/prometheus"
+      }
 
       check {
         name     = "alive"
