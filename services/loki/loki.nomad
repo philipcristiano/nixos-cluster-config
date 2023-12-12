@@ -1,7 +1,7 @@
 variable "docker_registry" {
   type        = string
   description = "The docker registry"
-  default     = "ghcr.io/"
+  default     = ""
 }
 
 variable "domain" {
@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/loki:2.9.2"
+  default     = "grafana/loki:2.9.3"
 }
 
 job "loki" {
