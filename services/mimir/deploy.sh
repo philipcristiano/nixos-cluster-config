@@ -2,4 +2,4 @@ set -ex
 
 vault policy write service-mimir policy.vault
 
-nomad run mimir.nomad
+nomad run -var-file=../../nomad_job.vars mimir.nomad

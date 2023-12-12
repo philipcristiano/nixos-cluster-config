@@ -1,3 +1,14 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
@@ -29,7 +40,6 @@ job "mimir" {
       }
     }
 
-
     network {
       port "http" {
 	      to = 8080
@@ -55,7 +65,7 @@ job "mimir" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http", "grpc"]
 
         args = [
