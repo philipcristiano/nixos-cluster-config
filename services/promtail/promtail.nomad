@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/promtail:2.8.4"
+  default     = "grafana/promtail:2.9.3"
 }
 
 job "promtail" {
@@ -58,7 +69,7 @@ scrape_configs:
       target_label:  'group'
       replacement:   '$1'
     - source_labels: [__meta_consul_service]
-      target_label: job
+      target_label: service
     - source_labels: ['__meta_consul_node']
       regex:         '(.*)'
       target_label:  'instance'
@@ -72,7 +83,7 @@ EOTC
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
         args = [
           "-config.file=/local/promtail.yml",
