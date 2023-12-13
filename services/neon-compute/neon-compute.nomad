@@ -25,7 +25,6 @@ variable "name" {
 variable "domain" {
   type        = string
   description = "Name of this instance of Neon Compute Postgres"
-
 }
 
 job "JOB_NAME-postgres" {
@@ -56,8 +55,8 @@ job "JOB_NAME-postgres" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.tcp.routers.${var.name}-postgres.tls=true",
-	    "traefik.tcp.routers.${var.name}-postgres.tls.certresolver=home",
+	      "traefik.tcp.routers.${var.name}-postgres.tls=true",
+	      "traefik.tcp.routers.${var.name}-postgres.tls.certresolver=home",
         "traefik.tcp.routers.${var.name}-postgres.entrypoints=postgres",
         "traefik.tcp.routers.${var.name}-postgres.rule=HostSNI(`${var.name}-postgres.${var.domain}`)",
       ]
@@ -68,6 +67,16 @@ job "JOB_NAME-postgres" {
         port     = "pg"
         interval = "10s"
         timeout  = "2s"
+      }
+
+      check {
+        name     = "sql-select"
+        type     = "script"
+        task     = "app"
+        interval = "10s"
+        timeout  = "2s"
+        command  = "sh"
+        args     = ["/local/check.sh"]
       }
 
       check_restart {
@@ -168,6 +177,21 @@ BROKER_ENDPOINT=https://neon-storage-broker.{{key "site/domain"}}
 
 EOF
         destination = "secrets/file.env"
+      }
+      template {
+        destination = "local/check.sh"
+        data = <<EOF
+
+set -ex
+psql -p 55433 -h 127.0.0.1 -U cloud_admin postgres < /local/check.sql
+
+EOF
+      }
+      template {
+        destination = "local/check.sql"
+        data = <<EOF
+SELECT 1;
+EOF
       }
 
       template {
