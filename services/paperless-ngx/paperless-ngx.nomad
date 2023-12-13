@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "paperlessngx/paperless-ngx:2.1.1"
+  default     = "paperlessngx/paperless-ngx:2.1.2"
 }
 
 job "paperless-ngx" {
@@ -82,6 +82,7 @@ job "paperless-ngx" {
       attachment_mode = "file-system"
       access_mode     = "multi-node-multi-writer"
     }
+
     task "prep-disk" {
       driver = "docker"
       volume_mount {
