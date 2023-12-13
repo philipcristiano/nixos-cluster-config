@@ -38,6 +38,12 @@ job "baserow" {
 	      "traefik.http.routers.baserow.tls.certresolver=home",
       ]
 
+      check_restart {
+        limit           = 5
+        grace           = "60s"
+        ignore_warnings = false
+      }
+
       check {
         name     = "alive"
         type     = "http"
@@ -47,28 +53,30 @@ job "baserow" {
         timeout  = "2s"
       }
 
-      check_restart {
-        limit           = 2
-        grace           = "30s"
-        ignore_warnings = false
+      check {
+        name     = "backend-curl-http"
+        type     = "script"
+        task     = "app"
+        interval = "15s"
+        timeout  = "10s"
+        command  = "curl"
+        args     = ["-f", "127.0.0.1:8000/_health/"]
       }
 
-      # check {
-      #   name     = "backend"
-      #   type     = "http"
-      #   port     = "backend"
-      #   path     = "/_health/"
-      #   interval = "10s"
-      #   timeout  = "2s"
-      #   }
+      check {
+        name     = "backend-cmd"
+        type     = "script"
+        task     = "app"
+        interval = "30s"
+        timeout  = "10s"
+        command  = "/baserow.sh"
+        args     = ["backend-cmd", "backend-healthcheck"]
+      }
     }
 
     network {
       port "http" {
   	    to = 80
-      }
-      port "backend" {
-  	    to = 8000
       }
     }
 
@@ -113,7 +121,7 @@ job "baserow" {
       config {
         # entrypoint = ["sleep", "10000"]
         image = "${var.docker_registry}${var.image_id}"
-        ports = ["http", "backend"]
+        ports = ["http"]
       }
       env {
  	    CONFIG_ROOT = "/local"
