@@ -29,9 +29,9 @@ job "synapse-admin" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.synapse-admin.tls=true",
+	      "traefik.http.routers.synapse-admin.tls=true",
         "traefik.http.routers.synapse-admin.entrypoints=http,https",
-	    "traefik.http.routers.synapse-admin.tls.certresolver=home",
+	      "traefik.http.routers.synapse-admin.tls.certresolver=home",
       ]
 
       check {

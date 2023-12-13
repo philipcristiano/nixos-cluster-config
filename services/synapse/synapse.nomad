@@ -52,7 +52,7 @@ job "synapse" {
       tags = [
         "prometheus",
         "traefik.enable=true",
-	    "traefik.http.routers.synapse.tls=true",
+	      "traefik.http.routers.synapse.tls=true",
         "traefik.http.routers.synapse.entrypoints=http,https,http-public,https-public",
         "traefik.http.routers.synapse.rule=( Host(`matrix.philipcristiano.com`)  && !PathPrefix(`/_synapse/admin`) && !PathPrefix(`/_synapse/metrics`) ) || Host(`matrix.home.cristiano.cloud`)",
 	    "traefik.http.routers.synapse.tls.certresolver=home",
@@ -79,38 +79,6 @@ job "synapse" {
       }
     }
 
-    # volume "storage" {
-    #   type            = "csi"
-    #   source          = "synapse"
-    #   read_only       = false
-    #   attachment_mode = "file-system"
-    #   access_mode     = "multi-node-multi-writer"
-    # }
-
-    # task "prep-disk" {
-    #   driver = "docker"
-    #   volume_mount {
-    #     volume      = "storage"
-    #     destination = "/storage"
-    #     read_only   = false
-    #   }
-    #   config {
-    #     image        = "${var.docker_registry}busybox:latest"
-    #     command      = "sh"
-    #     args         = ["-c", "mkdir -p /storage && chown 1000:1000 /storage && chmod 775 /storage"]
-    #   }
-    #   resources {
-    #     cpu    = 200
-    #     memory = 128
-    #     memory_max = 512
-    #   }
-
-    #   lifecycle {
-    #     hook    = "prestart"
-    #     sidecar = false
-    #   }
-    # }
-
     task "app" {
       driver = "docker"
       user = 991
@@ -123,11 +91,6 @@ job "synapse" {
         image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
       }
-
-      # volume_mount {
-      #   volume      = "storage"
-      #   destination = "/data"
-      # }
 
       resources {
         cpu    = 100
