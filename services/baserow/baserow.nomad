@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "baserow/baserow:1.19.1"
+  default     = "baserow/baserow:1.21.2"
 }
 
 job "baserow" {
@@ -16,6 +27,7 @@ job "baserow" {
       delay    = "10s"
       mode     = "delay"
     }
+
     service {
       name = "baserow"
       port = "http"
@@ -58,7 +70,7 @@ job "baserow" {
         read_only   = false
       }
       config {
-        image        = "busybox:latest"
+        image        = "${var.docker_registry}busybox:latest"
         command      = "sh"
         args         = ["-c", "mkdir -p /storage/data && chown -R 9999:0 /storage && chmod 775 /storage && rm -rf /data/log/*.lock"]
       }
