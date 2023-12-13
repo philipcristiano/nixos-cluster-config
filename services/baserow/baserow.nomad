@@ -46,11 +46,29 @@ job "baserow" {
         interval = "10s"
         timeout  = "2s"
       }
+
+      check_restart {
+        limit           = 2
+        grace           = "30s"
+        ignore_warnings = false
+      }
+
+      # check {
+      #   name     = "backend"
+      #   type     = "http"
+      #   port     = "backend"
+      #   path     = "/_health/"
+      #   interval = "10s"
+      #   timeout  = "2s"
+      #   }
     }
 
     network {
       port "http" {
   	    to = 80
+      }
+      port "backend" {
+  	    to = 8000
       }
     }
 
