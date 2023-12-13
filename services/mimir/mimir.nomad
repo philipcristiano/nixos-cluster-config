@@ -15,6 +15,12 @@ variable "image_id" {
   default     = "grafana/mimir:2.9.0"
 }
 
+variable "memory_max" {
+  type        = number
+  description = "Resource memory_max setting"
+  default     = 4096
+}
+
 job "mimir" {
   datacenters = ["dc1"]
   type        = "service"
@@ -100,7 +106,7 @@ EOF
       resources {
         cpu    = 100
         memory = 256
-        memory_max = 1024
+        memory_max = var.memory_max
       }
 
     }
