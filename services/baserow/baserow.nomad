@@ -76,37 +76,53 @@ job "baserow" {
     task "app" {
       driver = "docker"
 
+      vault {
+        policies = ["service-baserow"]
+      }
+
       config {
         # entrypoint = ["sleep", "10000"]
-        image = var.image_id
-        ports = ["http"]
+        image = "${var.docker_registry}${var.image_id}"
+        ports = ["http", "backend"]
       }
       env {
  	    CONFIG_ROOT = "/local"
         LOG_LEVEL = "info"
+        # MIGRATE_ON_STARTUP = "false"
       }
       template {
           destination = "local/config.env"
           env = true
           data = <<EOF
 BASEROW_ENABLE_OTEL=true
-OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-http.{{ key "site/domain" }}:443
+OTEL_EXPORTER_OTLP_ENDPOINT=https://tempo-otlp-http.{{ key "site/domain" }}:443
 OTEL_EXPORTER_OTLP_PROTOCOL=http/json
 OTEL_RESOURCE_ATTRIBUTES="service.name=baserow"
 OTEL_SERVICE_NAME=baserow_servicename
 
+EMAIL_SMTP=True
+EMAIL_SMTP_HOST="smtp.{{ key "site/domain" }}"
+EMAIL_SMTP_PORT="5457"
+EMAIL_SMTP_USE_TLS=
+
 BASEROW_PUBLIC_URL=https://baserow.{{ key "site/domain" }}
+
+{{with secret "kv/data/baserow-postgres"}}
 DATABASE_HOST=baserow-postgres.{{ key "site/domain" }}
-DATABASE_PORT={{ key "traefik-ports/baserow-postgres" }}
-DATABASE_USER={{ key "credentials/baserow-postgres/USER" }}
-DATABASE_PASSWORD={{ key "credentials/baserow-postgres/PASSWORD" }}
-DATABASE_NAME={{ key "credentials/baserow-postgres/DB" }}
+DATABASE_PORT=5457
+DATABASE_USER={{.Data.data.postgres_username}}
+DATABASE_PASSWORD={{ .Data.data.postgres_password }}
+DATABASE_NAME={{.Data.data.postgres_username}}
+{{ end }}
 
 REDIS_HOST=baserow-redis.{{ key "site/domain" }}
-REDIS_PORT={{ key "traefik-ports/baserow-redis" }}
+REDIS_PORT=6379
 REDIS_USER=default
-REDIS_PASSWORD={{ key "credentials/baserow-redis/password" }}
+REDIS_PROTOCOL=rediss
 
+{{ with secret "kv/data/baserow-redis" }}
+REDIS_PASSWORD={{.Data.data.password}}
+{{ end }}
 EOF
       }
 

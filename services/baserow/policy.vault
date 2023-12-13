@@ -1,3 +1,11 @@
 path "kv/data/baserow" {
   capabilities = ["read"]
 }
+
+path "kv/data/baserow-postgres" {
+  capabilities = ["read"]
+}
+
+path "kv/data/baserow-redis" {
+  capabilities = ["read"]
+}
