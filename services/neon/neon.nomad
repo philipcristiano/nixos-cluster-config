@@ -13,7 +13,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for cluster tasks."
-  default     = "neondatabase/neon:3841"
+  default     = "neondatabase/neon:4205"
 }
 
 variable "safekeeper_count" {
@@ -59,9 +59,10 @@ job "neon" {
       port = "pageserver-http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
-	    "traefik.http.routers.neon-pageserver-api.tls=true",
-	    "traefik.http.routers.neon-pageserver-api.tls.certresolver=home",
+	      "traefik.http.routers.neon-pageserver-api.tls=true",
+	      "traefik.http.routers.neon-pageserver-api.tls.certresolver=home",
       ]
 
       check {
@@ -219,7 +220,7 @@ EOF
 
     update {
       max_parallel = 1
-      stagger      = "300s"
+      min_healthy_time = "60s"
     }
 
     constraint {

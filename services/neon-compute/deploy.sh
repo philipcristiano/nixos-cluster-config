@@ -1,7 +1,6 @@
 set -ex
 
 
-# nomad volume create minio.volume
 if [ "$1" = "" ]; then
     echo "Name needs to be specified ./deploy.sh NAME"
     exit 1

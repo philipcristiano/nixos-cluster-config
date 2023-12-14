@@ -8,7 +8,7 @@ variable "docker_registry" {
 variable "image_id" {
   type        = string
   description = "The docker image used for compute task."
-  default     = "neondatabase/compute-node-v16:3841"
+  default     = "neondatabase/compute-node-v16:4205"
 }
 
 variable "count" {
