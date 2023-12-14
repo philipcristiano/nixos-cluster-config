@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "miniflux/miniflux:2.0.50"
+  default     = "miniflux/miniflux:2.0.51"
 }
 
 variable "count" {
