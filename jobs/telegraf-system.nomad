@@ -16,6 +16,12 @@ job "telegraf-system" {
       mode     = "delay"
     }
 
+    volume "hostfs" {
+      type      = "host"
+      read_only = true
+      source    = "hostfs"
+    }
+
     task "telegraf" {
       driver = "docker"
       config {
@@ -27,6 +33,17 @@ job "telegraf-system" {
           "-config",
           "/local/telegraf.conf",
         ]
+      }
+
+      volume_mount {
+        volume      = "hostfs"
+        destination = "/hostfs"
+        propagation_mode = "host-to-task"
+      }
+
+      env {
+        HOST_MOUNT_PREFIX="/hostfs"
+        HOST_PROC="/hostfs/proc"
       }
 
       template {

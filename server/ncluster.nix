@@ -122,8 +122,13 @@ vault {
       }
 
       host_volume "minio" {
-        path      = "/opt/minio"
+        path      = "/mnt/data/minio"
         read_only = false
+      }
+
+      host_volume "hostfs" {
+        path      = "/"
+        read_only = true
       }
   }
 
