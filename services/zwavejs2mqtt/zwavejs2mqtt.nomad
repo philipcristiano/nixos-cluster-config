@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "zwavejs/zwave-js-ui:9.5.1"
+  default     = "zwavejs/zwave-js-ui:9.6.0"
 }
 
 job "zwavejs2mqtt" {
@@ -41,8 +41,8 @@ job "zwavejs2mqtt" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.zwavejs.tls=true",
-	    "traefik.http.routers.zwavejs.tls.certresolver=home",
+	      "traefik.http.routers.zwavejs.tls=true",
+	      "traefik.http.routers.zwavejs.tls.certresolver=home",
       ]
 
       check {
@@ -60,9 +60,8 @@ job "zwavejs2mqtt" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.zwavejs-websocket.tls=true",
-	    "traefik.http.routers.zwavejs-websocket.tls.certresolver=home",
-	    #"traefik.http.routers.zwavejs-websocket.entrypoints=http,https",
+	      "traefik.http.routers.zwavejs-websocket.tls=true",
+	      "traefik.http.routers.zwavejs-websocket.tls.certresolver=home",
       ]
 
       check {
