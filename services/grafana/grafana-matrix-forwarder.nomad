@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "registry.gitlab.com/"
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "registry.gitlab.com/hectorjsmith/grafana-matrix-forwarder:0.8.0"
+  default     = "hectorjsmith/grafana-matrix-forwarder:0.8.0"
 }
 
 job "grafana-matrix-forwarder" {
@@ -28,10 +39,11 @@ job "grafana-matrix-forwarder" {
       port = "http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
-	    "traefik.http.routers.grafana-matrix-forwarder.tls=true",
+	      "traefik.http.routers.grafana-matrix-forwarder.tls=true",
         "traefik.http.routers.grafana-matrix-forwarder.entrypoints=http,https",
-	    "traefik.http.routers.grafana-matrix-forwarder.tls.certresolver=home",
+	      "traefik.http.routers.grafana-matrix-forwarder.tls.certresolver=home",
       ]
 
       check {
@@ -42,13 +54,19 @@ job "grafana-matrix-forwarder" {
         interval = "10s"
         timeout  = "2s"
       }
+
+      check_restart {
+        limit = 3
+        grace = "90s"
+        ignore_warnings = false
+      }
     }
 
     task "app" {
       driver = "docker"
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         #entrypoint = ["sleep", "10000"]
         ports = ["http"]
 
