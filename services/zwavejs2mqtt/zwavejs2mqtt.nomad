@@ -40,6 +40,7 @@ job "zwavejs2mqtt" {
       port = "http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
 	      "traefik.http.routers.zwavejs.tls=true",
 	      "traefik.http.routers.zwavejs.tls.certresolver=home",
