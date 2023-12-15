@@ -19,12 +19,14 @@ common:
 
 {{ end }}
 
-
 # Blocks storage requires a prefix when using a common object storage bucket.
 blocks_storage:
   storage_prefix: blocks
   tsdb:
     dir: {{ env "NOMAD_ALLOC_DIR" }}/data
+    # Alloc dir is used for block storage. There is a chance this wont start up
+    # again so flush the blocks when possible
+    flush_blocks_on_shutdown: true
 
 ingester:
   ring:
@@ -32,3 +34,7 @@ ingester:
 
 server:
   log_level: info
+
+limits:
+  # Allow ingestion of out-of-order samples up to 5 minutes since the latest received sample for the series.
+  out_of_order_time_window: 5m
