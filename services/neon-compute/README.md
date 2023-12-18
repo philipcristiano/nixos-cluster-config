@@ -23,3 +23,10 @@ Then call the API to create them on the Neon Pageserver
 curl -v -H "Content-Type: application/json" -d "{\"new_tenant_id\": \"$TENANT_ID\"}" https://neon-pageserver-api.home.cristiano.cloud/v1/tenant/
 
 curl -v      -X POST -H "Content-Type: application/json" -d "{\"new_timeline_id\": \"$TIMELINE_ID\", \"pg_version\": 16}" "https://neon-pageserver-api.home.cristiano.cloud/v1/tenant/$TENANT_ID/timeline/"
+
+
+Add the tenant to load automatically in Consul
+
+```
+neon/load_tenants/* -> [Tenant ID]
+```

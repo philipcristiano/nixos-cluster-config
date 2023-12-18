@@ -75,6 +75,9 @@ job "neon" {
     }
 
     network {
+
+      mode = "bridge"
+
       port "pageserver-http" {
   	    to = 9898
       }
@@ -128,6 +131,46 @@ AWS_SECRET_ACCESS_KEY={{.Data.data.AWS_SECRET_ACCESS_KEY}}
 
 EOF
         destination = "secrets/file.env"
+      }
+
+    }
+    task "attach" {
+      driver = "docker"
+
+      vault {
+        policies = ["service-neon"]
+      }
+
+      lifecycle {
+        hook = "poststart"
+      }
+
+      config {
+        image = "${var.docker_registry}curlimages/curl:8.3.0-1"
+        command = "sh"
+
+        args = [ "/local/attach.sh" ]
+      }
+
+      resources {
+        cpu    = 100
+        memory = 64
+        memory_max = 256
+      }
+
+      template {
+        destination = "local/attach.sh"
+        data = <<EOF
+
+set -ex
+{{ range $key, $pairs := safeTree "neon/load_tenants" }}
+
+# {{ .Key }}
+curl -vX POST "http://localhost:9898/v1/tenant/{{- .Value}}/attach"
+{{ end }}
+
+
+EOF
       }
 
     }
