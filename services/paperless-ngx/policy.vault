@@ -10,6 +10,10 @@ path "kv/data/paperles-ngx" {
   capabilities = ["read"]
 }
 
+path "kv/data/paperless-ngx-postgres" {
+  capabilities = ["read"]
+}
+
 path "kv/data/paperless-ngx-redis" {
   capabilities = ["read"]
 }
