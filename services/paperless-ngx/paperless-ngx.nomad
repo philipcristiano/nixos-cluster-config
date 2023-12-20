@@ -52,9 +52,9 @@ job "paperless-ngx" {
       name = "paperless-ngx-celery"
 
       check {
-        name     = "celery-consumer"
+        name     = "celery-worker"
         type     = "script"
-        task     = "celery-consumer"
+        task     = "celery-worker"
         command     = "celery"
         args        = [
             "-A",
