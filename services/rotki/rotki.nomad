@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for compute task."
-  default     = "rotki/rotki:v1.31.0"
+  default     = "rotki/rotki:v1.31.2"
 }
 
 job "rotki" {
