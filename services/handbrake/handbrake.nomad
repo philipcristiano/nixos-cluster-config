@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "jlesage/handbrake:v23.12.1"
+  default     = "jlesage/handbrake:v23.12.2"
 }
 
 job "handbrake" {
