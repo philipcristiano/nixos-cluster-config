@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "paperlessngx/paperless-ngx:2.1.3"
+  default     = "paperlessngx/paperless-ngx:2.2.0"
 }
 
 job "paperless-ngx" {
@@ -179,8 +179,8 @@ job "paperless-ngx" {
 
       resources {
         cpu    = 10
-        memory = 512
-        memory_max = 1024
+        memory = 768
+        memory_max = 1500
       }
 
       template {
