@@ -1,0 +1,11 @@
+path "pki_int/issue/directus" {
+  capabilities = ["update"]
+}
+
+path "kv/data/directus" {
+  capabilities = ["read"]
+}
+
+path "kv/data/directus-postgres" {
+  capabilities = ["read"]
+}
