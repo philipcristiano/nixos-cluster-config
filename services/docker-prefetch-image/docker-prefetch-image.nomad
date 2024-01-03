@@ -102,7 +102,7 @@ image = "docker-registry.{{ key "site/domain" }}/busybox:latest"
 image = "docker-registry.{{ key "site/domain" }}/traefik:v3.0.0-beta5"
 
 [[image]]
-image = "docker-registry.{{ key "site/domain" }}/minio/minio:RELEASE.2023-09-23T03-47-50Z"
+image = "docker-registry.{{ key "site/domain" }}/minio/minio:RELEASE.2024-01-01T16-36-33Z"
 
 [[image]]
 image = "docker-registry.{{ key "site/domain" }}/philipcristiano/gocast:sha-a00e6fd"
