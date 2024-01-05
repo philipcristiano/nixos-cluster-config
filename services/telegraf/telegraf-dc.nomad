@@ -1,7 +1,16 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "telegraf:1.27.0"
 }
 
 job "telegraf-dc" {
@@ -20,16 +29,22 @@ job "telegraf-dc" {
     task "telegraf" {
       driver = "docker"
       config {
-        image        = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         force_pull   = true
         entrypoint   = ["telegraf"]
         args = [
-          "-config",
-          "/local/telegraf.conf",
+          "--config-directory",
+          "/local/telegraf.d",
         ]
       }
 
       template {
+      	  destination = "/local/telegraf.d/http-output.conf"
+          data = file("telegraf.httpoutput.conf")
+      }
+
+      template {
+        destination = "/local/telegraf.d/telegraf.conf"
         data = <<EOTC
 # Adding Client class
 # This should be here until https://github.com/hashicorp/nomad/pull/3882 is merged
@@ -51,29 +66,6 @@ nomad_client_class = "{{ env "node.class" }}"
   hostname = ""
   omit_hostname = false
 
-[[outputs.influxdb_v2]]
-  urls = ["https://influxdb.{{ key "site/domain" }}"]
-  bucket = "dc"
-  organization = "{{key "credentials/telegraf-system/organization"}}"
-  token = "{{key "credentials/telegraf-system/influxdb_token"}}"
-
-[[outputs.http]]
-  ## URL is the address to send metrics to
-  url = "https://mimir.{{ key "site/domain" }}/api/v1/push"
-
-  ## Optional TLS Config
-  # tls_ca = "/etc/telegraf/ca.pem"
-  # tls_cert = "/etc/telegraf/cert.pem"
-  # tls_key = "/etc/telegraf/key.pem"
-
-  ## Data format to output.
-  data_format = "prometheusremotewrite"
-
-  [outputs.http.headers]
-     Content-Type = "application/x-protobuf"
-     Content-Encoding = "snappy"
-     X-Prometheus-Remote-Write-Version = "0.1.0"
-
 [[inputs.consul]]
   ## Consul server address
   address = "consul.{{ key "site/domain" }}:8500"
@@ -81,7 +73,6 @@ nomad_client_class = "{{ env "node.class" }}"
 ## Set response_timeout (default 5 seconds)
 
 EOTC
-        destination = "local/telegraf.conf"
       }
 
       resources {
