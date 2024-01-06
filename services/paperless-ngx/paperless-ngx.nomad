@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "paperlessngx/paperless-ngx:2.2.1"
+  default     = "paperlessngx/paperless-ngx:2.3.0"
 }
 
 job "paperless-ngx" {
