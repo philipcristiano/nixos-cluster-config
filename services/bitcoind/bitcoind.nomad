@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "btcpayserver/bitcoin:25.1"
+  default     = "btcpayserver/bitcoin:26.0"
 }
 
 job "bitcoind" {
