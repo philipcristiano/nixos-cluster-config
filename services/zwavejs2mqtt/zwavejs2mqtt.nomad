@@ -48,10 +48,17 @@ job "zwavejs2mqtt" {
 
       check {
         name     = "alive"
-        type     = "tcp"
+        type     = "http"
         port     = "http"
+        path     = "/"
         interval = "10s"
         timeout  = "2s"
+      }
+
+      check_restart {
+        limit = 3
+        grace = "90s"
+        ignore_warnings = false
       }
     }
 
