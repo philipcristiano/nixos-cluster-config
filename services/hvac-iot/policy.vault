@@ -1,0 +1,11 @@
+path "pki_int/issue/hvac-iot" {
+  capabilities = ["update"]
+}
+
+path "kv/data/hvac-iot" {
+  capabilities = ["read"]
+}
+
+path "kv/data/hvac-iot" {
+  capabilities = ["read"]
+}
