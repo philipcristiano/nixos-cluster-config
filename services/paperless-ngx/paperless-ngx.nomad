@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "paperlessngx/paperless-ngx:2.4.0"
+  default     = "paperlessngx/paperless-ngx:2.4.1"
 }
 
 job "paperless-ngx" {
@@ -48,25 +48,6 @@ job "paperless-ngx" {
       }
     }
 
-    service {
-      name = "paperless-ngx-celery"
-
-      check {
-        name     = "celery-worker"
-        type     = "script"
-        task     = "celery-worker"
-        command     = "celery"
-        args        = [
-            "-A",
-            "paperless",
-            "inspect",
-            "ping",
-        ]
-        interval = "10s"
-        timeout  = "30s"
-      }
-    }
-
     network {
       port "http" {
   	    to = 8000
@@ -80,6 +61,12 @@ job "paperless-ngx" {
       read_only       = false
       attachment_mode = "file-system"
       access_mode     = "multi-node-multi-writer"
+    }
+
+    ephemeral_disk {
+      migrate = false
+      size    = 500
+      sticky  = false
     }
 
     task "prep-disk" {
@@ -196,7 +183,7 @@ job "paperless-ngx" {
       }
     }
 
-    task "celery-consumer" {
+    task "document-consumer" {
       driver = "docker"
       user = 1000
 
@@ -270,6 +257,31 @@ job "paperless-ngx" {
         destination = "local/file.env"
         data = file("env.tmpl")
       }
+
+      service {
+        name = "paperless-ngx-celery"
+
+        check {
+          name     = "celery-worker"
+          type     = "script"
+          task     = "celery-worker"
+          command     = "celery"
+          args        = [
+              "-A",
+              "paperless",
+              "inspect",
+              "ping",
+          ]
+          interval = "60s"
+          timeout  = "45s"
+        }
+        check_restart {
+          limit = 3
+          grace = "90s"
+          ignore_warnings = false
+        }
+      }
+
     }
 
     task "celery-beat" {
