@@ -6,13 +6,13 @@ variable "docker_registry" {
 
 variable "domain" {
   type        = string
-  description = "Name of this instance of Neon Compute Postgres"
+  description = ""
 }
 
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/loki:2.9.3"
+  default     = "grafana/loki:2.9.4"
 }
 
 job "loki" {
