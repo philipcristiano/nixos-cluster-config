@@ -1,3 +1,20 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "ghcr.io/"
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "jacobalberty/unifi-docker:v8.0.26"
+}
+
 job "unifi" {
   datacenters = ["dc1"]
   type        = "service"
@@ -17,8 +34,8 @@ job "unifi" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.unifi-command.tls=true",
-	"traefik.http.routers.unifi-command.tls.certresolver=home",
+	      "traefik.http.routers.unifi-command.tls=true",
+	      "traefik.http.routers.unifi-command.tls.certresolver=home",
       ]
 
       check {
@@ -35,9 +52,9 @@ job "unifi" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.unifi.tls=true",
-	"traefik.http.routers.unifi.tls.certresolver=home",
-	"traefik.http.services.unifi.loadbalancer.server.scheme=https",
+	      "traefik.http.routers.unifi.tls=true",
+	      "traefik.http.routers.unifi.tls.certresolver=home",
+	      "traefik.http.services.unifi.loadbalancer.server.scheme=https",
       ]
 
       check {
@@ -55,7 +72,7 @@ job "unifi" {
         static = 8080
       }
       port "https" {
-  	to = 8443
+  	    to = 8443
       }
 
     }
@@ -72,7 +89,7 @@ job "unifi" {
       driver = "docker"
 
       config {
-        image = "jacobalberty/unifi:v7.3.83"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["command", "https"]
       }
 
@@ -82,8 +99,9 @@ job "unifi" {
       }
 
       resources {
-        cpu    = 500
+        cpu    = 50
         memory = 1024
+        memory_max = 2048
       }
 
     }

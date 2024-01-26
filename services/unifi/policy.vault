@@ -1,0 +1,7 @@
+path "pki_int/issue/unifi" {
+  capabilities = ["update"]
+}
+
+path "kv/data/unifi" {
+  capabilities = ["read"]
+}
