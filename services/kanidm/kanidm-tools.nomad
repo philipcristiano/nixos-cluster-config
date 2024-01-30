@@ -1,3 +1,14 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
@@ -25,7 +36,7 @@ job "kanidm-tools" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         entrypoint = ["sleep" ,"infinity"]
 
         hostname = "kanidm-tools"

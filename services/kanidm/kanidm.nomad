@@ -1,3 +1,14 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
@@ -87,7 +98,7 @@ job "kanidm" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["ldap", "http"]
         #entrypoint = ["sleep" ,"10000"]
         command = "/sbin/kanidmd"
@@ -252,9 +263,9 @@ EOF
 
 
       resources {
-        cpu    = 125
-        memory = 512
-        memory_max = 1024
+        cpu    = 32
+        memory = 64
+        memory_max = 512
       }
 
     }
