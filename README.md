@@ -53,6 +53,12 @@ BGP is used with GoCast to advertise floating IPs
 
 ## Services
 
+(WIP)
+```
+bash deploy.sh
+```
+
+
 ### Storage
 
 Minio for S3-compatible storage that can be hosted on each node.
@@ -69,24 +75,6 @@ Postgres is preferred database solution with [Neon](https://neon.tech) being use
 Traefik and Let's Encrypt for certs
 
 
-### InfluxDB
-
-#### Setup
-
-Create bucket:
-
-`host`
-
-###  Telegraf
-
-#### Setup
-Create a token in InfluxDB and add to Consul
-
-`credentials/telegraf-system/influxdb_token`
-
-Set:
-
-`credentials/telegraf-system/organization` to match the InfluxDB org
 
 ### mktxp / mikrotik monitoring
 
