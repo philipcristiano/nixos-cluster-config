@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/electrs:0.10.1"
+  default     = "philipcristiano/electrs:0.10.2"
 }
 
 job "electrs" {

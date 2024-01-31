@@ -4,6 +4,8 @@ SERVICES=(
   "neon"
   "docker-registry"
   "docker-registry-ui"
+  "bitcoind"
+  "electrs"
   "frigate"
   "homeassistant"
   "hello_idc"
