@@ -4,10 +4,12 @@ SERVICES=(
   "neon"
   "docker-registry"
   "docker-registry-ui"
+  "frigate"
   "homeassistant"
   "hello_idc"
   "kanidm"
   "paperless-ngx"
+  "rotki"
   "zwavejs2mqtt"
 )
 
