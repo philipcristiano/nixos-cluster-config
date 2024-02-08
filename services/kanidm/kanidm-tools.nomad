@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "kanidm/tools:1.1.0-beta.13"
+  default     = "kanidm/tools:1.1.0-rc.15"
 }
 
 job "kanidm-tools" {
