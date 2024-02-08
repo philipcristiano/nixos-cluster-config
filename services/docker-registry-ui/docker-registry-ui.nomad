@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "joxit/docker-registry-ui:2.5.6-debian"
+  default     = "joxit/docker-registry-ui:2.5.7-debian"
 }
 
 variable "count" {
