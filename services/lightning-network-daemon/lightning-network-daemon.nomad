@@ -11,13 +11,13 @@ variable "domain" {
 variable "lnd_image_id" {
   type        = string
   description = "The docker image used for lnd."
-  default     = "lightninglabs/lnd:v0.17.3-beta"
+  default     = "lightninglabs/lnd:v0.17.4-beta"
 }
 
 variable "terminal_image_id" {
   type        = string
   description = "The docker image used for lightning terminal."
-  default     = "lightninglabs/lightning-terminal:v0.12.1-alpha"
+  default     = "lightninglabs/lightning-terminal:v0.12.3-alpha"
 }
 
 variable "tor_image_id" {
@@ -223,7 +223,7 @@ EOF
 
       resources {
         cpu    = 100
-        memory = 512
+        memory = 1024
         memory_max = 4096
       }
 
@@ -302,7 +302,7 @@ EOF
 
       resources {
         cpu    = 24
-        memory = 128
+        memory = 256
         memory_max = 512
       }
 
