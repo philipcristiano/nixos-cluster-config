@@ -13,7 +13,6 @@ SERVICES=(
   "paperless-ngx"
   "rotki"
   "zwavejs2mqtt"
-  "bitcoind"
   "synapse"
   "regctl"
   "lightning-network-daemon"
