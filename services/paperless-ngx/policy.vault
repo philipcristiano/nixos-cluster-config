@@ -6,7 +6,7 @@ path "pki/issuer/default/json" {
   capabilities = ["read"]
 }
 
-path "kv/data/paperles-ngx" {
+path "kv/data/paperless-ngx" {
   capabilities = ["read"]
 }
 
