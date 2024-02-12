@@ -1,7 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "registry.gitlab.com/"
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "registry.gitlab.com/etke.cc/postmoogle:v0.9.16"
+  default     = "etke.cc/postmoogle:v0.9.17"
 }
 
 variable "count" {
@@ -66,7 +77,7 @@ job "postmoogle" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["smtp"]
       }
 

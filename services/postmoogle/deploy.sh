@@ -2,4 +2,4 @@ set -ex
 
 vault policy write service-postmoogle policy.vault
 
-nomad run postmoogle.nomad
+nomad run -var-file=../../nomad_job.vars postmoogle.nomad

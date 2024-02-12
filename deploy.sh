@@ -10,6 +10,7 @@ SERVICES=(
   "homeassistant"
   "hello_idc"
   "kanidm"
+  "postmoogle"
   "paperless-ngx"
   "rotki"
   "zwavejs2mqtt"
