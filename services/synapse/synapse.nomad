@@ -62,6 +62,12 @@ job "synapse" {
         metrics_path = "/_synapse/metrics"
       }
 
+      check_restart {
+        limit = 3
+        grace = "90s"
+        ignore_warnings = false
+      }
+
       check {
         name     = "alive"
         type     = "http"
@@ -70,8 +76,18 @@ job "synapse" {
         interval = "10s"
         timeout  = "2s"
       }
-    }
 
+      check {
+        name     = "list-rooms"
+        type     = "script"
+        task     = "app"
+        command  = "/bin/bash"
+        args     = ["/secrets/check.sh"]
+        interval = "15s"
+        timeout  = "10s"
+      }
+
+    }
 
     network {
       port "http" {
@@ -100,6 +116,17 @@ job "synapse" {
 
       env = {
         SYNAPSE_CONFIG_PATH = "secrets/synapse.config"
+      }
+
+      template {
+          destination = "secrets/check.sh"
+          data = <<EOF
+#!/bin/bash
+{{with secret "kv/data/synapse"}}
+curl -fv http://127.0.0.1:{{ env "NOMAD_PORT_http" }}/_matrix/client/v3/publicRooms -H "Authorization: Bearer {{.Data.data.HEALTHCHECK_TOKEN }}"
+{{ end }}
+
+EOF
       }
 
       template {
