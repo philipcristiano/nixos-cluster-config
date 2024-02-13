@@ -17,6 +17,7 @@ SERVICES=(
   "synapse"
   "regctl"
   "lightning-network-daemon"
+  "ytdl-sub"
 )
 
 for SERVICE in ${SERVICES[@]}; do
