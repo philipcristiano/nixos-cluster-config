@@ -191,10 +191,10 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     statusCodes = ["300-302", "400-499"]
     retryAttempts = true
 [tracing]
-  [tracing.openTelemetry]
-    address = "tempo-otlp-grpc.{{ key "site/domain" }}:443"
+  [tracing.otlp]
 
-    [tracing.openTelemetry.grpc]
+    [tracing.otlp.grpc]
+      endpoint = "tempo-otlp-grpc.{{ key "site/domain" }}:443"
 
 
 [metrics]
