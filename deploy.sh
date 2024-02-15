@@ -4,6 +4,8 @@ SERVICES=(
   "neon"
   "docker-registry"
   "docker-registry-ui"
+  "docker-prefetch-image"
+  "traefik"
   "bitcoind"
   "electrs"
   "frigate"
