@@ -122,8 +122,13 @@ job "synapse" {
           destination = "secrets/check.sh"
           data = <<EOF
 #!/bin/bash
+set -e
 {{with secret "kv/data/synapse"}}
-curl -fv http://127.0.0.1:{{ env "NOMAD_PORT_http" }}/_matrix/client/v3/publicRooms -H "Authorization: Bearer {{.Data.data.HEALTHCHECK_TOKEN }}"
+    {{ if eq (index .Data.data "HEALTHCHECK_TOKEN") "" }}
+        echo "No HEALTHCHECK_TOKEN set"
+    {{ else }}
+        curl -fv http://127.0.0.1:{{ env "NOMAD_PORT_http" }}/_matrix/client/v3/publicRooms -H "Authorization: Bearer {{.Data.data.HEALTHCHECK_TOKEN }}"
+    {{ end }}
 {{ end }}
 
 EOF
