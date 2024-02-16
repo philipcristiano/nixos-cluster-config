@@ -1,7 +1,17 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "awesometechnologies/synapse-admin:0.8.7"
 }
 
 job "synapse-admin" {
@@ -48,7 +58,7 @@ job "synapse-admin" {
       driver = "docker"
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
       }
 

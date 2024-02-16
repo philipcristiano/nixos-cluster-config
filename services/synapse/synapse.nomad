@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/synapse-omni:1.101.0"
 }
 
 variable "count" {

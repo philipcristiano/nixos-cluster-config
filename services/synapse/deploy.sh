@@ -8,4 +8,13 @@ vault write pki_int/roles/synapse \
      allow_subdomains=true \
      max_ttl="720h"
 
-nomad run -var-file=../../nomad_job.vars synapse.nomad
+SERVICE_ID=synapse
+IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
+ADMIN_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.admin)
+
+# nomad volume create zwavejs2mqtt.volume
+nomad job dispatch -meta image="${IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+nomad job dispatch -meta image="${ADMIN_IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+# nomad volume create paperless-ngx.volume
+nomad run -var-file=../../nomad_job.vars -var "image_id=${IMAGE_ID}" synapse.nomad
+nomad run -var-file=../../nomad_job.vars -var "image_id=${ADMIN_IMAGE_ID}" synapse-admin.nomad
