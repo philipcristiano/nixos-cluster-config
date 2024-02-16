@@ -1,7 +1,17 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "registry.gitlab.com/"
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "scsibug/nostr-rs-relay:0.8.9"
 }
 
 variable "count" {
@@ -68,7 +78,7 @@ job "nostr-rs-relay" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
         # entrypoint = ["sleep", "10000"]
 

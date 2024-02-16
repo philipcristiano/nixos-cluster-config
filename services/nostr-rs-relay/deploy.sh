@@ -8,7 +8,12 @@ vault write pki_int/roles/nostr-rs-relay \
      allow_subdomains=true \
      max_ttl="720h"
 
-# nomad volume create nostr-rs-relay-postgres.volume
-#nomad run nostr-rs-relay-postgres-backup.nomad
-#nomad run nostr-rs-relay-postgres.nomad
-nomad run nostr-rs-relay.nomad
+pushd ../neon-compute
+bash deploy.sh nostr-rs-relay
+popd
+
+SERVICE_ID=nostr-rs-relay
+IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
+
+nomad job dispatch -meta image="${IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+nomad run -var-file=../../nomad_job.vars -var "image_id=${IMAGE_ID}" nostr-rs-relay.nomad
