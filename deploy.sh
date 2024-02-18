@@ -9,6 +9,7 @@ SERVICES=(
   "bitcoind"
   "electrs"
   "frigate"
+  "miniflux"
   "homeassistant"
   "hello_idc"
   "kanidm"
