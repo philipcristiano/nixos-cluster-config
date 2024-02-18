@@ -1,0 +1,1 @@
+FROM rhasspy/wyoming-piper:1.3.2
