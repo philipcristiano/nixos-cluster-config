@@ -2,7 +2,7 @@ set -ex
 
 vault policy write service-frigate policy.vault
 
-SERVICE_ID=homeassistant
+SERVICE_ID=frigate
 IMAGE_ID=$(awk '/FROM ./ {sub(/.[^\/]*\//, "", $2 ); print $2}' Dockerfile)
 SOURCE_REGISTRY="$(awk '/FROM ./ {sub(/\/.*/, "", $2 ); print $2}' Dockerfile)/"
 
