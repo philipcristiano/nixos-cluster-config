@@ -1,2 +1,2 @@
-FROM blakeblackshear/frigate:0.13.1
+FROM ghcr.io/blakeblackshear/frigate:0.13.1
 
