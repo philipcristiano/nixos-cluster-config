@@ -1,7 +1,17 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/nostress:0.0.4"
 }
 
 variable "count" {
@@ -61,12 +71,23 @@ job "nostress" {
       driver = "docker"
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
-        command = "nostress"
         args = [
-          "--bind-addr", "0.0.0.0:3000"
+          "--bind-addr", "0.0.0.0:3000",
+          "--default-relay", "wss://relay.damus.io",
+          "--default-relay", "wss://relay.snort.social",
         ]
+      }
+
+      template {
+          destination = "local/otel.env"
+          env = true
+          data = <<EOF
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://otel-grpc.{{ key "site/domain" }}:443
+OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+
+EOF
       }
 
       resources {
