@@ -1,7 +1,17 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/hvac-iot-mqtt-influx:0.1.6"
 }
 
 job "hvac-iot" {
@@ -41,7 +51,7 @@ job "hvac-iot" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         args = [
             "--config-file", "/secrets/config.toml",
             "--log-json",
