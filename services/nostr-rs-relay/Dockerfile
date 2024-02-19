@@ -1,1 +1,1 @@
-FROM scsibug/nostr-rs-relay:0.8.9
+FROM scsibug/nostr-rs-relay:0.8.13
