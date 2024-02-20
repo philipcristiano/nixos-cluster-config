@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/hello_idc:0.1.1"
 }
 
 job "hello_idc" {
@@ -42,8 +41,12 @@ job "hello_idc" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.hello-idc.tls=true",
-	      "traefik.http.routers.hello-idc.tls.certresolver=home",
+        "traefik.http.routers.hello-idc.tls=true",
+        "traefik.http.routers.hello-idc.tls.certresolver=home",
+
+	      "enable_gocast",
+        "gocast_vip=192.168.110.50/32",
+	      "gocast_monitor=consul",
       ]
 
       check {
@@ -58,7 +61,8 @@ job "hello_idc" {
 
     network {
       port "http" {
-  	    to = 3000
+        to = 3000
+        host_network = "services"
       }
     }
 
