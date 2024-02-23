@@ -2,5 +2,15 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "services/minio-system",
+        "services/ytdl-sub"
+      ],
+      "versioning": "loose"
+    }
   ]
 }
