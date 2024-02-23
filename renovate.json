@@ -9,6 +9,12 @@
       "matchPackageNames": ["minio/minio"],
       "versionCompatibility": "^(?<compatibility>.*)\\.(?<version>.*)T.*$",
       "versioning": "loose"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/jmbannon/ytdl-sub"],
+      "versionCompatibility": "^ubuntu-(?<version>.*)$",
+      "versioning": "loose"
     }
   ]
 }
