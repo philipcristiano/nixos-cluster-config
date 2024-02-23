@@ -7,7 +7,7 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["minio/minio"],
-      "versionCompatibility": "^(?<compatibility>.*).(?<version>.*)T.*$",
+      "versionCompatibility": "^(?<compatibility>.*)\\.(?<version>.*)T.*$",
       "versioning": "loose"
     }
   ]
