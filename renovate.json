@@ -6,6 +6,12 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
+      "matchPackageNames": ["atinoda/text-generation-webui"],
+      "versionCompatibility": "^(?<compatibility>.*)-(?<version>.*-.*-.*)$",
+      "versioning": "loose"
+    },
+    {
+      "matchDatasources": ["docker"],
       "matchPackageNames": ["minio/minio"],
       "versionCompatibility": "^(?<compatibility>.*)\\.(?<version>.*)T.*$",
       "versioning": "loose"
