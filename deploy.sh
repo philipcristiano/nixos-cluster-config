@@ -5,6 +5,7 @@ SERVICES=(
   "docker-registry"
   "docker-registry-ui"
   "docker-prefetch-image"
+  "minio-system"
   "traefik"
   "bitcoind"
   "electrs"

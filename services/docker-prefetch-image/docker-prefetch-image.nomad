@@ -95,14 +95,17 @@ EOF
           destination = "local/config.toml"
           data = <<EOF
 
+{{ range ls "docker-prefetch" }}
+[[image]]
+# {{ .Key }}
+image = "docker-registry.{{ key "site/domain" }}/{{.Value}}"
+{{ end }}
+
 [[image]]
 image = "docker-registry.{{ key "site/domain" }}/busybox:latest"
 
 [[image]]
-image = "docker-registry.{{ key "site/domain" }}/traefik:v3.0.0-beta5"
-
-[[image]]
-image = "docker-registry.{{ key "site/domain" }}/minio/minio:RELEASE.2024-01-01T16-36-33Z"
+image = "docker-registry.{{ key "site/domain" }}/traefik:v3.0.0-rc1"
 
 [[image]]
 image = "docker-registry.{{ key "site/domain" }}/philipcristiano/gocast:sha-a00e6fd"
