@@ -7,9 +7,9 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": [
-        "minio/minio",
-        "ghcr.io/jmbannon/ytdl-sub"
+        "minio/minio"
       ],
+      "versionCompatibility": "^(?<compatibility>.*)\.(?<version>.*)T.*$",
       "versioning": "loose"
     }
   ]
