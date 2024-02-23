@@ -9,10 +9,12 @@ SERVICES=(
   "traefik"
   "bitcoind"
   "electrs"
+  "lightning-network-daemon"
   "frigate"
   "miniflux"
   "homeassistant"
   "hello_idc"
+  "hvac-iot"
   "kanidm"
   "postmoogle"
   "paperless-ngx"
@@ -20,7 +22,8 @@ SERVICES=(
   "zwavejs2mqtt"
   "synapse"
   "regctl"
-  "lightning-network-daemon"
+  "actual"
+  "nostress"
   "ytdl-sub"
 )
 
