@@ -1,1 +1,1 @@
-FROM grafana/grafana-oss:9.5.16
+FROM grafana/grafana-oss:10.3.3
