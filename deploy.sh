@@ -7,6 +7,7 @@ SERVICES=(
   "docker-prefetch-image"
   "minio-system"
   "traefik"
+  "telefraf"
   "bitcoind"
   "electrs"
   "lightning-network-daemon"
