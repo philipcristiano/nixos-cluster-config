@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/mimir:2.9.0"
 }
 
 variable "memory_max" {

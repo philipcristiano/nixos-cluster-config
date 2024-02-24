@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/loki:2.9.4"
 }
 
 job "loki" {
@@ -27,8 +26,8 @@ job "loki" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.loki.tls=true",
-	      "traefik.http.routers.loki.tls.certresolver=home",
+	    "traefik.http.routers.loki.tls=true",
+	    "traefik.http.routers.loki.tls.certresolver=home",
       ]
 
       check {
