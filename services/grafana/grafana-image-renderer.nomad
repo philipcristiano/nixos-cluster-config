@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/grafana-image-renderer:3.7.0"
 }
 
 job "grafana-image-renderer" {

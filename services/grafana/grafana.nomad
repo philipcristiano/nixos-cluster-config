@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/grafana-oss:9.5.2"
 }
 
 job "grafana" {
@@ -105,6 +104,8 @@ GF_AUTH_GENERIC_OAUTH_USE_PKCE = true
 GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH = "contains(scopes[*], 'admin') && 'Admin' || contains(scopes[*], 'editor') && 'Editor' || 'Viewer'"
 
 {{end}}
+
+GF_DATABASE_WAL=true
 
 GF_SMTP_ENABLED=true
 GF_SMTP_HOST="smtp.{{ key "site/domain" }}:{{ key "traefik-ports/smtp" }}"

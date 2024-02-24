@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "hectorjsmith/grafana-matrix-forwarder:0.8.0"
 }
 
 job "grafana-matrix-forwarder" {
@@ -75,7 +74,7 @@ job "grafana-matrix-forwarder" {
           destination = "local/app.env"
           env = true
           data = <<EOF
-GMF_MATRIX_HOMESERVER="https://matrix.{{ key "site/domain" }}"
+GMF_MATRIX_HOMESERVER="https://matrix.{{ key "site/public_domain" }}"
 GMF_MATRIX_USER="{{ key "credentials/grafana-matrix-forwarder/user" }}"
 GMF_MATRIX_PASSWORD="{{ key "credentials/grafana-matrix-forwarder/password" }}"
 
