@@ -13,7 +13,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for cluster tasks."
-  default     = "neondatabase/neon:4205"
 }
 
 variable "safekeeper_count" {
@@ -67,10 +66,17 @@ job "neon" {
 
       check {
         name     = "alive"
-        type     = "tcp"
+        type     = "http"
         port     = "pageserver-http"
+        path     = "/v1/status"
         interval = "10s"
         timeout  = "2s"
+      }
+
+      check_restart {
+        limit = 3
+        grace = "90s"
+        ignore_warnings = false
       }
     }
 
@@ -165,6 +171,7 @@ EOF
 set -ex
 {{ range $key, $pairs := safeTree "neon/load_tenants" }}
 
+sleep 1
 # {{ .Key }}
 curl -vX POST "http://localhost:9898/v1/tenant/{{- .Value}}/attach"
 {{ end }}
@@ -197,10 +204,17 @@ EOF
 
       check {
         name     = "alive"
-        type     = "tcp"
+        type     = "http"
         port     = "http"
+        path     = "/status"
         interval = "10s"
         timeout  = "2s"
+      }
+
+      check_restart {
+        limit = 3
+        grace = "90s"
+        ignore_warnings = false
       }
     }
 
@@ -289,9 +303,16 @@ EOF
         interval = "10s"
         timeout  = "2s"
       }
+
+      check_restart {
+        limit = 3
+        grace = "90s"
+        ignore_warnings = false
+      }
     }
 
     network {
+
       port "pg" {
         to = 5454
       }
