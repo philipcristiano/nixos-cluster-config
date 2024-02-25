@@ -13,7 +13,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "traefik:v3.0.0-rc1"
 }
 
 variable "ip" {
