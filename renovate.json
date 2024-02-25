@@ -19,7 +19,7 @@
     {
       "matchDatasources": ["docker"],
       "matchPackagePatterns": ["^neondatabase/.*"],
-      "versionCompatibility": "^(?<version>\d{4,6})$",
+      "versionCompatibility": "^(?<version>\\d{4,6})$",
       "versioning": "loose"
     },
     {
