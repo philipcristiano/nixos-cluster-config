@@ -18,6 +18,12 @@
     },
     {
       "matchDatasources": ["docker"],
+      "matchPackagePatterns": ["^neondatabase/.*"],
+      "versionCompatibility": "^(?<version>\d{4,6})$",
+      "versioning": "loose"
+    },
+    {
+      "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/jmbannon/ytdl-sub"],
       "versionCompatibility": "^ubuntu-(?<version>.*)$",
       "versioning": "loose"
