@@ -1,13 +1,13 @@
 set -ex
 
 SERVICES=(
-  "neon"
+  "minio-system"
   "docker-registry"
   "docker-registry-ui"
   "docker-prefetch-image"
-  "minio-system"
   "traefik"
-  "telefraf"
+  "neon"
+  "telegraf"
   "grafana"
   "loki"
   "mimir"
