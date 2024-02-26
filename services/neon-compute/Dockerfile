@@ -1,1 +1,1 @@
-FROM neondatabase/compute-node-v16:4712
+FROM neondatabase/compute-node-v16:4717
