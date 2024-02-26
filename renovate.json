@@ -13,6 +13,7 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["minio/minio"],
+      "schedule": ["before 8am on monday"],
       "versionCompatibility": "^(?<compatibility>.*)\\.(?<version>.*T.*)Z$",
       "versioning": "loose"
     },
