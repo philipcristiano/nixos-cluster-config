@@ -96,7 +96,7 @@ job "jaeger" {
 
       resources {
         cpu    = 200
-        memory = 1000
+        memory = 3000
       }
 
       volume_mount {
