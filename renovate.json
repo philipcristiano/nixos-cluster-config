@@ -19,6 +19,7 @@
     {
       "matchDatasources": ["docker"],
       "matchPackagePatterns": ["^neondatabase/.*"],
+      "schedule": ["@weekly"],
       "versionCompatibility": "^(?<version>\\d{4,6})$",
       "versioning": "loose"
     },
