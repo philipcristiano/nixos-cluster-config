@@ -8,7 +8,6 @@ variable "docker_registry" {
 variable "image_id" {
   type        = string
   description = "The docker image used for compute task."
-  default     = "neondatabase/compute-node-v16:4205"
 }
 
 variable "count" {
@@ -73,8 +72,8 @@ job "JOB_NAME-postgres" {
         name     = "sql-select"
         type     = "script"
         task     = "app"
-        interval = "10s"
-        timeout  = "2s"
+        interval = "30s"
+        timeout  = "30s"
         command  = "sh"
         args     = ["/local/check.sh"]
       }
@@ -143,6 +142,8 @@ EOF
 
     task "app" {
       driver = "docker"
+
+      kill_timeout = "600s"
 
       vault {
         policies = ["service-${ var.name }-postgres"]

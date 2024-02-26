@@ -7,7 +7,6 @@ variable "docker_registry" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "postgres:16"
 }
 
 variable "name" {
