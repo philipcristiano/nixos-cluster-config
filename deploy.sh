@@ -28,6 +28,7 @@ SERVICES=(
   "regctl"
   "actual"
   "nostress"
+  "nostr-rs-relay"
   "ytdl-sub"
 )
 
