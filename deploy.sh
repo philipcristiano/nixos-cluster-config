@@ -22,6 +22,7 @@ SERVICES=(
   "kanidm"
   "postmoogle"
   "paperless-ngx"
+  "jellyfin"
   "rotki"
   "zwavejs2mqtt"
   "synapse"
