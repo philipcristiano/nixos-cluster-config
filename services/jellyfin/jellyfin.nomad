@@ -1,7 +1,7 @@
 variable "docker_registry" {
   type        = string
   description = "The docker registry"
-  default     = "ghcr.io/"
+  default     = ""
 }
 
 variable "domain" {
