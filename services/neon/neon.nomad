@@ -173,7 +173,9 @@ set -ex
 
 sleep 1
 # {{ .Key }}
-curl -vX POST "http://localhost:9898/v1/tenant/{{- .Value}}/attach"
+
+curl -vfX PUT http://localhost:9898/v1/tenant/${TENANT_ID}/location_config \
+--data "{\"tenant_id\":\"${TENANT_ID}\", \"mode\":\"AttachedSingle\", \"tenant_conf\": {\"checkpoint_distance\": 1048576, \"pitr_interval\": \"1d\"}, \"generation\": 1}"
 {{ end }}
 
 

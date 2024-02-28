@@ -103,20 +103,34 @@ job "JOB_NAME-postgres" {
         sidecar = false
       }
 
+      restart {
+        attempts = 2
+        interval = "10s"
+        delay    = "2s"
+        mode     = "delay"
+      }
+
       vault {
         policies = ["service-${ var.name }-postgres"]
       }
 
       config {
         image = "${var.docker_registry}curlimages/curl:8.3.0-1"
-        command = "curl"
+        command = "sh"
+        args = [ "/local/attach.sh" ]
 
-        args = [
-            "-v",
-            "-X", "POST",
-            "${PAGESERVER_ENDPOINT}/v1/tenant/${TENANT_ID}/attach"
-        ]
+      }
 
+      template {
+        destination = "local/attach.sh"
+        data = <<EOF
+
+set -ex
+
+curl -vfX PUT ${PAGESERVER_ENDPOINT}/v1/tenant/${TENANT_ID}/location_config \
+--data "{\"tenant_id\":\"${TENANT_ID}\", \"mode\":\"AttachedSingle\", \"tenant_conf\": {\"checkpoint_distance\": 1048576, \"pitr_interval\": \"1d\"}, \"generation\": 1}"
+
+EOF
       }
 
       resources {
