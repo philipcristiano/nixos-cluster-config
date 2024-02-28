@@ -12,6 +12,11 @@ SERVICE_ID=synapse
 IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
 ADMIN_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.admin)
 
+
+pushd ../neon-compute
+bash deploy.sh synapse
+popd
+
 # nomad volume create zwavejs2mqtt.volume
 nomad job dispatch -meta image="${IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
 nomad job dispatch -meta image="${ADMIN_IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
