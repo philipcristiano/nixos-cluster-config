@@ -23,6 +23,7 @@ SERVICES=(
   "postmoogle"
   "paperless-ngx"
   "jellyfin"
+  "llm"
   "rotki"
   "zwavejs2mqtt"
   "synapse"
