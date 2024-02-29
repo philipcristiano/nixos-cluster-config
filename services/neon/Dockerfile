@@ -1,1 +1,1 @@
-FROM neondatabase/neon:4733
+FROM neondatabase/neon:4748
