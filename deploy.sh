@@ -29,6 +29,7 @@ SERVICES=(
   "synapse"
   "regctl"
   "actual"
+  "handbrake"
   "nostress"
   "nostr-rs-relay"
   "ytdl-sub"
