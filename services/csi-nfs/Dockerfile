@@ -1,1 +1,1 @@
-FROM registry.gitlab.com/rocketduck/csi-plugin-nfs:0.6.1
+FROM registry.gitlab.com/rocketduck/csi-plugin-nfs:0.7.0
