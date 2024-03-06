@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "philipcristiano/docker-prefetch-image:0.1.4"
 }
 
 variable "count" {
