@@ -6,12 +6,13 @@ vault policy write service-docker-prefetch-image policy.vault
 PREFETCH_DOCKER_HUB=(
     "minio-system"
     "docker-registry"
+    "traefik"
 )
 
 ### Dispatch the copy job to the local repository and set into consul to pull the image
 for D in ${PREFETCH_DOCKER_HUB[@]}; do
   IMAGE_ID=$(awk '/FROM/ {print $2}' "../${D}/Dockerfile")
-  nomad job dispatch -meta image="${IMAGE_ID}" -id-prefix-template="${PREFETCH_DOCKER_HUB}" regctl-img-copy
+  nomad job dispatch -meta image="${IMAGE_ID}" -id-prefix-template="${D}" regctl-img-copy
   consul kv put "docker-prefetch/${D}" "${IMAGE_ID}"
 done
 
