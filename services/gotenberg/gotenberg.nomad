@@ -44,10 +44,11 @@ job "gotenberg" {
 
       check {
         name     = "alive"
-        type     = "tcp"
+        type     = "http"
         port     = "http"
         interval = "10s"
         timeout  = "2s"
+        path     = "/health"
       }
     }
 
