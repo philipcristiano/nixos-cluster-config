@@ -5,6 +5,7 @@ vault policy write service-docker-prefetch-image policy.vault
 ### Define which services need prefetching
 PREFETCH_DOCKER_HUB=(
     "minio-system"
+    "docker-registry"
 )
 
 ### Dispatch the copy job to the local repository and set into consul to pull the image

@@ -1,8 +1,9 @@
 set -ex
+SERVICE_ID=docker-registry
+IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
 
-vault policy write service-docker-registry policy.vault
+vault policy write service-${SERVICE_ID} policy.vault
 
-# nomad volume create minio.volume
-
-nomad run -var-file=../../nomad_job.vars -var-file=./service.vars docker-registry.nomad
-nomad run -var-file=../../nomad_job.vars -var-file=./service.vars docker-registry-garbage-collect.nomad
+nomad job dispatch -meta image="${IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+nomad run -var-file=../../nomad_job.vars -var "image_id=${IMAGE_ID}" "${SERVICE_ID}.nomad"
+nomad run -var-file=../../nomad_job.vars -var "image_id=${IMAGE_ID}" "${SERVICE_ID}-garbage-collect.nomad"

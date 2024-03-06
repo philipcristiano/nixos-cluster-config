@@ -13,7 +13,7 @@ http:
 
 storage:
   cache:
-    blobdescriptor: inmemory
+    blobdescriptor: redis
   delete:
       enabled: true
   s3:
@@ -29,5 +29,20 @@ storage:
     multipartcopymaxconcurrency: 100
     multipartcopythresholdsize: 33554432
     rootdirectory: "/"
+{{ end }}
 
+{{ with secret "kv/data/docker-registry-redis" }}
+redis:
+  addr: docker-registry-redis.{{key "site/domain"}}:6379
+  password: {{.Data.data.password}}
+  db: 0
+  dialtimeout: 10ms
+  readtimeout: 10ms
+  writetimeout: 10ms
+  pool:
+    maxidle: 16
+    maxactive: 64
+    idletimeout: 300s
+  tls:
+    enabled: true
 {{ end }}

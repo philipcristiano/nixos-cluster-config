@@ -1,3 +1,7 @@
 path "kv/data/docker-registry" {
   capabilities = ["read"]
 }
+
+path "kv/data/docker-registry-redis" {
+  capabilities = ["read"]
+}

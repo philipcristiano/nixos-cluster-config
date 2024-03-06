@@ -109,9 +109,6 @@ image = "docker-registry.{{ key "site/domain" }}/traefik:v3.0.0-rc1"
 [[image]]
 image = "docker-registry.{{ key "site/domain" }}/philipcristiano/gocast:sha-a00e6fd"
 
-[[image]]
-image = "docker-registry.{{ key "site/domain" }}/registry:2.8.3"
-
 EOF
       }
       resources {
