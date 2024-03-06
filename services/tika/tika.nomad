@@ -1,3 +1,19 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+}
+
 job "tika" {
   datacenters = ["dc1"]
   type        = "service"
@@ -17,8 +33,8 @@ job "tika" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.tika.tls=true",
-	      "traefik.http.routers.tika.tls.certresolver=home",
+	    "traefik.http.routers.tika.tls=true",
+	    "traefik.http.routers.tika.tls.certresolver=home",
       ]
 
       check {
@@ -35,23 +51,22 @@ job "tika" {
       port "http" {
   	    to = 9998
       }
-
     }
 
     task "app" {
       driver = "docker"
 
       config {
-        image = "apache/tika:2.6.0.1-full"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
         # entrypoint = ["sleep", "10000"]
 
       }
 
-
       resources {
-        cpu    = 500
-        memory = 512
+        cpu    = 20
+        memory = 256
+        memory_max = 1024
       }
 
       env {}

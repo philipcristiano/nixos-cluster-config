@@ -21,6 +21,8 @@ SERVICES=(
   "hvac-iot"
   "kanidm"
   "postmoogle"
+  "tika"
+  "gotenberg"
   "paperless-ngx"
   "jellyfin"
   "llm"

@@ -1,3 +1,19 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+}
+
 job "gotenberg" {
   datacenters = ["dc1"]
   type        = "service"
@@ -17,8 +33,8 @@ job "gotenberg" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.gotenberg.tls=true",
-	      "traefik.http.routers.gotenberg.tls.certresolver=home",
+	    "traefik.http.routers.gotenberg.tls=true",
+	    "traefik.http.routers.gotenberg.tls.certresolver=home",
       ]
 
       check {
@@ -29,7 +45,6 @@ job "gotenberg" {
         timeout  = "2s"
       }
     }
-
 
     network {
       port "http" {
@@ -42,9 +57,8 @@ job "gotenberg" {
       driver = "docker"
 
       config {
-        image = "docker.io/gotenberg/gotenberg:7.6"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
-        # entrypoint = ["sleep", "10000"]
 
         command = "gotenberg"
         args = [
@@ -53,7 +67,6 @@ job "gotenberg" {
         ]
 
       }
-
 
       resources {
         cpu    = 500
