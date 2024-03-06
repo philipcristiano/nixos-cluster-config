@@ -32,10 +32,15 @@ job "gotenberg" {
       port = "http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
-	    "traefik.http.routers.gotenberg.tls=true",
-	    "traefik.http.routers.gotenberg.tls.certresolver=home",
+        "traefik.http.routers.gotenberg.tls=true",
+        "traefik.http.routers.gotenberg.tls.certresolver=home",
       ]
+
+      meta {
+       metrics_path = "/prometheus/metrics"
+      }
 
       check {
         name     = "alive"
@@ -48,7 +53,7 @@ job "gotenberg" {
 
     network {
       port "http" {
-  	    to = 3000
+        to = 3000
       }
 
     }
