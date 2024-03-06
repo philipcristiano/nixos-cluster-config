@@ -1,3 +1,7 @@
+
+Example CSI NFS Volume
+
+```
 id = "rackstation" # ID as seen in nomad
 name = "Rackstation" # Display name
 type = "csi"
@@ -17,3 +21,4 @@ parameters { # Optional, allows changing owner (etc) during volume creation
     mode = "770"
 
 }
+```

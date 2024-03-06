@@ -1,6 +1,7 @@
 set -ex
 
 SERVICES=(
+  "csi-nfs"
   "minio-system"
   "docker-registry"
   "docker-registry-ui"

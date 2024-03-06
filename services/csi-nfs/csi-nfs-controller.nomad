@@ -1,3 +1,19 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = "registry.gitlab.com/"
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
+variable "image_id" {
+  type        = string
+  description = "The docker image used for the task."
+}
+
 job "storage-controller" {
   datacenters = ["dc1"]
   type        = "service"
@@ -7,7 +23,7 @@ job "storage-controller" {
       driver = "docker"
 
       config {
-        image = "registry.gitlab.com/rocketduck/csi-plugin-nfs:0.6.1"
+        image = "${var.docker_registry}${var.image_id}"
 
         args = [
           "--type=controller",
@@ -28,8 +44,9 @@ job "storage-controller" {
       }
 
       resources {
-        cpu    = 500
-        memory = 256
+        cpu    = 50
+        memory = 64
+        memory_max = 256
       }
 
     }
