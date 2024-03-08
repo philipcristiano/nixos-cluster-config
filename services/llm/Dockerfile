@@ -1,1 +1,1 @@
-FROM atinoda/text-generation-webui:default-cpu-snapshot-2024-02-25
+FROM atinoda/text-generation-webui:default-cpu-snapshot-2024-03-03
