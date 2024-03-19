@@ -1,1 +1,1 @@
-FROM ghcr.io/jmbannon/ytdl-sub:ubuntu-2024.02.28
+FROM ghcr.io/jmbannon/ytdl-sub:ubuntu-2024.03.19
