@@ -101,13 +101,22 @@ issuer_url = "https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.O
 redirect_url = "https://w2z.{{ key "site/domain" }}/oidc/login_auth"
 client_secret = "{{.Data.data.OIDC_CLIENT_SECRET }}"
 client_id = "{{.Data.data.OIDC_CLIENT_ID }}"
-post_auth_path = "/"
 
 [github]
 token = "{{ .Data.data.GITHUB_TOKEN }}"
 owner = "philipcristiano"
 repository = "philipcristiano.com"
 branch = "main"
+
+[templates]
+[templates.note]
+path = {{ `"content/notes/{{ now() | date(format=\"%Y/%Y-%m-%dT%H:%M:%SZ\")}}-{{uuid}}.md"`}}
+body = """
++++
++++
+
+{{ `{{contents}} `}}
+"""
 
 {{end}}
 
