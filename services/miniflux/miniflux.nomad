@@ -133,7 +133,7 @@ SCHEDULER_ENTRY_FREQUENCY_MAX_INTERVAL=2880
 HTTP=1
 
 {{ with secret "kv/data/miniflux-postgres" }}
-DATABASE_URL=postgresql://{{.Data.data.postgres_username}}:{{ .Data.data.postgres_password }}@miniflux-postgres.{{ key "site/domain" }}:5457/{{.Data.data.postgres_username}}?sslmode=verify-full
+DATABASE_URL=postgresql://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@miniflux-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full
 
 {{ end }}
 

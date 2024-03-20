@@ -7,7 +7,7 @@ SERVICE_ID=miniflux
 IMAGE_ID=$(awk '/FROM ./ {sub(/.[^\/]*\//, "", $2 ); print $2}' Dockerfile)
 SOURCE_REGISTRY="$(awk '/FROM ./ {sub(/\/.*/, "", $2 ); print $2}' Dockerfile)/"
 
-pushd ../neon-compute
+pushd ../postgres
 bash deploy.sh miniflux
 popd
 

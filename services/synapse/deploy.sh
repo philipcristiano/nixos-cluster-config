@@ -13,7 +13,7 @@ IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
 ADMIN_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.admin)
 
 
-pushd ../neon-compute
+pushd ../postgres
 bash deploy.sh synapse
 popd
 

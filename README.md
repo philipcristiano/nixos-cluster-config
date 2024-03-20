@@ -67,7 +67,8 @@ NFS (hosted outside this cluster) is used for services that cannot use S3
 
 ### Database
 
-Postgres is preferred database solution with [Neon](https://neon.tech) being used for it's S3-compatible interfaces
+
+Postgres deployed for each service.
 
 
 ### Reverse-Proxy

@@ -159,9 +159,9 @@ listeners:
 database:
   name: psycopg2
   args:
-    user: {{.Data.data.postgres_username}}
-    password: {{ .Data.data.postgres_password }}
-    database: {{.Data.data.postgres_username}}
+    user: {{.Data.data.USER}}
+    password: {{ .Data.data.PASSWORD }}
+    database: {{.Data.data.DB}}
     host: synapse-postgres.{{ key "site/domain" }}
     port: 5457
 
