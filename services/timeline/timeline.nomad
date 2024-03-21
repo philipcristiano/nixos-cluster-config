@@ -147,7 +147,7 @@ EOF
           data = <<EOF
 
 {{ with secret "kv/data/timeline-postgres" }}
-database_url="postgres://{{.Data.data.postgres_username}}:{{ .Data.data.postgres_password }}@timeline-postgres.{{ key "site/domain" }}:5457/{{.Data.data.postgres_username}}?sslmode=verify-full"
+database_url="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@timeline-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full"
 
 {{ end }}
 
