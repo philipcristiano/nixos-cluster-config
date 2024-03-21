@@ -33,4 +33,4 @@ sed "s/JOB_NAME/$1/" backup_s3.env.tmpl.src > backup_s3.env.tmpl
 sed "s/JOB_NAME/$1/" postgres-backup.nomad > postgres-backup-deploy.nomad
 
 nomad run -var=name="${1}" -var-file=../../nomad_job.vars -var="image_id=${IMAGE_ID}" -var="backups3_image_id=${BACKUPS3_IMAGE_ID}" postgres-deploy.nomad
- nomad run -var=name="${1}" -var-file=../../nomad_job.vars -var="image_id=${BACKUPS3_IMAGE_ID}" postgres-backup-deploy.nomad
+nomad run -var=name="${1}" -var-file=../../nomad_job.vars -var="image_id=${BACKUPS3_IMAGE_ID}" postgres-backup-deploy.nomad
