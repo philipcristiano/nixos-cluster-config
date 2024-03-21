@@ -9,6 +9,11 @@ variable "image_id" {
   description = "The docker image used for compute task."
 }
 
+variable "backups3_image_id" {
+  type        = string
+  description = "The docker image used for compute task."
+}
+
 variable "name" {
   type        = string
   description = ""
@@ -51,21 +56,27 @@ job "JOB_NAME-postgres" {
         interval = "10s"
         timeout  = "2s"
       }
+
+      check {
+        name     = "JOB_NAME-data-in-place"
+        type     = "script"
+        task     = "app"
+        interval = "10s"
+        timeout  = "10s"
+        command  = "/bin/bash"
+        args     = ["/local/data-in-place.sh"]
+      }
+
     }
 
 
     network {
+
+      mode = "bridge"
+
       port "db" {
   	    to = 5432
       }
-    }
-
-    volume "storage" {
-      type            = "csi"
-      source          = "JOB_NAME-postgres"
-      read_only       = false
-      attachment_mode = "file-system"
-      access_mode     = "multi-node-multi-writer"
     }
 
     task "app" {
@@ -78,16 +89,19 @@ job "JOB_NAME-postgres" {
       config {
         image = "${var.docker_registry}${var.image_id}"
         ports = ["db"]
-        hostname = "JOB_NAME_postgres"
-      }
 
-      volume_mount {
-        volume      = "storage"
-        destination = "/var/lib/postgresql/data/"
+        #entrypoint = ["sleep", "1000"]
+        command = "postgres"
+        args = ["-c", "config_file=/local/postgres.conf"]
       }
 
       env {
         POSTGRES_INITDB_ARGS="--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      }
+
+      template {
+        destination = "local/postgres.conf"
+        data = file("postgresql.conf.tmpl")
       }
 
       template {
@@ -99,8 +113,26 @@ job "JOB_NAME-postgres" {
 POSTGRES_DB = "{{.Data.data.DB}}"
 POSTGRES_USER = "{{.Data.data.USER}}"
 POSTGRES_PASSWORD = "{{.Data.data.PASSWORD}}"
+PGDATA = "{{ env "NOMAD_ALLOC_DIR"}}/data"
 {{end}}
           EOF
+      }
+
+      template {
+        destination = "local/data-in-place.sh"
+        data = <<EOF
+#!/bin/bash
+
+echo "Check file {{ env "NOMAD_ALLOC_DIR"}}/restored.txt"
+
+if [ -e {{ env "NOMAD_ALLOC_DIR"}}/restored.txt ]
+then
+    exit 0
+else
+    exit 2
+fi
+
+EOF
       }
 
       resources {
@@ -108,10 +140,54 @@ POSTGRES_PASSWORD = "{{.Data.data.PASSWORD}}"
         memory = 512
         memory_max = 2048
       }
-
     }
+
+    task "restore_backup" {
+      driver = "docker"
+
+      vault {
+        policies = ["service-${ var.name }-postgres"]
+      }
+
+      lifecycle {
+        hook = "poststart"
+        sidecar = false
+      }
+
+      config {
+        image = "${var.docker_registry}${var.backups3_image_id}"
+
+        command = "/bin/sh"
+        args = ["/local/restore_backup.sh"]
+      }
+
+      template {
+        destination = "secrets/file.env"
+        env         = true
+        data = file("backup_s3.env.tmpl")
+      }
+
+      template {
+        destination = "local/restore_backup.sh"
+        data = <<EOF
+set -e
+
+export POSTGRES_HOST=127.0.0.1
+export POSTGRES_PORT=5432
+
+sh ./restore.sh
+
+touch {{ env "NOMAD_ALLOC_DIR"}}/restored.txt
+
+EOF
+      }
+
+      resources {
+        cpu    = 128
+        memory = 512
+        memory_max = 2048
+      }
+    }
+
   }
 }
-
-
-
