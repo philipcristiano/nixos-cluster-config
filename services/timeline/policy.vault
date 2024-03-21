@@ -1,0 +1,11 @@
+path "pki_int/issue/timeline" {
+  capabilities = ["update"]
+}
+
+path "kv/data/timeline" {
+  capabilities = ["read"]
+}
+
+path "kv/data/timeline-postgres" {
+  capabilities = ["read"]
+}
