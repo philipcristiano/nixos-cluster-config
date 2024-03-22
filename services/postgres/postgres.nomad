@@ -170,12 +170,26 @@ EOF
       template {
         destination = "local/restore_backup.sh"
         data = <<EOF
-set -e
+set -xe
 
 export POSTGRES_HOST=127.0.0.1
 export POSTGRES_PORT=5432
 
+{{ with secret "kv/data/JOB_NAME-postgres" }}
+
+{{ if .Data.data.DB_INIT }}
+echo DB_INIT set in secret kv/data/JOB_NAME-postgres, restore failure will still enable the Postgres service
+set +e
+
+{{else }}
+
+echo DB_INIT not set in secret kv/data/JOB_NAME-postgres, restore failure will block Postgres service enablement
+{{ end }}
+
+{{ end }}
 sh ./restore.sh
+
+set -e
 
 touch {{ env "NOMAD_ALLOC_DIR"}}/restored.txt
 

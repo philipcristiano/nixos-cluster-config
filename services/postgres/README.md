@@ -1,32 +1,39 @@
 
+# Postgres
 
-## Bootstrap a new database
+This service is meant to be reusable to deploy a Postgres instance for each application service that requires PG.
 
-Create a new Tenant ID and Timeline ID
+## Architecture
 
+The Postgres Job runs with the per-container filesystem. On initialization the container will attempt to restore a backup and if successful, will enable the Consul service.
+
+A backup task runs periodically to create the backup and store in Minio.
+
+This removes the need for mapped-in remote storage (NFS and PG don't work well together) while trying to keep the whole setup simple.
+
+## Deploying
+
+Create a secret in Vault `kv/[NAME]-postgres`
 ```
-printf -v TENANT_ID '%08x%08x%08x%08x' $RANDOM $RANDOM $RANDOM $RANDOM;
-printf -v TIMELINE_ID '%08x%08x%08x%08x' $RANDOM $RANDOM $RANDOM $RANDOM;
-
+{
+  "DB": "[NAME]",
+  "PASSWORD": "[PASSWORD]",
+  "USER": "[NAME]"
+  "DB_INIT": true
+}
 ```
 
-Or manually set them:
+`bash deploy.sh [NAME]`
+
+Trigger the first backup
+
+`nomad job periodic force [NAME]-postgres-backup`
+
+Remove `DB_INIT` from the secret
+
+The database will restart, with the initialized database
 
 
-```
-export TENANT_ID=cadd10990000beef00003ddc00006791
-export TIMELINE_ID=cadd646e0000233c000068f900006240
-```
+### `DB_INIT`
 
-Then call the API to create them on the Neon Pageserver
-
-curl -v -H "Content-Type: application/json" -d "{\"new_tenant_id\": \"$TENANT_ID\"}" https://neon-pageserver-api.home.cristiano.cloud/v1/tenant/
-
-curl -v      -X POST -H "Content-Type: application/json" -d "{\"new_timeline_id\": \"$TIMELINE_ID\", \"pg_version\": 16}" "https://neon-pageserver-api.home.cristiano.cloud/v1/tenant/$TENANT_ID/timeline/"
-
-
-Add the tenant to load automatically in Consul
-
-```
-neon/load_tenants/* -> [Tenant ID]
-```
+The `DB_INIT` config will allow the initial restore operation to fail. Removing this will cause a restore failure to withhold enabling the Consul service, protecting against any restore failures from loading an empty database
