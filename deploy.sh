@@ -1,12 +1,12 @@
 set -ex
 
 SERVICES=(
+  "docker-prefetch-image"
   "minio-system"
   "docker-registry"
   "docker-registry-ui"
-  "docker-prefetch-image"
   "traefik"
-  "neon"
+  "csi-nfs"
   "telegraf"
   "grafana"
   "loki"
@@ -18,12 +18,12 @@ SERVICES=(
   "miniflux"
   "homeassistant"
   "hello_idc"
+  "w2z"
   "hvac-iot"
   "kanidm"
   "postmoogle"
   "tika"
   "gotenberg"
-  "paperless-ngx"
   "jellyfin"
   "llm"
   "rotki"
@@ -34,7 +34,9 @@ SERVICES=(
   "handbrake"
   "nostress"
   "nostr-rs-relay"
+  "timeline"
   "ytdl-sub"
+  "paperless-ngx"
 )
 
 for SERVICE in ${SERVICES[@]}; do
