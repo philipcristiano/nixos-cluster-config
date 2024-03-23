@@ -38,3 +38,8 @@ server:
 limits:
   # Allow ingestion of out-of-order samples up to 5 minutes since the latest received sample for the series.
   out_of_order_time_window: 5m
+
+  # Delete blocks containing samples older than the specified retention period.
+  # Also used by query-frontend to avoid querying beyond the retention period. 0
+  # to disable.
+  compactor_blocks_retention_period: 2500h
