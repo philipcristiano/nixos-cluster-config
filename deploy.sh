@@ -4,6 +4,7 @@ SERVICES=(
   "docker-prefetch-image"
   "minio-system"
   "docker-registry"
+  "regctl"
   "docker-registry-ui"
   "traefik"
   "csi-nfs"
