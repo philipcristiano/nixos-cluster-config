@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "regclient/regctl:v0.5.7"
 }
 
 job "regctl-img-copy" {
