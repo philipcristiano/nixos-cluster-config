@@ -1,1 +1,1 @@
-FROM philipcristiano/nostress:0.1.4
+FROM philipcristiano/nostress:0.1.5
