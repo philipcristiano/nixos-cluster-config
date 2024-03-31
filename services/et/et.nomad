@@ -46,7 +46,7 @@ job "et" {
       port = "http"
 
       tags = [
-        "prometheus",
+        #"prometheus",
         "traefik.enable=true",
 	      "traefik.http.routers.et.tls=true",
 	      "traefik.http.routers.et.tls.certresolver=home",
