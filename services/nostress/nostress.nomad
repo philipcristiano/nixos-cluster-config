@@ -84,7 +84,7 @@ job "nostress" {
           destination = "local/otel.env"
           env = true
           data = <<EOF
-OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://otel-grpc.{{ key "site/domain" }}:443
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://tempo-otlp-grpc.{{ key "site/domain" }}:443
 OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 OTEL_SERVICE_NAME={{ env "NOMAD_JOB_NAME" }}
 
