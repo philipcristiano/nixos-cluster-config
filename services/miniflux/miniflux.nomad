@@ -127,9 +127,6 @@ POLLING_PARSING_ERROR_LIMIT=0
 POLLING_FREQUENCY=15
 POLLING_SCHEDULER=entry_frequency
 
-# in minutes
-SCHEDULER_ENTRY_FREQUENCY_MAX_INTERVAL=2880
-
 HTTP=1
 
 {{ with secret "kv/data/miniflux-postgres" }}
