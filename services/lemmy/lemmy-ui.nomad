@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "dessalines/lemmy-ui:0.17.4"
+  default     = "dessalines/lemmy-ui:0.18.0"
 }
 
 variable "count" {

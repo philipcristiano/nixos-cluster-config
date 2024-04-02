@@ -94,6 +94,10 @@ job "jellyfin" {
         image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
 
+        # sysctl = {
+        #   "fs.inotify.max_user_watches" = "524288"
+        # }
+
         mount = {
           type     = "bind"
           source   = "local/logging.json"

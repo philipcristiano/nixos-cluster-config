@@ -86,8 +86,8 @@ job "docker-registry-ui" {
 
       resources {
         cpu    = 100
-        memory = 512
-        memory_max = 2048
+        memory = 16
+        memory_max = 128
       }
 
       template {

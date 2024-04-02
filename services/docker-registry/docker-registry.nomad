@@ -19,7 +19,6 @@ variable "count" {
 variable "image_id" {
   type        = string
   description = "The docker image used for compute task."
-  default     = "registry:2.8.3"
 }
 
 job "docker-registry" {

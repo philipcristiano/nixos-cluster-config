@@ -28,6 +28,7 @@ job "folio" {
         "traefik.enable=true",
 	    "traefik.http.routers.folio.tls=true",
 	    "traefik.http.routers.folio.tls.certresolver=home",
+        "traefik.http.routers.folio.middlewares=traefik-forward-auth",
       ]
 
       check {
@@ -49,8 +50,12 @@ job "folio" {
     task "app" {
       driver = "docker"
 
+      vault {
+        policies = ["service-folio"]
+      }
+
       config {
-        image = "philipcristiano/folio:sha-9ee5620"
+        image = "philipcristiano/folio:sha-b1d1a93"
         ports = ["http"]
       }
       env {
@@ -61,14 +66,18 @@ job "folio" {
           destination = "local/folio.env"
           env = true
           data = <<EOF
-OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-grpc.{{ key "site/domain" }}:443
+OTEL_EXPORTER_OTLP_ENDPOINT=https://tempo-otlp-grpc.{{ key "site/domain" }}:443
 OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+
+{{with secret "kv/data/folio-postgres"}}
 PGHOST=folio-postgres.{{ key "site/domain" }}
-PGPORT={{ key "traefik-ports/folio-postgres" }}
-PGUSER={{ key "credentials/folio-postgres/USER" }}
-PGPASSWORD={{ key "credentials/folio-postgres/PASSWORD" }}
-PGDATABASE={{ key "credentials/folio-postgres/DB" }}
+PGPORT=5457
+PGUSER={{.Data.data.postgres_username}}
+PGPASSWORD={{ .Data.data.postgres_password }}
+PGDATABASE={{.Data.data.postgres_username}}
 PG_POOL_SIZE=20
+
+{{ end }}
 EOF
       }
       template {

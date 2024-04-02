@@ -264,8 +264,8 @@ storage \"raft\" {
   };
 
 
-  networking.firewall.allowedUDPPorts = [ 1514 1680 1700 1812 1813 8301];
-  networking.firewall.allowedTCPPorts = [ 80 443 1883 3080 3443 3636 8300 8301 8500 8554 8600 9000 9090 9735 ];
+  networking.firewall.allowedUDPPorts = [ 53 1514 1680 1700 1812 1813 8301];
+  networking.firewall.allowedTCPPorts = [ 53 80 443 1883 3080 3443 3636 8300 8301 8500 8554 8600 9000 9090 9735 ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 5433; to = 5500; } # Static port range for Traefik services
     { from = 5501; to = 5510; } # Static port range for Nomad tasks

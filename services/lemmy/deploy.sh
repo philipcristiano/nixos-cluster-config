@@ -11,5 +11,5 @@ vault write pki_int/roles/lemmy \
 # nomad volume create lemmy-postgres.volume
 nomad run lemmy-postgres-backup.nomad
 nomad run lemmy-postgres.nomad
-nomad run -var count=2 lemmy.nomad
+nomad run lemmy.nomad
 nomad run lemmy-ui.nomad

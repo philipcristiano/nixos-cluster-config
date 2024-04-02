@@ -21,10 +21,15 @@ job "zwavejs2mqtt" {
   group "app" {
 
     restart {
-      attempts = 1
+      attempts = 2
       interval = "5m"
       delay    = "10s"
       mode     = "fail"
+    }
+
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value     = "nixos01"
     }
 
     reschedule {

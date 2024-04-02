@@ -40,7 +40,7 @@ job "nomad-events-logger" {
         type     = "script"
         task     = "app"
 
-        command   = "/usr/local/bin/nomad-events-logger"
+        command   = "/usr/local/bin/nomad_events_logger"
         args      = ["-V"]
 
         interval = "30s"
@@ -57,7 +57,7 @@ job "nomad-events-logger" {
 
       config {
         image = var.image_id
-        command = "nomad-events-logger"
+        command = "nomad_events_logger"
       }
 
       template {

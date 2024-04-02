@@ -155,7 +155,7 @@ engine = "postgres"
 # Database connection string.  Required for postgres; not used for
 # sqlite.
 {{with secret "kv/data/nostr-rs-relay-postgres"}}
-connection = "postgresql://{{.Data.data.postgres_username}}:{{ .Data.data.postgres_password }}@nostr-rs-relay-postgres.{{ key "site/domain" }}:5457/{{.Data.data.postgres_username}}"
+connection = "postgresql://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@nostr-rs-relay-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}"
 
 {{ end }}
 

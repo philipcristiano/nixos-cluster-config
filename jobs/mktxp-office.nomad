@@ -16,6 +16,7 @@ job "mktxp-office" {
       port = "http"
 
       tags = [
+        "prometheus",
         "traefik.enable=true",
         "traefik.http.routers.mktxp-office.tls=true",
         "traefik.http.routers.mktxp-office.tls.certresolver=home",
@@ -80,7 +81,7 @@ job "mktxp-office" {
     installed_packages = True       # Installed packages
     dhcp = True                     # DHCP general metrics
     dhcp_lease = True               # DHCP lease metrics
-    connections = True              # IP connections metrics
+    connections = False             # IP connections metrics
     pool = True                     # Pool metrics
     interface = True                # Interfaces traffic metrics
 
@@ -109,78 +110,5 @@ EOTC
       }
 
     }
-
-    task "telegraf" {
-      driver = "docker"
-      config {
-        image        = "telegraf:1.25.1"
-        force_pull   = true
-        entrypoint   = ["telegraf"]
-        args = [
-          "-config",
-          "/local/telegraf.conf",
-        ]
-      }
-
-      template {
-        data = <<EOTC
-# Adding Client class
-# This should be here until https://github.com/hashicorp/nomad/pull/3882 is merged
-{{ $node_class := env "node.class" }}
-[global_tags]
-nomad_client_class = "{{ env "node.class" }}"
-
-[agent]
-  interval = "10s"
-  round_interval = true
-  metric_batch_size = 1000
-  metric_buffer_limit = 10000
-  collection_jitter = "0s"
-  flush_interval = "10s"
-  flush_jitter = "3s"
-  precision = ""
-  debug = true
-  quiet = false
-  hostname = ""
-  omit_hostname = false
-
-[[outputs.influxdb_v2]]
-  urls = ["https://influxdb.{{ key "site/domain" }}"]
-  bucket = "host"
-  organization = "{{key "credentials/mktxp/influxdb_organization"}}"
-  token = "{{key "credentials/mktxp/influxdb_token"}}"
-
-[[outputs.http]]
-  ## URL is the address to send metrics to
-  url = "https://mimir.{{ key "site/domain" }}/api/v1/push"
-
-  ## Optional TLS Config
-  # tls_ca = "/etc/telegraf/ca.pem"
-  # tls_cert = "/etc/telegraf/cert.pem"
-  # tls_key = "/etc/telegraf/key.pem"
-
-  ## Data format to output.
-  data_format = "prometheusremotewrite"
-
-  [outputs.http.headers]
-     Content-Type = "application/x-protobuf"
-     Content-Encoding = "snappy"
-     X-Prometheus-Remote-Write-Version = "0.1.0"
-
-
-[[inputs.prometheus]]
-  metric_version = 2
-  urls = ["http://127.0.0.1:{{ env "NOMAD_PORT_http" }}/metrics"]
-
-EOTC
-        destination = "local/telegraf.conf"
-      }
-
-      resources {
-        cpu    = 50
-        memory = 64
-      }
-    }
-
   }
 }

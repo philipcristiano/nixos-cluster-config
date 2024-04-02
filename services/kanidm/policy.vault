@@ -9,3 +9,14 @@ path "pki/issuer/default/json" {
 path "kv/data/kanidm" {
   capabilities = ["read"]
 }
+
+path "kv/data/radius/groups" {
+  capabilities = ["read"]
+}
+path "kv/data/radius/clients" {
+  capabilities = ["read"]
+}
+
+path "kv/data/radius/required_groups" {
+  capabilities = ["read"]
+}

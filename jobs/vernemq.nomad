@@ -59,7 +59,7 @@ job "vernemq" {
       }
       template {
           env = true
-      	  destination = "local/pwds"
+      	  destination = "secrets/pwds"
           data = <<EOF
 {{range ls "mqtt/credentials"}}
 DOCKER_VERNEMQ_USER_{{.Key}}={{.Value}}
@@ -68,8 +68,9 @@ DOCKER_VERNEMQ_USER_{{.Key}}={{.Value}}
       }
 
       resources {
-        cpu    = 500
-        memory = 512
+        cpu    = 50
+        memory = 256
+        memory_max = 1024
       }
 
     }

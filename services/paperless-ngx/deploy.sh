@@ -5,7 +5,7 @@ vault policy write service-paperless-ngx policy.vault
 SERVICE_ID=paperless-ngx
 IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
 
-pushd ../neon-compute
+pushd ../postgres
 bash deploy.sh paperless-ngx
 popd
 

@@ -8,5 +8,5 @@ vault write pki_int/roles/calibre-web \
      allow_subdomains=true \
      max_ttl="720h"
 
-# nomad volume create ccsi-nfs-calibre-web.volume
-nomad run calibre-web.nomad
+# nomad volume create csi-nfs-calibre-web.volume
+nomad run -var-file=../../nomad_job.vars calibre-web.nomad

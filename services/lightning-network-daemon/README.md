@@ -25,3 +25,13 @@ Set `wallet_unlock_password` to the wallet unlock password
 
 `lncli --tlscertpath=/alloc/data/tls/tls.cert --macaroonpath=/alloc/data/chain/bitcoin/mainnet/admin.macaroon newaddress p2wkh`
 
+
+
+# Pool
+
+
+## CLI
+
+```
+pool --rpcserver=localhost:8443 --tlscertpath=~/.lit/tls.cert --macaroonpath=~/.pool/mainnet/pool.macaroon accounts list
+```

@@ -8,7 +8,7 @@ vault write pki_int/roles/nostr-rs-relay \
      allow_subdomains=true \
      max_ttl="720h"
 
-pushd ../neon-compute
+pushd ../postgres
 bash deploy.sh nostr-rs-relay
 popd
 

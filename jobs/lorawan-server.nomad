@@ -9,9 +9,9 @@ job "lorawan-server" {
       port = "udp"
 
       tags = [
-	"traefik.enable=true",
-	"traefik.udp.routers.lorawan-server-udp.entrypoints=lorawan-server-udp",
-	"traefik.udp.routers.lorawan-server-udp.service=lorawan-server-udp"
+        "traefik.enable=true",
+        "traefik.udp.routers.lorawan-server-udp.entrypoints=lorawan-server-udp",
+        "traefik.udp.routers.lorawan-server-udp.service=lorawan-server-udp"
       ]
 
     }
@@ -21,9 +21,9 @@ job "lorawan-server" {
 
       tags = [
         "traefik.enable=true",
-	"traefik.http.routers.lorawan-server-http.tls=true",
-	"traefik.http.routers.lorawan-server-http.tls.certresolver=home",
-	"traefik.http.services.lorawan-server-http.loadbalancer.server.scheme=http",
+        "traefik.http.routers.lorawan-server-http.tls=true",
+        "traefik.http.routers.lorawan-server-http.tls.certresolver=home",
+        "traefik.http.services.lorawan-server-http.loadbalancer.server.scheme=http",
       ]
 
       check {
@@ -41,7 +41,7 @@ job "lorawan-server" {
         to = 1680
       }
       port "http" {
-  	to = 8080
+        to = 8080
       }
 
     }
@@ -60,7 +60,7 @@ job "lorawan-server" {
       config {
         image = "gotthardp/lorawan-server@sha256:9f650c987713fc105e0ac176f74ccda89287054ac3054cf3ec5db4d3b6ab13ca"
         ports = ["udp", "http"]
-	hostname = "lorawan"
+    hostname = "lorawan"
       }
 
       volume_mount {

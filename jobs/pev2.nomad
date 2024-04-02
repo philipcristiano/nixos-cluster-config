@@ -6,7 +6,7 @@ job "pev2" {
 
     network {
       port "http" {
-        static = 8080
+        to = 8080
       }
     }
 
@@ -22,8 +22,8 @@ job "pev2" {
       port = "http"
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.pev2.tls=true",
-	      "traefik.http.routers.pev2.tls.certresolver=home",
+	    "traefik.http.routers.pev2.tls=true",
+	    "traefik.http.routers.pev2.tls.certresolver=home",
       ]
 
       check {
@@ -34,6 +34,7 @@ job "pev2" {
           timeout  = "2s"
       }
     }
+
     task "download" {
       driver = "docker"
       config {

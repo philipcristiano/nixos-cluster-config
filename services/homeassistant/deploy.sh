@@ -18,6 +18,7 @@ WHISPER_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.whisper)
 nomad job dispatch -meta image="${IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
 nomad job dispatch -meta image="${PIPER_IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
 nomad job dispatch -meta image="${WHISPER_IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+
 nomad run -var-file=../../nomad_job.vars -var "image_id=${IMAGE_ID}" homeassistant.nomad
 nomad run -var-file=../../nomad_job.vars -var "image_id=${PIPER_IMAGE_ID}" homeassistant-piper.nomad
 nomad run -var-file=../../nomad_job.vars -var "image_id=${WHISPER_IMAGE_ID}" homeassistant-whisper.nomad

@@ -1,7 +1,7 @@
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "dessalines/lemmy:0.17.4"
+  default     = "dessalines/lemmy:0.18.0"
 }
 
 variable "count" {
@@ -79,7 +79,7 @@ job "lemmy" {
 
       resources {
         cpu    = 50
-        memory = 32
+        memory = 64
         memory_max = 256
       }
 

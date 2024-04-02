@@ -33,7 +33,6 @@ Remove `DB_INIT` from the secret
 
 The database will restart, with the initialized database
 
-
 ### `DB_INIT`
 
 The `DB_INIT` config will allow the initial restore operation to fail. Removing this will cause a restore failure to withhold enabling the Consul service, protecting against any restore failures from loading an empty database

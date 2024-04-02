@@ -97,7 +97,11 @@ EOF
 {{ range ls "docker-prefetch" }}
 [[image]]
 # {{ .Key }}
+# This configuration assumes all images are sourced from Docker Hub and don't
+# need an repo processing. The `image` can be prefixed with the local registry.
+# The alternatives can be used "as-is"
 image = "docker-registry.{{ key "site/domain" }}/{{.Value}}"
+alternative_images = ["{{.Value}}"]
 {{ end }}
 
 [[image]]

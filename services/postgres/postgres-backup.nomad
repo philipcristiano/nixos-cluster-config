@@ -31,6 +31,22 @@ job "JOB_NAME-postgres-backup" {
 
   group "postgres-backup" {
 
+    restart {
+      attempts = 5
+      interval = "5m"
+      delay    = "10s"
+      mode     = "fail"
+    }
+
+    reschedule {
+      attempts       = 2
+      interval       = "5m"
+      delay          = "10s"
+      delay_function = "exponential"
+      max_delay      = "60s"
+      unlimited      = false
+    }
+
     task "postgres-backup" {
       driver = "docker"
 

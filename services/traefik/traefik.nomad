@@ -28,7 +28,7 @@ job "traefik" {
 
   update {
     max_parallel = 1
-    stagger      = "300s"
+    stagger      = "15s"
   }
 
   group "traefik" {

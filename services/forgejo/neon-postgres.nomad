@@ -37,8 +37,8 @@ job "forgejo-compute" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.tcp.routers.forgejo-postgres.tls=true",
-	    "traefik.tcp.routers.forgejo-postgres.tls.certresolver=home",
+	      "traefik.tcp.routers.forgejo-postgres.tls=true",
+	      "traefik.tcp.routers.forgejo-postgres.tls.certresolver=home",
         "traefik.tcp.routers.forgejo-postgres.entrypoints=neon-postgres",
         "traefik.tcp.routers.forgejo-postgres.rule=HostSNI(`forgejo-postgres.home.cristiano.cloud`)",
       ]

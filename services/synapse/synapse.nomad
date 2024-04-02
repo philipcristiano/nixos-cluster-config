@@ -53,7 +53,7 @@ job "synapse" {
         "traefik.enable=true",
 	      "traefik.http.routers.synapse.tls=true",
         "traefik.http.routers.synapse.entrypoints=http,https,http-public,https-public",
-        "traefik.http.routers.synapse.rule=( Host(`matrix.philipcristiano.com`)  && !PathPrefix(`/_synapse/admin`) && !PathPrefix(`/_synapse/metrics`) ) || Host(`matrix.home.cristiano.cloud`)",
+        "traefik.http.routers.synapse.rule=( Host(`matrix.philipcristiano.com`)  && !PathPrefix(`/_synapse/admin`) && !PathPrefix(`/_synapse/metrics`) ) || Host(`matrix.home.cristiano.cloud`) || Host(`matrix2.home.cristiano.cloud`)",
 	    "traefik.http.routers.synapse.tls.certresolver=home",
       ]
 

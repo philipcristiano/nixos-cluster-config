@@ -23,8 +23,8 @@ job "tempo" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.tempo.tls=true",
-	    "traefik.http.routers.tempo.tls.certresolver=home",
+	      "traefik.http.routers.tempo.tls=true",
+	      "traefik.http.routers.tempo.tls.certresolver=home",
       ]
 
       check {
@@ -42,8 +42,8 @@ job "tempo" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.tempo-otlp-grpc.tls=true",
-	    "traefik.http.routers.tempo-otlp-grpc.tls.certresolver=home",
+	      "traefik.http.routers.tempo-otlp-grpc.tls=true",
+	      "traefik.http.routers.tempo-otlp-grpc.tls.certresolver=home",
         "traefik.http.services.tempo-otlp-grpc.loadbalancer.server.scheme=h2c",
       ]
 

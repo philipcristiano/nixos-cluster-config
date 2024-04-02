@@ -156,7 +156,7 @@ database_url="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@timeline-
 type = "PaperlessNGX"
 host = "https://paperless-ngx.{{ key "site/domain" }}"
 username = "timeline"
-token = ""
+token = "f7424d802c6d5ebbfbdbdfa9a5f933616af4e12a"
 {{ end }}
 
 

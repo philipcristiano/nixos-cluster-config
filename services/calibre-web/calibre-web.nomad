@@ -1,3 +1,20 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+  default     = "linuxserver/calibre-web:0.6.21"
+}
+
 job "calibre-web" {
   datacenters = ["dc1"]
   type        = "service"
@@ -65,7 +82,7 @@ job "calibre-web" {
       driver = "docker"
 
       config {
-        image = "linuxserver/calibre-web:0.6.20"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
       }
 

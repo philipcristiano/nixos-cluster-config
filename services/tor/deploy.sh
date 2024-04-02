@@ -8,4 +8,4 @@ vault write pki_int/roles/tor \
      allow_subdomains=true \
      max_ttl="720h"
 
-nomad run -var count=2 tor.nomad
+nomad run tor.nomad

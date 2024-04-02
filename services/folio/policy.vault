@@ -5,3 +5,7 @@ path "pki_int/issue/folio" {
 path "kv/data/folio" {
   capabilities = ["read"]
 }
+
+path "kv/data/folio-postgres" {
+  capabilities = ["read"]
+}
