@@ -70,6 +70,8 @@ scrape_configs:
       replacement:   '$1'
     - source_labels: [__meta_consul_service]
       target_label: service
+    - source_labels: [__meta_consul_service]
+      target_label: service_name
     - source_labels: ['__meta_consul_node']
       regex:         '(.*)'
       target_label:  'instance'
