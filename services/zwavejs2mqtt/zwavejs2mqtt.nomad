@@ -51,12 +51,16 @@ job "zwavejs2mqtt" {
       ]
 
       check {
-        name     = "alive"
+        name     = "zwave"
         type     = "http"
         port     = "http"
-        path     = "/"
+        path     = "/health/zwave"
         interval = "10s"
         timeout  = "2s"
+
+        header   {
+            Accept = ["text/plain"]
+        }
       }
 
       check_restart {
