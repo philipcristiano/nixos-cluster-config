@@ -17,7 +17,7 @@ variable "image_id" {
 variable "count" {
   type        = number
   description = "Number of instances"
-  default     = 2
+  default     = 1
 }
 
 job "et" {
