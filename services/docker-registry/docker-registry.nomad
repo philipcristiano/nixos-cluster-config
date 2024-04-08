@@ -81,7 +81,6 @@ job "docker-registry" {
         ports = ["http"]
 
         args = [
-          "registry",
           "serve",
           "/secrets/config.yml"
         ]

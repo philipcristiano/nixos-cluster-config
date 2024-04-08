@@ -59,9 +59,9 @@ job "docker-registry-garbage-collect" {
         image = "${var.docker_registry}${var.image_id}"
 
         args = [
-          "registry",
           "garbage-collect",
           # "--dry-run",
+          "--delete-untagged",
           "/secrets/config.yml"
         ]
 

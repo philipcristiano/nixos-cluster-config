@@ -1,2 +1,2 @@
-FROM registry:2.8.3
+FROM philipcristiano/distribution:3.0.0-alpha1-pr-4285
 
