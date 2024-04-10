@@ -1,1 +1,1 @@
-FROM grafana/loki:2.9.6
+FROM grafana/loki:2.9.7
