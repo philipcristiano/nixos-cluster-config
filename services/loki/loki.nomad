@@ -107,11 +107,6 @@ server:
 
 {{ with secret "kv/data/loki" }}
 storage_config:
-  boltdb_shipper:
-    active_index_directory: /alloc/data/loki/index
-    cache_location: /alloc/data/loki/index_cache
-    resync_interval: 5s
-    shared_store: aws
   aws:
     access_key_id: "{{.Data.data.ACCESS_KEY}}"
     secret_access_key: "{{.Data.data.SECRET_KEY}}"
@@ -121,13 +116,12 @@ storage_config:
 {{ end }}
 
   tsdb_shipper:
-    active_index_directory: /alloc//data/tsdb-index
+    active_index_directory: /alloc/data/tsdb-index
     cache_location: /alloc//data/tsdb-cache
     # index_gateway_client:
     #   # only applicable if using microservices where index-gateways are independently deployed.
     #   # This example is using kubernetes-style naming.
     #   server_address: dns:///index-gateway.<namespace>.svc.cluster.local:9095
-    shared_store: s3
 
 common:
   path_prefix: {{ env "NOMAD_ALLOC_DIR" }}/data/loki
@@ -143,6 +137,13 @@ schema_config:
       store: tsdb
       object_store: aws
       schema: v12
+      index:
+        prefix: index_
+        period: 24h
+    - from: 2024-04-04
+      store: tsdb
+      object_store: aws
+      schema: v13
       index:
         prefix: index_
         period: 24h
