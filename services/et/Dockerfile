@@ -1,1 +1,1 @@
-FROM philipcristiano/et:sha-86bc8c7
+FROM philipcristiano/et:2.2.0
