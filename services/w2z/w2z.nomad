@@ -102,6 +102,7 @@ issuer_url = "https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.O
 redirect_url = "https://w2z.{{ key "site/domain" }}/oidc/login_auth"
 client_secret = "{{.Data.data.OIDC_CLIENT_SECRET }}"
 client_id = "{{.Data.data.OIDC_CLIENT_ID }}"
+key = "{{.Data.data.KEY }}"
 
 [github]
 token = "{{ .Data.data.GITHUB_TOKEN }}"

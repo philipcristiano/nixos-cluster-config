@@ -168,6 +168,7 @@ issuer_url = "https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.O
 redirect_url = "https://et.{{ key "site/domain" }}/oidc/login_auth"
 client_secret = "{{.Data.data.OAUTH_CLIENT_SECRET }}"
 client_id = "{{.Data.data.OAUTH_CLIENT_ID }}"
+key = "{{.Data.data.KEY }}"
 {{ end }}
 
 
