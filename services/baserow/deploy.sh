@@ -1,8 +1,5 @@
 set -ex
 
-set -ex
-
-
 SERVICE_ID=baserow
 IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
 
