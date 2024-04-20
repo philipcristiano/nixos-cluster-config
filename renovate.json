@@ -14,15 +14,7 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["minio/minio"],
-      "schedule": ["before 8am on monday"],
       "versionCompatibility": "^(?<compatibility>.*)\\.(?<version>.*T.*)Z$",
-      "versioning": "loose"
-    },
-    {
-      "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["^neondatabase/.*"],
-      "schedule": ["before 8am on monday"],
-      "versionCompatibility": "^(?<version>\\d{4,6})$",
       "versioning": "loose"
     },
     {
