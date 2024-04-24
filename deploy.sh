@@ -20,6 +20,7 @@ SERVICES=(
   "miniflux"
   "homeassistant"
   "hello_idc"
+  "forgejo"
   "w2z"
   "et"
   "hvac-iot"
