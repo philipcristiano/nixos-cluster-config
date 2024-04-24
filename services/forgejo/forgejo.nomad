@@ -12,7 +12,7 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "forgejo/forgejo:1.20.5-0"
+  default     = ""
 }
 
 job "forgejo" {
@@ -32,9 +32,9 @@ job "forgejo" {
       port = "ssh"
 
       tags = [
-	    "enable_gocast",
+	      "enable_gocast",
         "gocast_vip=192.168.102.52/32",
-	    "gocast_monitor=consul",
+	      "gocast_monitor=consul",
         "gocast_nat=tcp:22:${NOMAD_HOST_PORT_ssh}",
       ]
 
@@ -138,9 +138,9 @@ OTEL_EXPORTER_OTLP_PROTOCOL=http/json
 FORGEJO__database__DB_TYPE=postgres
 FORGEJO__database__HOST=forgejo-postgres.{{ key "site/domain" }}:5457
 FORGEJO__database__SSL_MODE=require
-FORGEJO__database__NAME={{.Data.data.postgres_username}}
-FORGEJO__database__USER={{.Data.data.postgres_username}}
-FORGEJO__database__PASSWD={{ .Data.data.postgres_password }}
+FORGEJO__database__NAME={{.Data.data.DB}}
+FORGEJO__database__USER={{.Data.data.USER}}
+FORGEJO__database__PASSWD={{ .Data.data.PASSWORD }}
 {{ end }}
 
 FORGEJO__server__SSH_DOMAIN=git.{{ key "site/domain"}}
