@@ -1,0 +1,1 @@
+FROM lightninglabs/lndmon:v0.2.7
