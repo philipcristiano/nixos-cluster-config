@@ -1,1 +1,1 @@
-FROM lightninglabs/lightning-terminal:v0.12.3-alpha
+FROM lightninglabs/lightning-terminal:v0.12.4-alpha
