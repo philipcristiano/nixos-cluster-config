@@ -84,9 +84,10 @@ job "kanidm-radius" {
 
       env {
  	      CONFIG_ROOT = "/local"
-        LOG_LEVEL = "info"
+        LOG_LEVEL = "debug"
         DEBUG="True"
         KANIDM_CONFIG_FILE="/local/kanidm.toml"
+        KANIDM_RLM_CONFIG="/local/kanidm.toml"
       }
       template {
           destination = "local/kanidm.toml"
@@ -94,8 +95,9 @@ job "kanidm-radius" {
 uri = "https://kanidm.{{ key "site/domain"}}" # URL to the Kanidm server
 verify_hostnames = true     # verify the hostname of the Kanidm server
 
-verify_ca = "false"           # Strict CA verification
+# verify_ca = "false"           # Strict CA verification
 ca = "/secrets/ca.pem"           # Path to the kanidm ca
+ca_path = "/secrets/ca.pem"           # Path to the kanidm ca
 
 {{with secret "kv/data/kanidm"}}
 
