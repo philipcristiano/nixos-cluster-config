@@ -1,5 +1,17 @@
 set -ex
 
+SERVICE_ID=kanidm
+SERVER_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.server)
+RADIUS_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.radius)
+TOOLS_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.tools)
+
+vault policy write "service-${SERVICE_ID}" policy.vault
+
+nomad job dispatch -meta image="${SERVER_IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+nomad job dispatch -meta image="${RADIUS_IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+nomad job dispatch -meta image="${TOOLS_IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+
+
 vault policy write service-kanidm policy.vault
 vault write pki_int/roles/kanidm \
      issuer_ref="$(vault read -field=default pki_int/config/issuers)" \
@@ -9,6 +21,6 @@ vault write pki_int/roles/kanidm \
      max_ttl="720h"
 
 # nomad volume create kanidm.volume
-nomad run -var-file=../../nomad_job.vars -var-file=./service.vars kanidm.nomad
-nomad run -var-file=../../nomad_job.vars -var-file=./service.vars kanidm-radius.nomad
-nomad run -var-file=../../nomad_job.vars -var-file=./service.vars kanidm-tools.nomad
+nomad run -var-file=../../nomad_job.vars -var "image_id=${SERVER_IMAGE_ID}" "${SERVICE_ID}.nomad"
+nomad run -var-file=../../nomad_job.vars -var "image_id=${RADIUS_IMAGE_ID}" "${SERVICE_ID}-radius.nomad"
+nomad run -var-file=../../nomad_job.vars -var "image_id=${TOOLS_IMAGE_ID}" "${SERVICE_ID}-tools.nomad"
