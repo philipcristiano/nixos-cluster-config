@@ -32,6 +32,7 @@ SERVICES=(
   "rotki"
   "zwavejs2mqtt"
   "synapse"
+  "postmoogle"
   "regctl"
   "actual"
   "handbrake"

@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "etke.cc/postmoogle:v0.9.17"
 }
 
 variable "count" {
