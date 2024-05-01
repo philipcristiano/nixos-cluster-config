@@ -120,6 +120,28 @@ body = """
 {{ `{{contents}} `}}
 """
 
+[templates.reply]
+path = {{ `"content/replies/{{ now() | date(format=\"%Y/%Y-%m-%dT%H:%M:%SZ\")}}-{{uuid}}.md"`}}
+body = """
++++
+[extra]
+in_reply_to = "{{ `{{in_reply_to}}` }}"
++++
+
+{{ `{{contents}} `}}
+"""
+
+[templates.like]
+path = {{ `"content/likes/{{ now() | date(format=\"%Y/%Y-%m-%dT%H:%M:%SZ\")}}-{{uuid}}.md"`}}
+body = """
++++
+[extra]
+in_like_of = "{{ `{{in_like_of}}` }}"
++++
+
+{{ `{{contents}} `}}
+"""
+
 {{end}}
 
 EOF
