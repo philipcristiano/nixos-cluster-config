@@ -61,7 +61,7 @@ job "miniflux" {
         timeout  = "2s"
 
         check_restart {
-          limit           = 2
+          limit           = 5
           grace           = "30s"
           ignore_warnings = false
         }
