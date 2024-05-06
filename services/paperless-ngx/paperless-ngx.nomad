@@ -275,7 +275,7 @@ job "paperless-ngx" {
           timeout  = "45s"
         }
         check_restart {
-          limit = 3
+          limit = 20
           grace = "90s"
           ignore_warnings = false
         }
