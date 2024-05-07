@@ -164,6 +164,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 
     [entryPoints.postgres]
     address = ":{{ env "NOMAD_PORT_postgres" }}"
+    [entryPoints.postgres.transport.respondingTimeouts]
+        readTimeout = "605s"
     [entryPoints.redis]
     address = ":{{ env "NOMAD_PORT_redis" }}"
     [entryPoints.traefik]
