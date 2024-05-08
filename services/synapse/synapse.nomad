@@ -158,6 +158,7 @@ listeners:
 {{with secret "kv/data/synapse-postgres"}}
 database:
   name: psycopg2
+  txn_limit: 1000
   args:
     user: {{.Data.data.USER}}
     password: {{ .Data.data.PASSWORD }}
@@ -165,7 +166,9 @@ database:
     host: synapse-postgres.{{ key "site/domain" }}
     port: 5457
 
-    cp_min: 5
+    cp_noisy: true
+    cp_reconnect: true
+    cp_min: 2
     cp_max: 10
 {{ end }}
 
