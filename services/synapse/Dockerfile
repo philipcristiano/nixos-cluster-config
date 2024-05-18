@@ -1,1 +1,1 @@
-FROM philipcristiano/synapse-omni:1.106.0
+FROM philipcristiano/synapse-omni:1.107.0
