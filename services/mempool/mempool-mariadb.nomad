@@ -1,3 +1,19 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
+variable "image_id" {
+  type        = string
+  description = "The docker image used for task."
+}
+
 job "mempool-mariadb" {
   datacenters = ["dc1"]
   type        = "service"
@@ -30,7 +46,6 @@ job "mempool-mariadb" {
       }
     }
 
-
     network {
       port "db" {
   	    to = 3306
@@ -53,7 +68,7 @@ job "mempool-mariadb" {
         read_only   = false
       }
       config {
-        image        = "busybox:latest"
+        image        = "${var.docker_registry}busybox:latest"
         command      = "sh"
         args         = ["-c", "mkdir -p /storage/data && chown -R 999:999 /storage && chmod 775 /storage"]
       }
@@ -72,7 +87,7 @@ job "mempool-mariadb" {
       driver = "docker"
 
       config {
-        image = "mariadb:10.11"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["db"]
         hostname = "mempool-mariadb"
       }

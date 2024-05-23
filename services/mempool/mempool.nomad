@@ -1,3 +1,24 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = "Name of this instance of Neon Compute Postgres"
+}
+
+variable "frontend_image_id" {
+  type        = string
+  description = "The docker image used for task."
+}
+
+variable "backend_image_id" {
+  type        = string
+  description = "The docker image used for task."
+}
+
 job "mempool" {
   datacenters = ["dc1"]
   type        = "service"
@@ -64,7 +85,7 @@ job "mempool" {
       driver = "docker"
 
       config {
-        image = "mempool/frontend:v2.5.0"
+        image = "${var.docker_registry}${var.frontend_image_id}"
         ports = ["http"]
       }
       env {
@@ -91,7 +112,7 @@ EOF
       driver = "docker"
 
       config {
-        image = "mempool/backend:v2.5.0"
+        image = "${var.docker_registry}${var.backend_image_id}"
         ports = ["api"]
       }
       env {
