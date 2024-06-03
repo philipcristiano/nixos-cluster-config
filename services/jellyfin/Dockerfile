@@ -1,1 +1,1 @@
-FROM jellyfin/jellyfin:10.9.3
+FROM jellyfin/jellyfin:10.9.4
