@@ -1,1 +1,1 @@
-FROM osminogin/tor-simple:0.4.8.11
+FROM osminogin/tor-simple:0.4.8.12
