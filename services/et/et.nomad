@@ -84,16 +84,14 @@ job "et" {
       config {
         image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
-        entrypoint = ["/atlas"]
+        entrypoint = ["/usr/local/bin/et-migrate"]
         args = [
-          "schema",
-          "apply",
-          "-c=file://atlas.hcl",
-          "--env=local",
-          "--auto-approve"
+          "--config-file",
+          "/secrets/et.toml",
+          "migrate",
         ]
-
       }
+
       resources {
         cpu    = 200
         memory = 128
@@ -103,15 +101,10 @@ job "et" {
         hook    = "prestart"
         sidecar = false
       }
-      template {
-          destination = "secrets/et.env"
-          env = true
-          data = <<EOF
-{{ with secret "kv/data/et-postgres" }}
-DATABASE_URL="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@et-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full"
-{{ end }}
 
-EOF
+      template {
+      	  destination = "secrets/et.toml"
+          data = file("et.toml.tmpl")
       }
     }
 
@@ -153,27 +146,10 @@ EOF
       }
 
       template {
-          destination = "secrets/et.toml"
-          data = <<EOF
-
-{{ with secret "kv/data/et-postgres" }}
-database_url="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@et-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full"
-
-{{ end }}
-
-{{ with secret "kv/data/et" }}
-
-[auth]
-issuer_url = "https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.OAUTH_CLIENT_ID }}"
-redirect_url = "https://et.{{ key "site/domain" }}/oidc/login_auth"
-client_secret = "{{.Data.data.OAUTH_CLIENT_SECRET }}"
-client_id = "{{.Data.data.OAUTH_CLIENT_ID }}"
-key = "{{.Data.data.KEY }}"
-{{ end }}
-
-
-EOF
+      	  destination = "secrets/et.toml"
+          data = file("et.toml.tmpl")
       }
+
     }
   }
 }
