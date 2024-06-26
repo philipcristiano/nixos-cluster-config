@@ -1,1 +1,1 @@
-FROM lightninglabs/lnd:v0.18.0-beta
+FROM lightninglabs/lnd:v0.18.1-beta
