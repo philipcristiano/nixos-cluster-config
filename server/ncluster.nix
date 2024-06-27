@@ -22,7 +22,7 @@ in
                                  pkgs.nfs-utils
                                  pkgs.consul
                                  pkgs.gasket # libedgetpu driver
-                                 pkgs.nomad_1_4
+                                 pkgs.nomad_1_6
                                  pkgs.libusb
                                  nomad_usb_device_plugin
                                  pkgs.vault
@@ -194,7 +194,7 @@ vault {
   services.consul.interface.bind = "enp2s0";
   services.nomad = {
     enable = true;
-    package = pkgs.nomad_1_4;
+    package = pkgs.nomad_1_6;
   };
 
   # https://github.com/NixOS/nixpkgs/issues/147415

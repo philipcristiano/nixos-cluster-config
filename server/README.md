@@ -3,7 +3,8 @@
 cp {*.lock,*.nix} to /etc/nixos/ on a server
 
 ```
-sudo nixos-rebuild switch --flake /etc/nixos#server
+sudo nix-channel --add https://channels.nixos.org/nixos-24.05 nixos
+sudo nixos-rebuild switch --flake /etc/nixos
 ```
 
 ```
