@@ -70,10 +70,8 @@ EOF
           destination = "local/kanidm.toml"
           data = <<EOF
 
-tls_chain = "secrets/chain.pem"
-tls_key = "secrets/key.pem"
-
-domain = "kanidm.{{ key "site/domain" }}"
+verify_ca = true
+verify_hostnames = true
 uri = "https://kanidm.{{ key "site/domain" }}"
 
 EOF
