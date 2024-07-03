@@ -47,10 +47,9 @@ job "timeline" {
       port = "http"
 
       tags = [
-        "prometheus",
         "traefik.enable=true",
-	      "traefik.http.routers.timeline.tls=true",
-	      "traefik.http.routers.timeline.tls.certresolver=home",
+	    "traefik.http.routers.timeline.tls=true",
+	    "traefik.http.routers.timeline.tls.certresolver=home",
       ]
 
       check {
@@ -108,6 +107,13 @@ job "timeline" {
       	  destination = "secrets/timeline.toml"
           data = file("timeline.toml.tmpl")
       }
+
+      template {
+      	  destination = "local/otel.env"
+          env=true
+          data = file("../template_fragments/otel_grpc.env.tmpl")
+      }
+
     }
 
     task "app" {
@@ -129,7 +135,6 @@ job "timeline" {
 
       }
 
-
       resources {
         cpu    = 50
         memory = 128
@@ -140,6 +145,12 @@ job "timeline" {
       	  destination = "secrets/timeline.toml"
           data = file("timeline.toml.tmpl")
       }
+
+      template {
+      	  destination = "local/otel.env"
+          data = file("../template_fragments/otel_grpc.env.tmpl")
+      }
+
     }
   }
 }
