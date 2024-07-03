@@ -110,7 +110,7 @@ job "timeline" {
 
       template {
       	  destination = "local/otel.env"
-          env=true
+          env = true
           data = file("../template_fragments/otel_grpc.env.tmpl")
       }
 
@@ -148,6 +148,7 @@ job "timeline" {
 
       template {
       	  destination = "local/otel.env"
+          env = true
           data = file("../template_fragments/otel_grpc.env.tmpl")
       }
 
