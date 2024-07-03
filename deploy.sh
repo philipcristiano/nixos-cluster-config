@@ -24,6 +24,7 @@ SERVICES=(
   "forgejo"
   "w2z"
   "et"
+  "timeline"
   "hvac-iot"
   "postmoogle"
   "tika"

@@ -85,16 +85,15 @@ job "timeline" {
       config {
         image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
-        entrypoint = ["/atlas"]
+        #entrypoint = ["sleep", "10000"]
+        entrypoint = ["/usr/local/bin/timeline-migrate"]
         args = [
-          "schema",
-          "apply",
-          "-c=file://atlas.hcl",
-          "--env=local",
-          "--auto-approve"
+          "--config-file",
+          "/secrets/timeline.toml",
+          "migrate",
         ]
-
       }
+
       resources {
         cpu    = 200
         memory = 128
@@ -104,15 +103,10 @@ job "timeline" {
         hook    = "prestart"
         sidecar = false
       }
-      template {
-          destination = "secrets/timeline.env"
-          env = true
-          data = <<EOF
-{{ with secret "kv/data/timeline-postgres" }}
-DATABASE_URL="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@timeline-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full"
-{{ end }}
 
-EOF
+      template {
+      	  destination = "secrets/timeline.toml"
+          data = file("timeline.toml.tmpl")
       }
     }
 
@@ -143,28 +137,9 @@ EOF
       }
 
       template {
-          destination = "secrets/timeline.toml"
-          data = <<EOF
-
-{{ with secret "kv/data/timeline-postgres" }}
-database_url="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@timeline-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full"
-
-{{ end }}
-
-{{ with secret "kv/data/timeline" }}
-[[integration]]
-type = "PaperlessNGX"
-host = "https://paperless-ngx.{{ key "site/domain" }}"
-username = "timeline"
-token = "f7424d802c6d5ebbfbdbdfa9a5f933616af4e12a"
-{{ end }}
-
-
-EOF
+      	  destination = "secrets/timeline.toml"
+          data = file("timeline.toml.tmpl")
       }
     }
   }
 }
-
-
-
