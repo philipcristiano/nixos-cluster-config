@@ -27,21 +27,20 @@ job "regctl-img-copy" {
   group "app" {
 
     restart {
-      attempts = 2
-      interval = "1m"
-      delay    = "10s"
-      mode     = "delay"
+      attempts = 10
+      interval = "15m"
+      delay    = "30s"
+      mode     = "fail"
     }
 
     service {
       name = "regctl"
     }
 
-    task "app" {
+    task "copy" {
       driver = "docker"
 
       config {
-        # entrypoint = ["sleep", "10000"]
         image = "${var.docker_registry}${var.image_id}"
 
         args = [
@@ -54,11 +53,44 @@ job "regctl-img-copy" {
       }
 
       template {
-          destination = "local/otel.env"
+          destination = "local/app.env"
           env = true
           data = <<EOF
 
 SITE_REGISTRY="docker-registry.{{key "site/domain" }}/"
+
+EOF
+      }
+    }
+
+    task "label" {
+      driver = "docker"
+
+      lifecycle {
+        hook = "poststop"
+        sidecar = false
+      }
+
+      config {
+        image = "${var.docker_registry}${var.image_id}"
+
+        args = [
+          "image",
+          "mod",
+          "${SITE_REGISTRY}${NOMAD_META_image}",
+          "--replace",
+          "--label=image.last-copied=${JOB_START}",
+        ]
+
+      }
+
+      template {
+          destination = "local/app.env"
+          env = true
+          data = <<EOF
+
+SITE_REGISTRY="docker-registry.{{key "site/domain" }}/"
+JOB_START="{{timestamp}}"
 
 EOF
       }
@@ -68,7 +100,6 @@ EOF
         memory = 256
         memory_max = 1024
       }
-
     }
   }
 }
