@@ -106,6 +106,13 @@ job "et" {
       	  destination = "secrets/et.toml"
           data = file("et.toml.tmpl")
       }
+
+      template {
+      	  destination = "local/otel.env"
+          env = true
+          data = file("../template_fragments/otel_grpc.env.tmpl")
+      }
+
     }
 
     task "app" {
@@ -126,7 +133,6 @@ job "et" {
         ]
 
       }
-
 
       resources {
         cpu    = 50
