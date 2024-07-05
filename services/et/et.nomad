@@ -135,14 +135,9 @@ job "et" {
       }
 
       template {
-          destination = "local/otel.env"
+      	  destination = "local/otel.env"
           env = true
-          data = <<EOF
-OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://tempo-otlp-grpc.{{ key "site/domain" }}:443
-OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-OTEL_SERVICE_NAME={{ env "NOMAD_JOB_NAME" }}
-
-EOF
+          data = file("../template_fragments/otel_grpc.env.tmpl")
       }
 
       template {
