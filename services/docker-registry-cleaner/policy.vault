@@ -1,0 +1,3 @@
+path "kv/data/docker-registry-cleaner" {
+  capabilities = ["read"]
+}
