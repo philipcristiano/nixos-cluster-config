@@ -1,12 +1,10 @@
 set -ex
 
-vault policy write service-calibre-web policy.vault
-vault write pki_int/roles/calibre-web \
-     issuer_ref="$(vault read -field=default pki_int/config/issuers)" \
-     allowed_domains="calibre.home.cristiano.cloud" \
-     allow_bare_domains=true \
-     allow_subdomains=true \
-     max_ttl="720h"
+SERVICE_ID=calibre-web
+IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
 
-# nomad volume create csi-nfs-calibre-web.volume
-nomad run -var-file=../../nomad_job.vars calibre-web.nomad
+vault policy write "service-${SERVICE_ID}" policy.vault
+volume create ${SERVICE_ID}.volume || true
+
+nomad job dispatch -meta image="${IMAGE_ID}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
+nomad run -var-file=../../nomad_job.vars -var "image_id=${IMAGE_ID}" "${SERVICE_ID}.nomad"

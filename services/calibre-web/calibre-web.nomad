@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "linuxserver/calibre-web:0.6.21"
 }
 
 job "calibre-web" {
@@ -27,8 +26,8 @@ job "calibre-web" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.calibre.tls=true",
-	      "traefik.http.routers.calibre.tls.certresolver=home",
+	    "traefik.http.routers.calibre.tls=true",
+	    "traefik.http.routers.calibre.tls.certresolver=home",
       ]
 
       check {
@@ -43,7 +42,7 @@ job "calibre-web" {
 
     network {
       port "http" {
-	to = 8083
+	    to = 8083
       }
     }
 
