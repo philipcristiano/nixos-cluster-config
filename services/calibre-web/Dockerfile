@@ -1,1 +1,1 @@
-FROM linuxserver/calibre-web:0.6.21
+FROM linuxserver/calibre-web:2021.12.16
