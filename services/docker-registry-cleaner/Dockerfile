@@ -1,2 +1,2 @@
-FROM philipcristiano/docker-registry-cleaner:0.1.0
+FROM philipcristiano/docker-registry-cleaner:0.1.1
 
