@@ -48,8 +48,8 @@ job "docker-registry" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.docker-registry.tls=true",
-	      "traefik.http.routers.docker-registry.tls.certresolver=home",
+	    "traefik.http.routers.docker-registry.tls=true",
+	    "traefik.http.routers.docker-registry.tls.certresolver=home",
       ]
 
       check {
@@ -96,6 +96,12 @@ job "docker-registry" {
       template {
         destination = "secrets/config.yml"
         data = file("config.yml")
+      }
+
+      template {
+      	  destination = "local/otel.env"
+          env = true
+          data = file("../template_fragments/otel_grpc.env.tmpl")
       }
 
     }
