@@ -1,1 +1,1 @@
-FROM philipcristiano/hello_idc:0.3.1
+FROM philipcristiano/hello_idc:0.3.2
