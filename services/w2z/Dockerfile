@@ -1,1 +1,1 @@
-FROM philipcristiano/w2z:0.6.1
+FROM philipcristiano/w2z:0.6.2
