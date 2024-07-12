@@ -50,16 +50,21 @@ job "w2z" {
         name     = "alive"
         type     = "http"
         port     = "http"
-        path     = "/"
+        path     = "/_health"
         interval = "10s"
         timeout  = "2s"
+
+        check_restart {
+          limit           = 2
+          grace           = "30s"
+          ignore_warnings = false
+        }
       }
     }
 
     network {
       port "http" {
         to = 3000
-        host_network = "services"
       }
     }
 
