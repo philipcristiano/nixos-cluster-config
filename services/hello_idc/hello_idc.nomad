@@ -53,16 +53,21 @@ job "hello_idc" {
         name     = "alive"
         type     = "http"
         port     = "http"
-        path     = "/"
+        path     = "/_health"
         interval = "10s"
         timeout  = "2s"
+
+        check_restart {
+          limit           = 2
+          grace           = "30s"
+          ignore_warnings = false
+        }
       }
     }
 
     network {
       port "http" {
         to = 3000
-        host_network = "services"
       }
     }
 
@@ -84,14 +89,9 @@ job "hello_idc" {
         ]
       }
       template {
-          destination = "local/otel.env"
+      	  destination = "local/otel.env"
           env = true
-          data = <<EOF
-OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://tempo-otlp-grpc.{{ key "site/domain" }}:443
-OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-OTEL_SERVICE_NAME={{ env "NOMAD_JOB_NAME" }}
-
-EOF
+          data = file("../template_fragments/otel_grpc.env.tmpl")
       }
 
       template {
