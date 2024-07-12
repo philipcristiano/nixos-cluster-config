@@ -1,1 +1,1 @@
-FROM philipcristiano/timeline:0.1.1
+FROM philipcristiano/timeline:0.0.8
