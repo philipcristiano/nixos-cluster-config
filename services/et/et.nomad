@@ -56,7 +56,7 @@ job "et" {
         name     = "alive"
         type     = "http"
         port     = "http"
-        path     = "/"
+        path     = "/_health"
         interval = "10s"
         timeout  = "2s"
 
