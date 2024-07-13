@@ -1,7 +1,17 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "grafana/tempo:2.2.1"
 }
 
 job "tempo" {
@@ -62,8 +72,8 @@ job "tempo" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.tempo-otlp-http.tls=true",
-	    "traefik.http.routers.tempo-otlp-http.tls.certresolver=home",
+	      "traefik.http.routers.tempo-otlp-http.tls=true",
+	      "traefik.http.routers.tempo-otlp-http.tls.certresolver=home",
       ]
 
       check {
@@ -95,14 +105,6 @@ job "tempo" {
       sticky = true
     }
 
-    # volume "storage" {
-    #   type            = "csi"
-    #   source          = "tempo"
-    #   read_only       = false
-    #   attachment_mode = "file-system"
-    #   access_mode     = "multi-node-multi-writer"
-    # }
-
     task "app" {
       driver = "docker"
 
@@ -111,15 +113,10 @@ job "tempo" {
       }
 
       config {
-        image = var.image_id
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["tempo", "otlp-grpc", "otlp-http"]
         command = "-config.file=/secrets/tempo.yaml"
       }
-
-      # volume_mount {
-      #   volume      = "storage"
-      #   destination = "/storage"
-      # }
 
       template {
           destination = "secrets/tempo.yaml"
@@ -169,9 +166,8 @@ EOF
       }
 
       resources {
-        cpu    = 50
-        memory = 256
-        memory_max = 1024
+        cpu    = 100
+        memory = 4096
       }
 
     }
