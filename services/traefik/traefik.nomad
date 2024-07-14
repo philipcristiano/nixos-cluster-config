@@ -175,6 +175,8 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 {{range ls "traefik-ports/"}}
     [entryPoints.{{.Key}}]
     address = ":{{.Value}}"
+    [entryPoints.{{.Key}}.transport.respondingTimeouts]
+      readTimeout = "905s"
 {{end}}
 
 [serversTransport]
