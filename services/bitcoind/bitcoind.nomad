@@ -163,6 +163,8 @@ peerblockfilters=1
 # Don't advertise as a remote node
 discover=0
 
+allowignoredconf=1
+
 EOF
       }
 
