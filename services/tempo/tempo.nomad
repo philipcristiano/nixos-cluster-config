@@ -161,6 +161,9 @@ storage:
       secret_key: "{{.Data.data.SECRET_KEY}}"
 {{ end }}
 
+compactor:
+  compaction:
+    block_retention: 72h
 
 EOF
       }
