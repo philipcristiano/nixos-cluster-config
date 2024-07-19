@@ -1,1 +1,1 @@
-FROM homeassistant/home-assistant:2024.7.2
+FROM homeassistant/home-assistant:2024.7.3
