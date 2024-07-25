@@ -1,1 +1,1 @@
-FROM registry.gitlab.com/etke.cc/postmoogle:v0.9.18
+FROM registry.gitlab.com/etke.cc/postmoogle:v0.9.19
