@@ -1,1 +1,1 @@
-FROM linuxserver/calibre-web:0.6.22
+FROM linuxserver/calibre-web:0.6.23
