@@ -30,7 +30,7 @@ SERVICES=(
   "tika"
   "gotenberg"
   "jellyfin"
-  "calibre"
+  "calibre-web"
   "llm"
   "rotki"
   "zwavejs2mqtt"
