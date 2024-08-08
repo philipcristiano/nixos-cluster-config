@@ -1,2 +1,2 @@
-FROM registry:3.0.0-alpha.1
+FROM registry:3.0.0-beta.1
 

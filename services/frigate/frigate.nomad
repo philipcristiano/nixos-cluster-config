@@ -176,9 +176,6 @@ cameras:
           roles:
             - detect
             - record
-            - rtmp
-    rtmp:
-      enabled: True # <-- RTMP should be disabled if your stream is not H264
     detect:
       width: 1280 # <---- update for your camera's resolution
       height: 720 # <---- update for your camera's resolution
