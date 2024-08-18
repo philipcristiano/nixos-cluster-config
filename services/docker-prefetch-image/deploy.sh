@@ -7,7 +7,6 @@ PREFETCH_DOCKER_HUB=(
     "minio-system"
     "docker-registry"
     "traefik"
-    "telegraf"
 )
 
 ### Dispatch the copy job to the local repository and set into consul to pull the image
