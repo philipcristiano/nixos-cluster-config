@@ -1,17 +1,17 @@
 variable "docker_registry" {
   type        = string
   description = "The docker registry"
-  default     = "quay.io/"
+  default     = ""
 }
 
 variable "domain" {
   type        = string
-  description = "Name of this instance of Neon Compute Postgres"
+  description = ""
 }
 
 variable "image_id" {
   type        = string
-  description = "The docker image used for compute task."
+  description = ""
 }
 
 job "minio" {
@@ -101,7 +101,7 @@ job "minio" {
       }
 
       config {
-        image = "quay.io/${var.image_id}"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["api", "console"]
 
         network_mode = "host"
@@ -120,8 +120,8 @@ job "minio" {
 
       resources {
         cpu    = 100
-        memory = 2048
-        memory_max = 4096
+        memory = 4000
+        memory_max = 4000
       }
 
       env {
