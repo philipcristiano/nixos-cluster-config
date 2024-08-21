@@ -13,7 +13,7 @@ http:
 
 storage:
   cache:
-    blobdescriptor: redis
+    blobdescriptor: inmemory
   delete:
       enabled: true
   s3:
