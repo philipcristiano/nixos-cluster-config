@@ -23,6 +23,7 @@ storage:
     regionendpoint: https://s3.{{ key "site/domain" }}
     bucket: {{.Data.data.bucket}}
     encrypt: false
+    forcepathstyle: true
     secure: true
     chunksize: 5242880
     multipartcopychunksize: 33554432
