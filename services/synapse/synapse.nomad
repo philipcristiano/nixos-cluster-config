@@ -205,8 +205,7 @@ report_stats: true
 
 
 # Application services
-app_service_config_files:
-- /local/heisenbridge.yaml
+# app_service_config_files:
 
 media_storage_providers:
 # S3 Storage provider
@@ -276,29 +275,6 @@ disable_existing_loggers: false
 EOF
         }
 
-      template {
-          destination = "local/heisenbridge.yaml"
-          data = <<EOF
-
-id: heisenbridge
-url: https://heisenbridge.{{ key "site/domain" }}
-
-{{with secret "kv/data/heisenbridge"}}
-as_token: "{{.Data.data.as_token}}"
-hs_token: "{{.Data.data.hs_token}}"
-{{end}}
-
-rate_limited: false
-sender_localpart: heisenbridge
-namespaces:
-    users:
-    - regex: '@irc_.*'
-      exclusive: true
-    aliases: []
-    rooms: []
-
-EOF
-      }
     }
   }
 }
