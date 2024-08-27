@@ -1,5 +1,5 @@
-id = "lemmy-postgres" # ID as seen in nomad
-name = "lemmy-postgres" # Display name
+id = "llm" # ID as seen in nomad
+name = "llm" # Display name
 type = "csi"
 plugin_id = "nfs" # Needs to match the deployed plugin
 

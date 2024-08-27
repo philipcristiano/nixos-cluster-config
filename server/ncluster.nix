@@ -154,10 +154,10 @@ vault {
      config {
        enabled = true
 
-       included_vendor_ids = []
+       included_vendor_ids = [ 0x0658 ]
        excluded_vendor_ids = []
 
-       included_product_ids = []
+       included_product_ids = [ 0x0200 ]
        excluded_product_ids = []
 
        fingerprint_period = "1m"

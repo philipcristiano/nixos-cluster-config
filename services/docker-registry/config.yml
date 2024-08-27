@@ -34,7 +34,8 @@ storage:
 
 {{ with secret "kv/data/docker-registry-redis" }}
 redis:
-  addr: docker-registry-redis.{{key "site/domain"}}:6379
+  addrs:
+  - docker-registry-redis.{{key "site/domain"}}:6379
   password: {{.Data.data.password}}
   db: 0
   dialtimeout: 10ms

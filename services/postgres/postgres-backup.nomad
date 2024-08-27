@@ -25,7 +25,7 @@ job "JOB_NAME-postgres-backup" {
   type        = "batch"
 
   periodic {
-    cron             = "0 * * * * *"
+    cron             = "*/15 * * * * *"
     prohibit_overlap = true
   }
 
@@ -61,6 +61,7 @@ job "JOB_NAME-postgres-backup" {
 
       config {
         image = "${var.docker_registry}${var.image_id}"
+        force_pull = true
       }
 
       template {

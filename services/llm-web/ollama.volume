@@ -1,5 +1,5 @@
-id = "svix-postgres" # ID as seen in nomad
-name = "svix-postgres" # Display name
+id = "ollama" # ID as seen in nomad
+name = "ollama" # Display name
 type = "csi"
 plugin_id = "nfs" # Needs to match the deployed plugin
 

@@ -96,7 +96,6 @@ job "traefik" {
       driver = "docker"
 
       config {
-        #image = "${var.image_id}"
         image = "${var.docker_registry}${var.image_id}"
         network_mode = "host"
         ports = [

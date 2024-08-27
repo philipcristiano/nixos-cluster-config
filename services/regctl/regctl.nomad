@@ -27,7 +27,7 @@ job "regctl-img-copy" {
   group "app" {
 
     restart {
-      attempts = 10
+      attempts = 3
       interval = "15m"
       delay    = "30s"
       mode     = "fail"
@@ -44,6 +44,8 @@ job "regctl-img-copy" {
         image = "${var.docker_registry}${var.image_id}"
 
         args = [
+          "-v",
+          "debug",
           "image",
           "copy",
           "${NOMAD_META_source_registry}${NOMAD_META_image}",

@@ -62,7 +62,7 @@ job "calibre-web" {
         read_only   = false
       }
       config {
-        image        = "busybox:latest"
+        image        = "${var.docker_registry}busybox/busybox:latest"
         command      = "sh"
         args         = ["-c", "mkdir -p /storage/data && chown -R 1000:0 /storage && chmod 775 /storage"]
       }

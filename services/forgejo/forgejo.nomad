@@ -144,6 +144,7 @@ FORGEJO__database__PASSWD={{ .Data.data.PASSWORD }}
 {{ end }}
 
 FORGEJO__server__SSH_DOMAIN=git.{{ key "site/domain"}}
+FORGEJO__CORS__ENABLED=true
 
 EOF
       }
