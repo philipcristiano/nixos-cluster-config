@@ -31,7 +31,7 @@ SERVICES=(
   "gotenberg"
   "jellyfin"
   "calibre-web"
-  "llm"
+  "llm-web"
   "rotki"
   "zwavejs2mqtt"
   "synapse"
