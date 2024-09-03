@@ -98,56 +98,63 @@ EOF
 
       template {
           destination = "local/config.toml"
+          left_delimiter = "{{{"
+          right_delimiter = "}}}"
           data = <<EOF
 
-{{with secret "kv/data/w2z"}}
+{{{with secret "kv/data/w2z"}}}
 
 [auth]
-issuer_url = "https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.OIDC_CLIENT_ID }}"
-redirect_url = "https://w2z.{{ key "site/domain" }}/oidc/login_auth"
-client_secret = "{{.Data.data.OIDC_CLIENT_SECRET }}"
-client_id = "{{.Data.data.OIDC_CLIENT_ID }}"
-key = "{{.Data.data.KEY }}"
+issuer_url = "https://kanidm.{{{ key "site/domain"}}}/oauth2/openid/{{{.Data.data.OIDC_CLIENT_ID }}}"
+redirect_url = "https://w2z.{{{ key "site/domain" }}}/oidc/login_auth"
+client_secret = "{{{.Data.data.OIDC_CLIENT_SECRET }}}"
+client_id = "{{{.Data.data.OIDC_CLIENT_ID }}}"
+key = "{{{.Data.data.KEY }}}"
 
 [github]
-token = "{{ .Data.data.GITHUB_TOKEN }}"
+app_id = {{{ .Data.data.GITHUB_APP_ID }}}
+app_key = '''{{{ .Data.data.GITHUB_APP_KEY }}}'''
 owner = "philipcristiano"
 repository = "philipcristiano.com"
 branch = "main"
 
+{{{end}}}
+
 [templates]
 [templates.note]
-path = {{ `"content/notes/{{ now() | date(format=\"%Y/%Y-%m-%dT%H:%M:%SZ\")}}-{{uuid}}.md"`}}
+path = "content/notes/{{ now() | date(format=\"%Y/%Y%m%d%H%M%S\")}}/index.md"
 body = """
 +++
+date = "{{ now() | date(format=\"%Y-%m-%dT%H:%M:%SZ\")}}"
 +++
 
-{{ `{{contents}} `}}
+{{contents}}
 """
 
 [templates.reply]
-path = {{ `"content/replies/{{ now() | date(format=\"%Y/%Y-%m-%dT%H:%M:%SZ\")}}-{{uuid}}.md"`}}
+path = "content/replies/{{ now() | date(format=\"%Y/%Y%m%d%H%M%S\")}}/index.md"
 body = """
 +++
+date = "{{ now() | date(format=\"%Y-%m-%dT%H:%M:%SZ\")}}"
 [extra]
-in_reply_to = "{{ `{{in_reply_to}}` }}"
+in_reply_to = "{{in_reply_to}}"
 +++
 
-{{ `{{contents}} `}}
+{{contents}}
 """
 
 [templates.like]
-path = {{ `"content/likes/{{ now() | date(format=\"%Y/%Y-%m-%dT%H:%M:%SZ\")}}-{{uuid}}.md"`}}
+path = "content/likes/{{ now() | date(format=\"%Y/%Y%m%d%H%M%S\")}}/index.md"
 body = """
 +++
+date = "{{ now() | date(format=\"%Y-%m-%dT%H:%M:%SZ\")}}"
 [extra]
-in_like_of = "{{ `{{in_like_of}}` }}"
+in_like_of = "{{in_like_of}}"
 +++
 
-{{ `{{contents}} `}}
+{{contents}}
 """
 
-{{end}}
 
 EOF
       }
