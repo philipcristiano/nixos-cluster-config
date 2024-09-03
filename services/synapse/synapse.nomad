@@ -193,6 +193,7 @@ oidc_providers:
 {{ end }}
 
 enable_metrics: true
+enable_authenticated_media: true
 
 log_config: "/local/log.config"
 media_store_path: "/tmp"
