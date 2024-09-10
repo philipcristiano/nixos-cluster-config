@@ -1,1 +1,1 @@
-FROM philipcristiano/mktxp:1.2.1-p02
+FROM ghcr.io/akpw/mktxp:stable-20240821070725
