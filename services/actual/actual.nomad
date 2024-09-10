@@ -39,7 +39,6 @@ job "actual" {
       port = "http"
 
       tags = [
-        "prometheus",
         "traefik.enable=true",
 	      "traefik.http.routers.actual.tls=true",
 	      "traefik.http.routers.actual.tls.certresolver=home",
