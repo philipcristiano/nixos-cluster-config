@@ -40,12 +40,17 @@ job "regctl-img-copy" {
     task "copy" {
       driver = "docker"
 
+      vault {
+        policies = ["service-regctl"]
+      }
+
       config {
         image = "${var.docker_registry}${var.image_id}"
 
         args = [
           "-v",
           "debug",
+          "--host", "${AUTH}",
           "image",
           "copy",
           "${NOMAD_META_source_registry}${NOMAD_META_image}",
@@ -59,6 +64,9 @@ job "regctl-img-copy" {
           env = true
           data = <<EOF
 
+{{ with secret "kv/data/regctl" }}
+AUTH=reg="docker.io,user={{.Data.data.USERNAME}},pass={{.Data.data.PASSWORD}}"
+{{ end }}
 SITE_REGISTRY="docker-registry.{{key "site/domain" }}/"
 
 EOF
