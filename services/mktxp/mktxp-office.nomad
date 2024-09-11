@@ -1,3 +1,18 @@
+variable "docker_registry" {
+  type        = string
+  description = "The docker registry"
+  default     = ""
+}
+
+variable "domain" {
+  type        = string
+  description = ""
+}
+variable "image_id" {
+  type        = string
+  description = "The docker image used for lnd."
+}
+
 job "mktxp-office" {
   datacenters = ["dc1"]
   type        = "service"
@@ -18,8 +33,8 @@ job "mktxp-office" {
       tags = [
         "prometheus",
         "traefik.enable=true",
-        "traefik.http.routers.mktxp-office.tls=true",
-        "traefik.http.routers.mktxp-office.tls.certresolver=home",
+	      "traefik.http.routers.mktxp-office.tls=true",
+	      "traefik.http.routers.mktxp-office.tls.certresolver=home",
       ]
 
       check {
@@ -29,6 +44,7 @@ job "mktxp-office" {
         path     = "/"
         interval = "10s"
         timeout  = "2s"
+
       }
     }
 
@@ -36,7 +52,7 @@ job "mktxp-office" {
     network {
       mode = "bridge"
       port "http" {
-    to = 49090
+  	    to = 49090
       }
 
     }
@@ -45,7 +61,7 @@ job "mktxp-office" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/akpw/mktxp:stable-20230706091740"
+        image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
         volumes = [
           "local/mktxp.conf:/root/mktxp/mktxp.conf",
@@ -81,13 +97,15 @@ job "mktxp-office" {
     installed_packages = True       # Installed packages
     dhcp = True                     # DHCP general metrics
     dhcp_lease = True               # DHCP lease metrics
-    connections = False             # IP connections metrics
+    connections = True              # IP connections metrics
     pool = True                     # Pool metrics
     interface = True                # Interfaces traffic metrics
 
     firewall = True                 # IPv4 Firewall rules traffic metrics
     ipv6_firewall = False           # IPv6 Firewall rules traffic metrics
     ipv6_neighbor = False           # Reachable IPv6 Neighbors
+    connection_stats = False
+    check_for_updates = True
 
     poe = False                     # POE metrics
     monitor = True                  # Interface monitor metrics
@@ -108,7 +126,6 @@ job "mktxp-office" {
 EOTC
         destination = "local/mktxp.conf"
       }
-
     }
   }
 }

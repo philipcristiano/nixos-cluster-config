@@ -11,7 +11,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for lnd."
-  default     = "philipcristiano/mktxp:1.2.1-p02"
 }
 
 job "mktxp-router" {
