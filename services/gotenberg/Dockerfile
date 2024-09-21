@@ -1,1 +1,1 @@
-FROM gotenberg/gotenberg:8.9
+FROM gotenberg/gotenberg:8.10
