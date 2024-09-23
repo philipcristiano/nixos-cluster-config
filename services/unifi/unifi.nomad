@@ -12,7 +12,6 @@ variable "domain" {
 variable "image_id" {
   type        = string
   description = "The docker image used for task."
-  default     = "jacobalberty/unifi-docker:v8.0.26"
 }
 
 job "unifi" {
@@ -34,8 +33,8 @@ job "unifi" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.unifi-command.tls=true",
-	      "traefik.http.routers.unifi-command.tls.certresolver=home",
+	    "traefik.http.routers.unifi-command.tls=true",
+	    "traefik.http.routers.unifi-command.tls.certresolver=home",
       ]
 
       check {
@@ -52,9 +51,9 @@ job "unifi" {
 
       tags = [
         "traefik.enable=true",
-	      "traefik.http.routers.unifi.tls=true",
-	      "traefik.http.routers.unifi.tls.certresolver=home",
-	      "traefik.http.services.unifi.loadbalancer.server.scheme=https",
+	    "traefik.http.routers.unifi.tls=true",
+	    "traefik.http.routers.unifi.tls.certresolver=home",
+	    "traefik.http.services.unifi.loadbalancer.server.scheme=https",
       ]
 
       check {
