@@ -1,1 +1,1 @@
-FROM mempool/backend:v3.0.0
+FROM mempool/backend:v3.0.1
