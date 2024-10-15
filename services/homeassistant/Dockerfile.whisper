@@ -1,1 +1,1 @@
-FROM rhasspy/wyoming-whisper:2.1.0
+FROM rhasspy/wyoming-whisper:2.2.0
