@@ -1,1 +1,1 @@
-FROM philipcristiano/postgres-backup-s3:16
+FROM philipcristiano/postgres-backup-s3:17
