@@ -220,6 +220,12 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
     [providers.consulCatalog.endpoint]
       address = "127.0.0.1:8500"
       scheme  = "http"
+
+[providers]
+  [providers.file]
+    directory = "/local/dynamic"
+    watch = true
+
 [certificatesResolvers]
     [certificatesResolvers.home]
         [certificatesResolvers.home.acme]
@@ -240,6 +246,16 @@ EOF
         destination = "local/traefik.toml"
       }
 
+      template {
+        data = <<EOF
+
+[tls.options]
+  [tls.options.default]
+    alpnProtocols = [ "h2", "http/1.1", "postgresql" ]
+
+EOF
+        destination = "local/dynamic/traefik.toml"
+      }
       resources {
         cpu    = 100
         memory = 128
