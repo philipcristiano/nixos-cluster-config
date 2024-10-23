@@ -61,13 +61,17 @@ job "JOB_NAME-postgres-backup" {
 
       config {
         image = "${var.docker_registry}${var.image_id}"
-        force_pull = true
       }
 
       template {
         destination = "secrets/file.env"
         env         = true
         data = file("backup_s3.env.tmpl")
+      }
+
+      env {
+        PGSSLNEGOTIATION="postgres"
+        PGSSLMODE="require"
       }
 
       resources {
