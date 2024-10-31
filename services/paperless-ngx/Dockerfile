@@ -1,1 +1,1 @@
-FROM paperlessngx/paperless-ngx:2.13.0
+FROM paperlessngx/paperless-ngx:2.13.2
