@@ -101,7 +101,7 @@ job "kanidm" {
         ports = ["ldap", "http"]
         #entrypoint = ["sleep" ,"10000"]
         command = "/sbin/kanidmd"
-        args = ["server" ,"-c", "local/kanidm.toml"]
+        args = ["server" ,"-c", "/local/kanidm.toml"]
 
         hostname = "kanidm"
       }
@@ -158,8 +158,8 @@ db_path = "/data/kanidm.db"
 # db_arc_size = 2048
 #
 #   TLS chain and key in pem format. Both must be present
-tls_chain = "secrets/chain.pem"
-tls_key = "secrets/key.pem"
+tls_chain = "/secrets/chain.pem"
+tls_key = "/secrets/key.pem"
 #
 #   The log level of the server. May be default, verbose,
 #   perfbasic, perffull
