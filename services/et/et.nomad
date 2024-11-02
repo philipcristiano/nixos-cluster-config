@@ -50,6 +50,8 @@ job "et" {
         "traefik.enable=true",
 	      "traefik.http.routers.et.tls=true",
 	      "traefik.http.routers.et.tls.certresolver=home",
+          "traefik.http.middlewares.et.retry.attempts=4",
+          "traefik.http.middlewares.et.retry.initialinterval=100ms",
       ]
 
       check {
