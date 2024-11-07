@@ -447,28 +447,28 @@ archive_timeout = 500            # force a WAL file switch after this
 
 # - Where to Log -
 
-#log_destination = 'stderr'             # Valid values are combinations of
+log_destination = 'jsonlog'             # Valid values are combinations of
                                         # stderr, csvlog, jsonlog, syslog, and
                                         # eventlog, depending on platform.
                                         # csvlog and jsonlog require
                                         # logging_collector to be on.
 
 # This is used when logging to stderr:
-#logging_collector = off                # Enable capturing of stderr, jsonlog,
+logging_collector = on                  # Enable capturing of stderr, jsonlog,
                                         # and csvlog into log files. Required
                                         # to be on for csvlogs and jsonlogs.
                                         # (change requires restart)
 
 # These are only used if logging_collector is on:
-#log_directory = 'log'                  # directory where log files are written,
+log_directory = '/alloc/logs'           # directory where log files are written,
                                         # can be absolute or relative to PGDATA
-#log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'        # log file name pattern,
+log_filename = 'app.stdlog-%Y-%m-%d_%H%M%S.log'         # log file name pattern,
                                         # can include strftime() escapes
-#log_file_mode = 0600                   # creation mode for log files,
+log_file_mode = 0666                    # creation mode for log files,
                                         # begin with 0 to use octal notation
 #log_rotation_age = 1d                  # Automatic rotation of logfiles will
                                         # happen after that time.  0 disables.
-#log_rotation_size = 10MB               # Automatic rotation of logfiles will
+log_rotation_size = 10MB               # Automatic rotation of logfiles will
                                         # happen after that much log output.
                                         # 0 disables.
 #log_truncate_on_rotation = off         # If on, an existing log file with the
@@ -521,7 +521,7 @@ log_min_messages = info
                                         #   fatal
                                         #   panic (effectively off)
 
-#log_min_duration_statement = -1        # -1 is disabled, 0 logs all statements
+log_min_duration_statement = 100      # -1 is disabled, 0 logs all statements
                                         # and their durations, > 0 logs only
                                         # statements running at least this number
                                         # of milliseconds
@@ -559,7 +559,7 @@ log_min_messages = info
                                         # of milliseconds.
 #log_checkpoints = on
 log_connections = on
-log_disconnections = off
+log_disconnections = on
 #log_duration = off
 #log_error_verbosity = default          # terse, default, or verbose messages
 #log_hostname = off
@@ -602,6 +602,12 @@ log_disconnections = off
                                         # than the specified size in kilobytes;
                                         # -1 disables, 0 logs all temp files
 log_timezone = 'Etc/UTC'
+
+# - Auto Explain
+
+auto_explain.log_min_duration = 250ms
+auto_explain.log_analyze = true
+auto_explain.log_buffers = true
 
 # - Process Title -
 
