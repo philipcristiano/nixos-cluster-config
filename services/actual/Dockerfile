@@ -1,1 +1,1 @@
-FROM actualbudget/actual-server:24.10.1
+FROM actualbudget/actual-server:24.11.0
