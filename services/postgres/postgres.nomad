@@ -193,6 +193,11 @@ set -e
 
 touch {{ env "NOMAD_ALLOC_DIR"}}/restored.txt
 
+set -o pipefail
+{{ with secret "kv/data/JOB_NAME-postgres" }}
+echo "ANALYZE;" | psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U {{.Data.data.USER}}
+{{ end }}
+
 EOF
       }
 
