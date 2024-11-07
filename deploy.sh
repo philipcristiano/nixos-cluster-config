@@ -14,7 +14,7 @@ SERVICES=(
   "mimir"
   "bitcoind"
   "electrs"
-  "lightning-network-daemon"
+  # "lightning-network-daemon"
   "frigate"
   "kanidm"
   "miniflux"
