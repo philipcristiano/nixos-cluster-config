@@ -12,10 +12,10 @@ http:
   secret: {{ .Data.data.http_secret }}
 
 storage:
-  cache:
-    blobdescriptor: inmemory
   delete:
       enabled: true
+  cache:
+    blobdescriptor: inmemory
   s3:
     accesskey: {{.Data.data.AWS_ACCESS_KEY_ID}}
     secretkey: {{.Data.data.AWS_SECRET_ACCESS_KEY}}
