@@ -1,1 +1,1 @@
-FROM telegraf:1.32.2
+FROM telegraf:1.32.3
