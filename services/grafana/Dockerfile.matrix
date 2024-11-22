@@ -1,1 +1,1 @@
-FROM registry.gitlab.com/hctrdev/grafana-matrix-forwarder:0.8.2
+FROM registry.gitlab.com/hctrdev/grafana-matrix-forwarder:0.8.3
