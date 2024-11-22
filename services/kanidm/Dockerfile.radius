@@ -1,1 +1,1 @@
-FROM kanidm/radius:1.4.2
+FROM kanidm/radius:1.4.3
