@@ -1,1 +1,1 @@
-FROM lightninglabs/lndmon:v0.2.8
+FROM lightninglabs/lndmon:v0.2.9
