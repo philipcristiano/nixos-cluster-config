@@ -1,1 +1,1 @@
-FROM philipcristiano/owui-rag-sync:0.1.4
+FROM philipcristiano/owui-rag-sync:0.1.5
