@@ -50,7 +50,7 @@ job "owui-rag-sync" {
         args = [
           "--bucket=${BUCKET}",
           "--endpoint=${ENDPOINT}",
-          "--hours-since-modified=4"
+          "--hours-since-modified=72"
         ]
 
       }
