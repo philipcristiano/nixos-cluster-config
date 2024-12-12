@@ -1,1 +1,1 @@
-FROM grafana/promtail:3.3.0
+FROM grafana/promtail:3.3.1
