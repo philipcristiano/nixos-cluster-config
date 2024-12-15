@@ -1,1 +1,1 @@
-FROM philipcristiano/hvac-iot-mqtt-influx:0.1.6
+FROM philipcristiano/hvac-iot-mqtt-influx:0.1.7
