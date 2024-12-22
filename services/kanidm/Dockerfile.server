@@ -1,1 +1,1 @@
-FROM kanidm/server:1.4.4
+FROM kanidm/server:1.4.5
