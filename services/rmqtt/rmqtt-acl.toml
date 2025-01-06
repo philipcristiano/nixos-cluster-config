@@ -1,0 +1,13 @@
+rules = [
+    # Allow "dashboard" users to subscribe to "$SYS/#" topics
+    ["allow", { user = "dashboard" }, "subscribe", ["$SYS/#"]],
+    # Allow client with IP address "127.0.0.1" to publish/subscribe to "$SYS/#" or "#" topics.
+    ["allow", { ipaddr = "127.0.0.1" }, "pubsub", ["$SYS/#", "#"]],
+    # Deny "All Users" subscribe to "$SYS/#" "#" Topics
+    ["deny", "all", "subscribe", ["$SYS/#", { eq = "#" }]],
+    # Allow any other clients connect and publish/subscribe operations
+{{range ls "mqtt/credentials"}}
+    ["allow", {user = "{{.Key}}", password="{{.Value}}"}, "all"],
+{{end}}
+    ["deny", "all"]
+]
