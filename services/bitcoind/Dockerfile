@@ -1,1 +1,1 @@
-FROM btcpayserver/bitcoin:27.1
+FROM btcpayserver/bitcoin:28.1
