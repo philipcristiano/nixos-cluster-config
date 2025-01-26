@@ -97,9 +97,9 @@ job "llm-web" {
       }
 
       resources {
-        cpu    = 4000
-        memory = 15000
-        memory_max = 20000
+        cpu    = 250
+        memory = 2048
+        memory_max = 2048
       }
       env {
           DATA_DIR = "/storage"
