@@ -42,7 +42,9 @@ job "llm-web" {
         port     = "http"
         path     = "/health"
         interval = "10s"
-        timeout  = "2s"
+        timeout  = "5s"
+
+        failures_before_critical = 3
 
       }
     }
@@ -110,6 +112,7 @@ job "llm-web" {
 
 WEBUI_SESSION_COOKIE_SECURE=true
 WEBUI_SESSION_COOKIE_SAME_SITE=strict
+WEBUI_URL=https://llm-web.{{ key "site/domain" }}
 {{with secret "kv/data/llm-web"}}
 WEBUI_SECRET_KEY="{{.Data.data.WEBUI_SECRET_KEY }}"
 
