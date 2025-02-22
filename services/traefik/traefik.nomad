@@ -79,6 +79,7 @@ job "traefik" {
 	      "enable_gocast",
         "gocast_vip=192.168.102.50/32",
 	      "gocast_monitor=consul",
+        "prometheus",
       ]
 
       check {
@@ -200,16 +201,11 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 
 
 [metrics]
-  [metrics.influxDB2]
-    address= "https://influxdb-write.{{ key "site/domain" }}:443"
-    org = "{{ key "credentials/traefik/influxdb_organization"}}"
-    bucket = "{{ key "credentials/traefik/influxdb_bucket"}}"
-    token = "{{ key "credentials/traefik/influxdb_token"}}"
+  [metrics.prometheus]
+    buckets = [0.1,0.3,1.2,5.0]
     addEntryPointsLabels = true
     addRoutersLabels = true
     addServicesLabels = true
-    [metrics.influxDB2.additionalLabels]
-      traefik_host = "{{ env "NOMAD_ALLOC_ID" }}"
 
 # Enable Consul Catalog configuration backend.
 [providers.consulCatalog]
