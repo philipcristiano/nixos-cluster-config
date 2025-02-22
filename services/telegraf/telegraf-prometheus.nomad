@@ -87,7 +87,7 @@ nomad_client_class = "{{ env "node.class" }}"
     [[inputs.prometheus.consul.query]]
       name = "{{ .Name }}"
       tag = "prometheus"
-      url = {{ `'http://{{if ne .ServiceAddress ""}}{{.ServiceAddress}}{{else}}{{.Address}}{{end}}:{{.ServicePort}}{{with .ServiceMeta.metrics_path}}{{.}}{{else}}/metrics{{end}}'` }}
+      url = {{ `'http://{{if ne .ServiceAddress ""}}{{.ServiceAddress}}{{else}}{{.Address}}{{end}}:{{with .ServiceMeta.metrics_port}}{{.}}{{else}}{{.ServicePort}}{{end}}{{with .ServiceMeta.metrics_path}}{{.}}{{else}}/metrics{{end}}'` }}
     {{ end }}
 
 

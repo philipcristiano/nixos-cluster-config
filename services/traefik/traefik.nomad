@@ -91,6 +91,10 @@ job "traefik" {
         interval = "3s"
         timeout  = "2s"
       }
+
+      meta {
+        metrics_port = "8081"
+      }
     }
 
     task "traefik" {
