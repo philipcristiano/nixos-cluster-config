@@ -78,6 +78,8 @@ nomad_client_class = "{{ env "node.class" }}"
 # Read metrics from one or many prometheus clients
 [[inputs.prometheus]]
   ## Scrape Services available in Consul Catalog
+  metric_version = 1
+
   [inputs.prometheus.consul]
     enabled = true
     agent = "http://consul.{{ key "site/domain" }}:8500"

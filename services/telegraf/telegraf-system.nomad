@@ -95,6 +95,20 @@ url = "http://127.0.0.1:4646"
 
 ## Set response_timeout (default 5 seconds)
 response_timeout = "5s"
+
+# Processor configuration to rename metric names
+[[processors.regex]]
+namepass = ["nomad.*"]  # Apply to metrics starting with "nomad."
+
+# Rename the metric names by replacing periods with underscores
+[[processors.regex.metric_rename]]
+pattern = "\\."
+replacement = "_"
+
+[[processors.regex.metric_rename]]
+pattern = "-"
+replacement = "_"
+
 EOTC
       }
 
