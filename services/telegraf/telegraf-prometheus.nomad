@@ -62,15 +62,15 @@ job "telegraf-prometheus" {
 nomad_client_class = "{{ env "node.class" }}"
 
 [agent]
-  interval = "10s"
+  interval = "15s"
   round_interval = true
   metric_batch_size = 1000
-  metric_buffer_limit = 100000
+  metric_buffer_limit = 15000
   collection_jitter = "0s"
-  flush_interval = "10s"
+  flush_interval = "15s"
   flush_jitter = "3s"
-  precision = ""
-  debug = false
+  precision = "1ms"
+  debug = true
   quiet = false
   hostname = ""
   omit_hostname = false
