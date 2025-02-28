@@ -1,1 +1,1 @@
-FROM ghcr.io/miniflux/miniflux:2.2.5
+FROM ghcr.io/miniflux/miniflux:2.2.6
