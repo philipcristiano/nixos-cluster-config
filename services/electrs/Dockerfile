@@ -1,1 +1,1 @@
-FROM philipcristiano/electrs:0.10.8
+FROM philipcristiano/electrs:0.10.9
