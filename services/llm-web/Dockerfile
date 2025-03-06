@@ -1,1 +1,1 @@
-FROM ghcr.io/open-webui/open-webui:v0.5.18
+FROM ghcr.io/open-webui/open-webui:0.5.20
