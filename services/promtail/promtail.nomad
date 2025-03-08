@@ -78,7 +78,28 @@ scrape_configs:
     - source_labels: [__meta_consul_service_id]
       regex: '_nomad-task-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-.*'
       target_label:  '__path__'
-      replacement: '/nomad/alloc/$1/alloc/logs/*std*.{?,??}'
+      replacement: '/nomad/alloc/$1/alloc/logs/*std*'
+    - source_labels: [__meta_consul_service_id]
+      regex: '_nomad-task-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-.*'
+      target_label:  '__path_exclude__'
+      replacement: '/nomad/alloc/$1/alloc/logs/*fifo'
+
+- job_name: 'system-journal'
+  journal:
+    json: false
+    max_age: 12h
+    path: /system-logs
+    labels:
+      job: systemd-journal
+  relabel_configs:
+    - source_labels: ["__journal__systemd_unit"]
+      target_label: "unit"
+    - source_labels: ["__journal__hostname"]
+      target_label: host
+    - source_labels: ["__journal_priority_keyword"]
+      target_label: level
+    - source_labels: ["__journal_syslog_identifier"]
+      target_label: syslog_identifier
 EOTC
         destination = "/local/promtail.yml"
       }
@@ -92,7 +113,8 @@ EOTC
         ]
         volumes = [
           "/data/promtail:/data",
-          "/var/lib/nomad:/nomad/"
+          "/var/lib/nomad:/nomad/",
+          "/var/log/journal:/system-logs"
         ]
       }
 
