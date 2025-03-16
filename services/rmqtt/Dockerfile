@@ -1,1 +1,1 @@
-FROM rmqtt/rmqtt:0.11.0
+FROM rmqtt/rmqtt:0.12.1
