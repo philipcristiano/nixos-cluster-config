@@ -1,1 +1,1 @@
-FROM homeassistant/home-assistant:2025.3.3
+FROM homeassistant/home-assistant:2025.3.4
