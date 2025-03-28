@@ -1,1 +1,1 @@
-FROM gristlabs/grist:1.4.2
+FROM gristlabs/grist:1.5.0
