@@ -33,6 +33,7 @@ SERVICES=(
   "calibre-web"
   "llm-web"
   "rotki"
+  "simplefin-rotki"
   "zwavejs2mqtt"
   "synapse"
   "postmoogle"
