@@ -37,7 +37,6 @@ SERVICES=(
   "rotki"
   "simplefin-rotki"
   "zwavejs2mqtt"
-  "synapse"
   "postmoogle"
   "regctl"
   "actual"
