@@ -1,0 +1,4 @@
+path "kv/data/ntfy" {
+  capabilities = ["read"]
+}
+

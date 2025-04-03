@@ -10,6 +10,8 @@ SERVICES=(
   "csi-nfs"
   "telegraf"
   "grafana"
+  "ntfy"
+  "grafana-to-ntfy"
   "loki"
   "mimir"
   "bitcoind"

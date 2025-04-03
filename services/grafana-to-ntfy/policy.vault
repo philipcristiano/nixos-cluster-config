@@ -1,0 +1,4 @@
+path "kv/data/grafana-to-ntfy" {
+  capabilities = ["read"]
+}
+
