@@ -1,0 +1,15 @@
+path "pki_int/issue/mathesar" {
+  capabilities = ["update"]
+}
+
+path "kv/data/mathesar" {
+  capabilities = ["read"]
+}
+
+path "kv/data/mathesar-postgres" {
+  capabilities = ["read"]
+}
+
+path "kv/data/mathesar-data-postgres" {
+  capabilities = ["read"]
+}
