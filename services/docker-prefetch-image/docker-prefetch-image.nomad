@@ -104,11 +104,20 @@ image = "docker-registry.{{ key "site/domain" }}/{{.Value}}"
 alternative_images = ["{{.Value}}"]
 {{ end }}
 
+{{- range $key, $pairs := tree "docker-prefetch-full" | byKey -}}
+[[image]]
+# {{ .Key }}
+  {{- range $pair := $pairs }}
+{{ .Key }} = {{ .Value }}
+  {{- end }}
+{{ end }}
+
 [[image]]
 image = "docker-registry.{{ key "site/domain" }}/busybox:latest"
 
 [[image]]
 image = "docker-registry.{{ key "site/domain" }}/philipcristiano/gocast:sha-a00e6fd"
+
 
 EOF
       }
