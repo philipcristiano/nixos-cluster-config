@@ -1,7 +1,7 @@
 set -ex
 
 SERVICE_ID=kanidm
-SERVER_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.server)
+SERVER_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile)
 RADIUS_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.radius)
 TOOLS_IMAGE_ID=$(awk '/FROM/ {print $2}' Dockerfile.tools)
 

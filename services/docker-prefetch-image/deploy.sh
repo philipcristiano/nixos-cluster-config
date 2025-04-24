@@ -7,6 +7,7 @@ PREFETCH_DOCKER_HUB=(
     "minio-system"
     "docker-registry"
     "traefik"
+    "kanidm"
     "telegraf"
 )
 ### Define which services need prefetching
