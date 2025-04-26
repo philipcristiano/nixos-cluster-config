@@ -143,7 +143,7 @@ job "paperless-ngx" {
 
     }
 
-    task "gunicorn" {
+    task "http" {
       driver = "docker"
       user = 1000
 
@@ -155,7 +155,7 @@ job "paperless-ngx" {
         image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
 
-        entrypoint = ["gunicorn", "-c", "/usr/src/paperless/gunicorn.conf.py", "paperless.asgi:application"]
+        entrypoint = ["python3", "webserver.py"]
       }
 
       volume_mount {
