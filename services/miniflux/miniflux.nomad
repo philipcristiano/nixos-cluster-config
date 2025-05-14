@@ -130,7 +130,7 @@ POLLING_SCHEDULER=entry_frequency
 HTTP=1
 
 {{ with secret "kv/data/miniflux-postgres" }}
-DATABASE_URL=postgresql://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@miniflux-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full
+DATABASE_URL=postgresql://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@miniflux-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=require
 
 {{ end }}
 

@@ -45,6 +45,7 @@ job "JOB_NAME-postgres" {
         "traefik.enable=true",
 	      "traefik.tcp.routers.${var.name}-postgres.tls=true",
 	      "traefik.tcp.routers.${var.name}-postgres.tls.certresolver=home",
+	      # "traefik.tcp.routers.${var.name}-postgres.tls.options.Options0.alpnProtocols[0]=postgresql",
         "traefik.tcp.routers.${var.name}-postgres.entrypoints=postgres",
         "traefik.tcp.routers.${var.name}-postgres.rule=HostSNI(`${var.name}-postgres.${var.domain}`)",
       ]
@@ -76,6 +77,10 @@ job "JOB_NAME-postgres" {
 
       port "db" {
   	    to = 5432
+      }
+
+      dns {
+        servers = ["192.168.102.1"]
       }
     }
 
@@ -187,9 +192,27 @@ echo DB_INIT not set in secret kv/data/JOB_NAME-postgres, restore failure will b
 {{ end }}
 
 {{ end }}
+
+
+#DEBUG
+#
+# set +x
+# if [ -n "$S3_ACCESS_KEY_ID" ]; then
+#   export AWS_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID
+# fi
+# if [ -n "$S3_SECRET_ACCESS_KEY" ]; then
+#   export AWS_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY
+# fi
+# export AWS_DEFAULT_REGION=$S3_REGION
+# set -x
+#
+# aws --debug --endpoint-url https://s3.home.cristiano.cloud s3 ls s3://postgres-backup/et/et
+#
+#END DEBUG
 sh ./restore.sh
 
 set -e
+
 
 touch {{ env "NOMAD_ALLOC_DIR"}}/restored.txt
 

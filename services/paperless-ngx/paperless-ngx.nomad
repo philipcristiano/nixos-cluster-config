@@ -155,7 +155,7 @@ job "paperless-ngx" {
         image = "${var.docker_registry}${var.image_id}"
         ports = ["http"]
 
-        entrypoint = ["python3", "webserver.py"]
+        entrypoint = ["granian", "--host", "0.0.0.0", "--interface", "asginl", "--ws", "paperless.asgi:application"]
       }
 
       volume_mount {

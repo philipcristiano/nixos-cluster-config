@@ -40,6 +40,7 @@ job "promtail" {
       env {
         HOSTNAME = "${attr.unique.hostname}"
       }
+
       template {
         data        = <<EOTC
 positions:

@@ -48,8 +48,8 @@ job "docker-registry" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.docker-registry.tls=true",
-	    "traefik.http.routers.docker-registry.tls.certresolver=home",
+	      "traefik.http.routers.docker-registry.tls=true",
+	      "traefik.http.routers.docker-registry.tls.certresolver=home",
       ]
 
       check {

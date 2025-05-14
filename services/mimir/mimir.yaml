@@ -37,7 +37,12 @@ server:
 
 limits:
   # Allow ingestion of out-of-order samples up to 5 minutes since the latest received sample for the series.
-  out_of_order_time_window: 5m
+  out_of_order_time_window: 1m
+
+  # (advanced) Most recent allowed cacheable result per-tenant, to prevent caching
+  # very recent results that might still be in flux.
+  # CLI flag: -query-frontend.max-cache-freshness
+  max_cache_freshness: 2m
 
   # Delete blocks containing samples older than the specified retention period.
   # Also used by query-frontend to avoid querying beyond the retention period. 0

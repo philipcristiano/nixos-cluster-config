@@ -115,6 +115,7 @@ WEBUI_SESSION_COOKIE_SAME_SITE=strict
 WEBUI_URL=https://llm-web.{{ key "site/domain" }}
 {{with secret "kv/data/llm-web"}}
 WEBUI_SECRET_KEY="{{.Data.data.WEBUI_SECRET_KEY }}"
+ENV=dev
 
 ENABLE_OAUTH_SIGNUP=true
 OPENID_PROVIDER_URL = "https://kanidm.{{ key "site/domain"}}/oauth2/openid/{{.Data.data.OAUTH_CLIENT_ID }}/.well-known/openid-configuration"

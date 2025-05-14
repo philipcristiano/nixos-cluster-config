@@ -85,6 +85,8 @@ EOF
         image = "${var.docker_registry}${var.image_id}"
 
         args = [
+          "-v",
+          "debug",
           "image",
           "mod",
           "${SITE_REGISTRY}${NOMAD_META_image}",

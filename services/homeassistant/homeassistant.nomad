@@ -52,7 +52,6 @@ job "homeassistant" {
       }
     }
 
-
     network {
       port "http" {
   	    to = 8123

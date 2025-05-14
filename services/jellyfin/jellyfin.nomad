@@ -27,6 +27,13 @@ job "jellyfin" {
       mode     = "delay"
     }
 
+    reschedule {
+      delay          = "10s"
+      delay_function = "exponential"
+      max_delay      = "5m"
+      unlimited      = true
+    }
+
     service {
       name = "jellyfin"
       port = "http"
@@ -153,8 +160,7 @@ job "jellyfin" {
 
       resources {
         cpu        = 500
-        memory     = 1024
-        memory_max = 6000
+        memory     = 4096
       }
 
     }

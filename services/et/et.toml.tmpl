@@ -1,5 +1,5 @@
 {{ with secret "kv/data/et-postgres" }}
-database_url="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@et-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full"
+database_url="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@et-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=require"
 
 {{ end }}
 

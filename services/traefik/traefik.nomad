@@ -33,6 +33,12 @@ job "traefik" {
 
   group "traefik" {
 
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      operator  = "!="
+      value     = "nixos00"
+    }
+
     restart {
       attempts = 2
       interval = "1m"
@@ -197,6 +203,7 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
   [accessLog.filters]
     statusCodes = ["300-302", "400-499"]
     retryAttempts = true
+    minDuration = "100ms"
 [tracing]
   [tracing.otlp]
 
@@ -206,7 +213,6 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 
 [metrics]
   [metrics.prometheus]
-    buckets = [0.1,0.3,1.2,5.0]
     addEntryPointsLabels = true
     addRoutersLabels = true
     addServicesLabels = true
@@ -215,7 +221,7 @@ DNSIMPLE_OAUTH_TOKEN="{{ key "credentials/traefik/DNSIMPLE_OAUTH_TOKEN"}}"
 [providers.consulCatalog]
     prefix           = "traefik"
     exposedByDefault = false
-    defaultRule = "Host(`{{"{{ .Name }}"}}.{{ key "site/domain" }}`)"
+    defaultRule = "Host(`{{"{{ .Name }}"}}.{{ key "site/domain" }}`) || Host(`{{"{{ .Name }}"}}-backup.{{ key "site/domain" }}`)"
 
     [providers.consulCatalog.endpoint]
       address = "127.0.0.1:8500"

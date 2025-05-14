@@ -13,5 +13,4 @@ nomad job dispatch -meta image="${IMAGE_RENDERER_IMAGE_ID}" -id-prefix-template=
 nomad job dispatch -meta image="${MATRIX_IMAGE_ID}" -meta source_registry="${MATRIX_SOURCE_REGISTRY}" -id-prefix-template="${SERVICE_ID}" regctl-img-copy
 #nomad volume create grafana.volume
 nomad run -var-file=../../nomad_job.vars -var="image_id=${IMAGE_ID}" grafana.nomad
-nomad run -var-file=../../nomad_job.vars -var="image_id=${MATRIX_IMAGE_ID}" -var="docker_registry=${MATRIX_SOURCE_REGISTRY}" grafana-matrix-forwarder.nomad
 nomad run -var-file=../../nomad_job.vars -var="image_id=${IMAGE_RENDERER_IMAGE_ID}" grafana-image-renderer.nomad

@@ -38,9 +38,9 @@ SERVICES=(
   "nostr-rs-relay"
   "timeline"
   "ytdl-sub"
-  "bitcoind"
-  "electrs"
-  "llm-web"
+  #"bitcoind"
+  #"electrs"
+  #"llm-web"
   "paperless-ngx"
 )
 

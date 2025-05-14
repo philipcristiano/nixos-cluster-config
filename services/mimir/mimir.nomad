@@ -17,7 +17,7 @@ variable "image_id" {
 variable "memory_max" {
   type        = number
   description = "Resource memory_max setting"
-  default     = 4096
+  default     = 1024
 }
 
 job "mimir" {
@@ -104,7 +104,7 @@ EOF
 
       resources {
         cpu    = 100
-        memory = 256
+        memory = 1024
         memory_max = var.memory_max
       }
 

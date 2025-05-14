@@ -7,7 +7,6 @@ variable "docker_registry" {
 variable "image_id" {
   type        = string
   description = "The docker image used for compute task."
-  default     = "redis:7.0.7"
 }
 
 variable "count" {

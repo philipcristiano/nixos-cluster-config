@@ -47,6 +47,13 @@ job "JOB_NAME-postgres-backup" {
       unlimited      = false
     }
 
+    network {
+      dns {
+        servers = ["192.168.102.1"]
+      }
+
+    }
+
     task "postgres-backup" {
       driver = "docker"
 

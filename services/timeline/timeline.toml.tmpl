@@ -1,6 +1,6 @@
 
 {{ with secret "kv/data/timeline-postgres" }}
-database_url="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@timeline-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=verify-full"
+database_url="postgres://{{.Data.data.USER}}:{{ .Data.data.PASSWORD }}@timeline-postgres.{{ key "site/domain" }}:5457/{{.Data.data.DB}}?sslmode=require"
 
 {{ end }}
 

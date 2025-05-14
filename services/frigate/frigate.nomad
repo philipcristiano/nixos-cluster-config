@@ -198,10 +198,6 @@ record:
   retain:
     days: 7
     mode: motion
-  events:
-    retain:
-      default: 14
-      mode: active_objects
 
 
 EOF
