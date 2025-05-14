@@ -1,35 +1,36 @@
 { config, pkgs, buildGoModule, pkg-config, ... }:
 
-let
-
-
-nomad_usb_device_plugin = pkgs.buildGoModule {
-      src = pkgs.fetchFromGitLab {
-          owner = "CarbonCollins";
-          repo = "nomad-usb-device-plugin";
-          rev = "0.4.0";
-          sha256 = "sha256-k5L07CzQkY80kHszCLhqtZ0LfGGuV07LrHjvdgy04bk=";
-      };
-      vendorSha256 = "sha256-gf2E7DTAGTjoo3nEjcix3qWjHJHudlR7x9XJODvb2sk=";
-      name = "nomad-usb-device-plugin";
-      nativeBuildInputs = [ pkgs.pkg-config ];
-      buildInputs = [ pkgs.libusb ];
-    };
-
-in
+# let
+#
+#
+# nomad_usb_device_plugin = pkgs.buildGoModule {
+#       go = pkgs.go_1_22;
+#       src = pkgs.fetchFromGitLab {
+#           owner = "CarbonCollins";
+#           repo = "nomad-usb-device-plugin";
+#           rev = "0.4.0";
+#           sha256 = "sha256-k5L07CzQkY80kHszCLhqtZ0LfGGuV07LrHjvdgy04bk=";
+#       };
+#       vendorHash = "sha256-gf2E7DTAGTjoo3nEjcix3qWjHJHudlR7x9XJODvb2sk=";
+#       name = "nomad-usb-device-plugin";
+#       nativeBuildInputs = [ pkgs.pkg-config ];
+#       buildInputs = [ pkgs.libusb1 ];
+#     };
+#
+# in
 
 { environment.systemPackages = [ pkgs.cni-plugins
                                  pkgs.nfs-utils
                                  pkgs.consul
-                                 pkgs.gasket # libedgetpu driver
-                                 pkgs.nomad_1_6
-                                 pkgs.libusb
-                                 nomad_usb_device_plugin
+                                 pkgs.linuxPackages.gasket # libedgetpu driver
+                                 pkgs.nomad
+                                 pkgs.libusb1
+                                 #nomad_usb_device_plugin
                                  pkgs.vault
                                  pkgs.vault-bin];
 
 
-  boot.extraModulePackages = [ (pkgs.gasket.override { kernel = config.boot.kernelPackages.kernel; }) ];
+  boot.extraModulePackages = [ (pkgs.linuxPackages.gasket.override { kernel = config.boot.kernelPackages.kernel; }) ];
 
   # boot.kernel.sysctl."fs.inotify.max_user_watches" = 524288;
 
@@ -62,6 +63,30 @@ in
 
   # systemd.services.consul.serviceConfig.Type = "notify";
 
+  sops = {
+      age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      secrets = {
+        "vault_token" = {
+          sopsFile = secrets/vault.yaml;
+          key = "vault_token";
+          owner = "vault";
+          mode = "400";
+        } ;
+      };
+      templates."/var/lib/nomad/vault_token.hcl" = {
+       content = ''
+       vault {
+        token = "${config.sops.placeholder.vault_token}"
+
+       }
+       '';
+       path = "/var/lib/nomad/vault_token";
+    };
+  };
+
+
+
+
   environment.etc.nomad_vault_json.text = ''
 vault {
   enabled     = true
@@ -74,13 +99,13 @@ vault {
   # Embedding the token in the configuration is discouraged. Instead users
   # should set the VAULT_TOKEN environment variable when starting the Nomad
   # agent
-  token       = "hvs.CAESIHzUgT2NTrWKbUgdXg9CJ_-414_uBTWWU3Ge61YSCeZrGh4KHGh2cy4xVnM4MzJEMFhoZFZrcnhJMm9OQlRZeWg"
 
   # Setting the create_from_role option causes Nomad to create tokens for tasks
   # via the provided role. This allows the role to manage what policies are
   # allowed and disallowed for use by tasks.
   create_from_role = "nomad-cluster"
 } '';
+
   environment.etc.nomad_docker_json.text = ''
   plugin "docker" {
       config {
@@ -140,8 +165,6 @@ vault {
     }
   }
 
-  plugin_dir = "${nomad_usb_device_plugin}/bin"
-
   telemetry {
     publish_allocation_metrics = true
     publish_node_metrics       = true
@@ -171,10 +194,15 @@ vault {
   services.nomad = {
     enableDocker = true;
     dropPrivileges = false;
-    extraPackages = [ pkgs.cni-plugins nomad_usb_device_plugin];
+    extraPackages = [ pkgs.cni-plugins];
     extraSettingsPaths = [ "/etc/nomad_extras_json" "/etc/nomad_docker_json"  "/etc/nomad_usb_json" "/etc/nomad_vault_json" ];
 
+    credentials = {
+      vault_token = config.sops.templates."/var/lib/nomad/vault_token.hcl".path;
+    };
+
     settings = {
+        bind_addr = "0.0.0.0";
         server = {
             enabled = true;
             bootstrap_expect = 3;
@@ -194,7 +222,7 @@ vault {
   services.consul.interface.bind = "enp2s0";
   services.nomad = {
     enable = true;
-    package = pkgs.nomad_1_6;
+    package = pkgs.nomad;
   };
 
   # https://github.com/NixOS/nixpkgs/issues/147415

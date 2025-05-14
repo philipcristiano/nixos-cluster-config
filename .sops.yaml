@@ -1,0 +1,16 @@
+keys:
+  - &user_philipcristiano age1alwtmac852458qvlpcce3ntr5erenfa7zk2acfyawpm74p7g9dtse6q7zw
+
+  - &server_192_168_102_100 age1qmhas3h7kqv0tgxl58vtvu766mtvk8psdvs5mv200dsp5s7cnvgsh5r3qt
+  - &server_192_168_102_101 age1galvtxkfv63zxhlgns93arts3l656fk5t6kl9l7tdzklt37a692q0s3288
+  - &server_192_168_102_102 age19ch9sz2arzwanllseaglppysuuhmyskkjcfkmaxzjg6r5umd8alqxfvqtq
+
+creation_rules:
+  - path_regex: .yaml$
+    key_groups:
+    - age:
+      - *user_philipcristiano
+      - *server_192_168_102_100
+      - *server_192_168_102_101
+      - *server_192_168_102_102
+
