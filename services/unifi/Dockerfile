@@ -1,1 +1,1 @@
-FROM ghcr.io/jacobalberty/unifi-docker:v9.0.114
+FROM ghcr.io/jacobalberty/unifi-docker:v9.1.120
