@@ -1,1 +1,1 @@
-FROM kanidm/tools:1.5.0
+FROM kanidm/tools:1.6.3
