@@ -1,1 +1,1 @@
-FROM ghcr.io/regclient/regctl:v0.8.2
+FROM ghcr.io/regclient/regctl:v0.8.3
