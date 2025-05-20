@@ -1,1 +1,1 @@
-FROM mathesar/mathesar:0.2.2
+FROM mathesar/mathesar:0.2.4
