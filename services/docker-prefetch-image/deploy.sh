@@ -14,6 +14,10 @@ PREFETCH_DOCKER_HUB=(
 PREFETCH_DOCKER_REPO=(
     "regctl"
 )
+### Define which services need prefetching
+PREFETCH_DOCKER_REPO=(
+    "regctl"
+)
 
 ### Dispatch the copy job to the local repository and set into consul to pull the image
 for D in ${PREFETCH_DOCKER_HUB[@]}; do

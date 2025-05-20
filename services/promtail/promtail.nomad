@@ -101,6 +101,7 @@ scrape_configs:
       target_label: level
     - source_labels: ["__journal_syslog_identifier"]
       target_label: syslog_identifier
+
 EOTC
         destination = "/local/promtail.yml"
       }
