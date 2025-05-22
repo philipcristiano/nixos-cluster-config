@@ -3,7 +3,9 @@ with lib;
 {
   imports = [
     ./parts/traefik.nix
+
     ./parts/anki-sync/service.nix
+    ./parts/et/service.nix
   ];
 
   options = {
