@@ -20,7 +20,6 @@ SERVICES=(
   "miniflux"
   "homeassistant"
   "hello_idc"
-  "w2z"
   "et"
   "timeline"
   "hvac-iot"

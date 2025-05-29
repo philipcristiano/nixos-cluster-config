@@ -3,7 +3,10 @@ with lib;
 {
   imports = [
     ./parts/traefik.nix
+
     ./parts/anki-sync/service.nix
+    # ./parts/et/service.nix
+    ./parts/w2z/service.nix
   ];
 
   options = {
@@ -42,6 +45,8 @@ with lib;
 
     lab_traefik.enable = true;
     lab_anki_sync.enable = true;
+    # lab_et.enable = false;
+    lab_w2z.enable = true;
     services.traefik.dynamicConfigOptions.http.routers.router1 = {
       rule = "Host(`s1.${config.homelab.domain}`)";
       service = "service1";
