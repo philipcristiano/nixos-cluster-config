@@ -4,6 +4,9 @@ let
 
   cfg = config.lab_w2z;
   name = "w2z";
+  dockerFile = builtins.readFile ./Dockerfile;
+  dockerImage = pkgs.lib.trim( builtins.replaceStrings ["FROM "] [""] dockerFile );
+
   w2zFlake = builtins.getFlake "github:philipcristiano/w2z/5e2fd4d40220a5e4ee8e93dbc93d14a2f0052dfe";
   w2zPackage = w2zFlake.packages.${pkgs.system}.default;
 
@@ -121,7 +124,7 @@ in with lib; {
     virtualisation.oci-containers.backend = "docker";
     virtualisation.oci-containers.containers = {
         w2z = {
-            image = "philipcristiano/w2z:0.10.3";
+            image = dockerImage;
             autoStart = true;
             ports = [ "127.0.0.1:3003:3000" ];
             volumes =  ["${config.sops.templates."w2z.toml".path}:/etc/w2z.toml"];
