@@ -28,9 +28,7 @@ in with lib; {
   };
   config = mkIf config.lab_w2z.enable {
 
-    environment.systemPackages = [
-      w2zPackage
-    ];
+    environment.systemPackages = [];
 
     sops.secrets.w2z-client-secret = {
           sopsFile = secrets/w2z.yaml;
@@ -120,22 +118,33 @@ in with lib; {
       group = name;
       isSystemUser = true;
     };
-
-    systemd.services.w2z = {
-      description = "w2z";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-      path = [ w2zPackage ];
-      environment = { };
-      serviceConfig = {
-        Type = "simple";
-        DynamicUser = true;
-        StateDirectory = name;
-        User = name;
-        ExecStart = "${w2zPackage}/bin/w2z --config-file ${config.sops.templates."w2z.toml".path} --bind-addr=0.0.0.0:3003";
-        Restart = "always";
-      };
+    virtualisation.oci-containers.backend = "docker";
+    virtualisation.oci-containers.containers = {
+        w2z = {
+            image = "philipcristiano/w2z:0.10.3";
+            autoStart = true;
+            ports = [ "127.0.0.1:3003:3000" ];
+            volumes =  ["${config.sops.templates."w2z.toml".path}:/etc/w2z.toml"];
+            cmd = ["--bind-addr=0.0.0.0:3000"
+                   "--config-file=/etc/w2z.toml"];
+        };
     };
+
+    # systemd.services.w2z = {
+    #   description = "w2z";
+    #   after = [ "network.target" ];
+    #   wantedBy = [ "multi-user.target" ];
+    #   path = [ w2zPackage ];
+    #   environment = { };
+    #   serviceConfig = {
+    #     Type = "simple";
+    #     DynamicUser = true;
+    #     StateDirectory = name;
+    #     User = name;
+    #     ExecStart = "${w2zPackage}/bin/w2z --config-file ${config.sops.templates."w2z.toml".path} --bind-addr=0.0.0.0:3003";
+    #     Restart = "always";
+    #   };
+    # };
 
     services.traefik.dynamicConfigOptions.http.routers.w2z = mkIf config.lab_w2z.expose_with_traefik {
         rule = "Host(`w2z.${config.homelab.domain}`)";

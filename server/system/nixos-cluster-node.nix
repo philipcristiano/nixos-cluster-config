@@ -42,14 +42,29 @@
   nix.settings.trusted-users = [ "root" "philipcristiano" ];
   security.sudo.wheelNeedsPassword = false;
 
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    podman-tui
     wget
   #   firefox
   ];
 
+  virtualisation.containers.enable = true;
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      # TODO: Conflicts with docker, so maybe we're not ready yet!
+      # dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
@@ -67,7 +82,10 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.11"; # Did you read the comment?
+
+  # https://discourse.nixos.org/t/warning-boot-enablecontainers-virtualisation-containers-unsupported/21249/4
+  system.stateVersion = "22.05"; # Did you read the comment?
+
 
   system.autoUpgrade.enable = false;
   nixpkgs.config.allowUnfree = true;
