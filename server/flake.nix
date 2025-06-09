@@ -16,12 +16,12 @@
     nixosConfigurations.nixos01 = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { hostName = "nixos01"; };
-      modules = [ ./system/nixos-cluster-node.nix ./ncluster.nix ];
+      modules = [ sops-nix.nixosModules.sops ./system/nixos-cluster-node.nix ./ncluster.nix ];
     };
     nixosConfigurations.nixos02 = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { hostName = "nixos02"; };
-      modules = [ ./system/nixos-cluster-node.nix ./ncluster.nix ];
+      modules = [ sops-nix.nixosModules.sops ./system/nixos-cluster-node.nix ./ncluster.nix ];
     };
   description = "Deploy GNU hello to localhost";
 

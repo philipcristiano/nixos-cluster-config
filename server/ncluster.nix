@@ -195,7 +195,7 @@ vault {
     enableDocker = true;
     dropPrivileges = false;
     extraPackages = [ pkgs.cni-plugins];
-    extraSettingsPaths = [ "/etc/nomad_extras_json" "/etc/nomad_docker_json"  "/etc/nomad_usb_json" "/etc/nomad_vault_json" ];
+    extraSettingsPaths = [ "/etc/nomad_extras_json" "/etc/nomad_docker_json"  "/etc/nomad_usb_json" "/etc/nomad_vault_json" config.sops.templates."/var/lib/nomad/vault_token.hcl".path ];
 
     credentials = {
       vault_token = config.sops.templates."/var/lib/nomad/vault_token.hcl".path;

@@ -24,11 +24,6 @@
   # replicates the default behaviour.
   networking.useDHCP = false;
   networking.interfaces.enp2s0.useDHCP = true;
-  networking.vlans = {
-	  vlan110 = { id=110; interface="enp2s0"; };
-  };
-  networking.interfaces.vlan110.useDHCP = true;
-  # networking.interfaces.vlan110.macAddress = "stable";
   networking.timeServers = options.networking.timeServers.default ++ [ "192.168.102.1" ];
 
 
