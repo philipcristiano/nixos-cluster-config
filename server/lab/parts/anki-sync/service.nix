@@ -20,7 +20,7 @@ in with lib; {
       };
     };
   };
-  config = mkIf config.lab_traefik.enable {
+  config = mkIf config.lab_anki_sync.enable {
     environment.systemPackages = [
       pkgs.anki-sync-server
     ];

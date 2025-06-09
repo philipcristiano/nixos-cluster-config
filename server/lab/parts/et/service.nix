@@ -25,7 +25,7 @@ in with lib; {
       };
     };
   };
-  config = mkIf config.lab_et.enable {
+  config = mkIf cfg.enable {
 
     sops.secrets.et-databaseurl-secret = {
           sopsFile = secrets/et.yaml;
@@ -57,7 +57,7 @@ in with lib; {
 
     [auth]
     issuer_url = "https://kanidm.${config.homelab.domain}/oauth2/openid/${config.sops.placeholder.et-client-id}"
-    redirect_url = "https://et.${config.homelab.domain}/oidc/login_auth"
+    redirect_url = "https://${name}.${config.homelab.domain}/oidc/login_auth"
     client_id = "${config.sops.placeholder.et-client-id}"
     client_secret = "${config.sops.placeholder.et-client-secret}"
     key = "${config.sops.placeholder.et-key}"
@@ -96,11 +96,11 @@ in with lib; {
     systemd.services.docker-et-migrate.serviceConfig.Type = "oneshot";
     systemd.services.docker-et-migrate.serviceConfig.RemainAfterExit = true;
 
-    services.traefik.dynamicConfigOptions.http.routers.et = mkIf config.lab_et.expose_with_traefik {
-        rule = "Host(`et.${config.homelab.domain}`)";
-        service = "et@file";
+    services.traefik.dynamicConfigOptions.http.routers.et = mkIf cfg.expose_with_traefik {
+        rule = "Host(`${name}.${config.homelab.domain}`)";
+        service = "${name}@file";
     };
-    services.traefik.dynamicConfigOptions.http.services.et = mkIf config.lab_et.expose_with_traefik {
+    services.traefik.dynamicConfigOptions.http.services.et = mkIf cfg.expose_with_traefik {
       loadBalancer = {
         servers = [
           {
@@ -109,5 +109,12 @@ in with lib; {
         ];
       };
     };
+
+    services.postgresql.ensureDatabases = [ name ];
+    services.postgresql.ensureUsers = [{
+      name = name;
+      ensureDBOwnership = true;
+    }];
+
   };
 }

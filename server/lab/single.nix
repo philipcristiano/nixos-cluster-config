@@ -4,6 +4,7 @@ with lib;
   imports = [
     ./parts/traefik.nix
 
+    ./parts/postgres/service.nix
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
     ./parts/w2z/service.nix
