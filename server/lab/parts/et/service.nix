@@ -1,11 +1,10 @@
-
 { lib, config, pkgs, ... }:
 let
 
   cfg = config.lab_et;
   name = "et";
-  etFlake = builtins.getFlake "github:philipcristiano/et/95186c88422f2db1c04f82471ed28cbb4f531aab";
-  etPackage = etFlake.packages.${pkgs.system}.default;
+  dockerFile = builtins.readFile ./Dockerfile;
+  dockerImage = pkgs.lib.trim( builtins.replaceStrings ["FROM "] [""] dockerFile );
 
 in with lib; {
   options = {
@@ -28,31 +27,74 @@ in with lib; {
   };
   config = mkIf config.lab_et.enable {
 
-    environment.systemPackages = [
-      pkgs.et
-    ];
-
+    sops.secrets.et-databaseurl-secret = {
+          sopsFile = secrets/et.yaml;
+          key = "database_url";
+          mode = "400";
+          restartUnits = ["docker-et.service"];
+    };
+    sops.secrets.et-client-id = {
+          sopsFile = secrets/et.yaml;
+          key = "oidc_client_id";
+          mode = "400";
+          restartUnits = ["docker-et.service"];
+    };
+    sops.secrets.et-client-secret = {
+          sopsFile = secrets/et.yaml;
+          key = "oidc_client_secret";
+          mode = "400";
+          restartUnits = ["docker-et.service"];
+    };
     sops.secrets.et-key = {
           sopsFile = secrets/et.yaml;
           key = "key";
           mode = "400";
-          restartUnits = ["et.service"];
+          restartUnits = ["docker-et.service"];
     };
+    sops.templates."et.toml".owner = name;
+    sops.templates."et.toml".content = ''
+    database_url="${config.sops.placeholder.et-databaseurl-secret}"
 
-    systemd.services.et = {
-      description = "et: Expense Tacker";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-      path = [ etPackage ];
-      environment = { };
-      serviceConfig = {
-        Type = "simple";
-        DynamicUser = true;
-        StateDirectory = name;
-        ExecStart = "et";
-        Restart = "always";
-      };
+    [auth]
+    issuer_url = "https://kanidm.${config.homelab.domain}/oauth2/openid/${config.sops.placeholder.et-client-id}"
+    redirect_url = "https://et.${config.homelab.domain}/oidc/login_auth"
+    client_id = "${config.sops.placeholder.et-client-id}"
+    client_secret = "${config.sops.placeholder.et-client-secret}"
+    key = "${config.sops.placeholder.et-key}"
+
+    [features]
+    charts = true
+
+  '';
+    users.groups."${name}" = {};
+    users.users."${name}" = {
+      group = name;
+      isSystemUser = true;
     };
+    virtualisation.oci-containers.backend = "docker";
+    virtualisation.oci-containers.containers = {
+        et-migrate = {
+            image = dockerImage;
+            ports = [ "127.0.0.1:3002:3000" ];
+            volumes =  ["${config.sops.templates."et.toml".path}:/etc/et.toml"];
+            entrypoint = "et-migrate";
+            #autoRemoveOnStop = false;
+            cmd = ["--config-file=/etc/et.toml"
+                   "migrate"];
+        };
+        et = {
+            image = dockerImage;
+            dependsOn = [ "et-migrate" ];
+            autoStart = true;
+            ports = [ "127.0.0.1:3002:3000" ];
+            volumes =  ["${config.sops.templates."et.toml".path}:/etc/et.toml"];
+            cmd = ["--bind-addr=0.0.0.0:3000"
+                   "--config-file=/etc/et.toml"];
+        };
+    };
+    systemd.services.docker-et-migrate.serviceConfig.Restart = lib.mkForce "on-failure";
+    systemd.services.docker-et-migrate.serviceConfig.Type = "oneshot";
+    systemd.services.docker-et-migrate.serviceConfig.RemainAfterExit = true;
 
     services.traefik.dynamicConfigOptions.http.routers.et = mkIf config.lab_et.expose_with_traefik {
         rule = "Host(`et.${config.homelab.domain}`)";
