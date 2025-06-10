@@ -24,6 +24,12 @@ in with lib; {
     services.postgresql.enable = true;
     services.postgresql.package = pkgs.postgresql_17;
 
+
+    services.postgresqlBackup = {
+      enable = true;
+      backupAll = true;
+    };
+
     services.traefik.dynamicConfigOptions.http.services.postgres = mkIf config.lab_postgres.expose_with_traefik {
       loadBalancer = {
         servers = [
