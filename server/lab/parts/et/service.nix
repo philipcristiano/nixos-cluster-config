@@ -31,7 +31,7 @@ in with lib; {
           sopsFile = secrets/et.yaml;
           key = "database_url";
           mode = "400";
-          restartUnits = ["docker-et.service"];
+          restartUnits = ["docker-et-migrate.service" "docker-et.service"];
     };
     sops.secrets.et-client-id = {
           sopsFile = secrets/et.yaml;
@@ -75,9 +75,10 @@ in with lib; {
     virtualisation.oci-containers.containers = {
         et-migrate = {
             image = dockerImage;
-            ports = [ "127.0.0.1:3002:3000" ];
+            #ports = [ "127.0.0.1:3002:3000" ];
             volumes =  ["${config.sops.templates."et.toml".path}:/etc/et.toml"];
             entrypoint = "et-migrate";
+            networks = ["host"];
             #autoRemoveOnStop = false;
             cmd = ["--config-file=/etc/et.toml"
                    "migrate"];
@@ -86,9 +87,10 @@ in with lib; {
             image = dockerImage;
             dependsOn = [ "et-migrate" ];
             autoStart = true;
-            ports = [ "127.0.0.1:3002:3000" ];
+            #ports = [ "127.0.0.1:3002:3000" ];
             volumes =  ["${config.sops.templates."et.toml".path}:/etc/et.toml"];
-            cmd = ["--bind-addr=0.0.0.0:3000"
+            networks = ["host"];
+            cmd = ["--bind-addr=0.0.0.0:3002"
                    "--config-file=/etc/et.toml"];
         };
     };

@@ -1,7 +1,7 @@
 {
   inputs = {
     libedgetpu.url = "github:jhvst/nix-flake-edgetpu";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     deploy-rs.url = "github:serokell/deploy-rs";
     sops-nix.url = "github:Mic92/sops-nix";
   };

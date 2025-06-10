@@ -22,6 +22,7 @@ in with lib; {
   };
   config = mkIf config.lab_postgres.enable {
     services.postgresql.enable = true;
+    services.postgresql.package = pkgs.postgresql_17;
 
     services.traefik.dynamicConfigOptions.http.services.postgres = mkIf config.lab_postgres.expose_with_traefik {
       loadBalancer = {
