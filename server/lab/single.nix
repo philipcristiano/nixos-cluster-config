@@ -4,6 +4,7 @@ with lib;
   imports = [
     ./parts/traefik.nix
 
+    ./parts/restic-s3/service.nix
     ./parts/postgres/service.nix
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
@@ -45,6 +46,7 @@ with lib;
     services.traefik.environmentFiles = [config.sops.templates."/var/lib/traefik/dnsimple_oauth_token.env".path];
 
     lab_traefik.enable = true;
+    lab_restic_s3.enable = true;
     lab_anki_sync.enable = true;
     lab_et.enable = true;
     lab_w2z.enable = true;

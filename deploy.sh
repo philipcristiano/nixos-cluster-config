@@ -20,7 +20,6 @@ SERVICES=(
   "miniflux"
   "homeassistant"
   "hello_idc"
-  "et"
   "timeline"
   "hvac-iot"
   "tika"

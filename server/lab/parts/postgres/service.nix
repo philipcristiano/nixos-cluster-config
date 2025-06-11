@@ -30,6 +30,8 @@ in with lib; {
       backupAll = true;
     };
 
+    services.restic.backups.persist.paths = ["/var/backup/postgresql/all.sql.gz"];
+
     services.traefik.dynamicConfigOptions.http.services.postgres = mkIf config.lab_postgres.expose_with_traefik {
       loadBalancer = {
         servers = [
@@ -39,5 +41,6 @@ in with lib; {
         ];
       };
     };
+
   };
 }
