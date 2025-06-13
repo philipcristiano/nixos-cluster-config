@@ -1,2 +1,2 @@
-FROM rotki/rotki:v1.39.0
+FROM rotki/rotki:v1.39.1
 
