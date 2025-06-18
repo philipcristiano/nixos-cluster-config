@@ -9,7 +9,7 @@
     flake-utils.lib.eachDefaultSystem
       (system:
         let
-          overlays = [ deploy-rs.overlay  ];
+          overlays = [ deploy-rs.overlays.default  ];
           pkgs = import nixpkgs {
             inherit system overlays;
           };
