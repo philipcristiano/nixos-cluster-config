@@ -32,8 +32,6 @@ SERVICES=(
   "regctl"
   "actual"
   "handbrake"
-  "nostress"
-  "nostr-rs-relay"
   "timeline"
   "ytdl-sub"
   "llm-web"
