@@ -1,1 +1,1 @@
-FROM grafana/mimir:2.16.0
+FROM grafana/mimir:2.16.1
