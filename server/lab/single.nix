@@ -9,6 +9,7 @@ with lib;
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
     ./parts/w2z/service.nix
+    ./parts/paperless/service.nix
   ];
 
   options = {
@@ -50,6 +51,7 @@ with lib;
     lab_anki_sync.enable = true;
     lab_et.enable = true;
     lab_w2z.enable = true;
+    lab_paperless.enable = true;
     services.traefik.dynamicConfigOptions.http.routers.router1 = {
       rule = "Host(`s1.${config.homelab.domain}`)";
       service = "service1";
