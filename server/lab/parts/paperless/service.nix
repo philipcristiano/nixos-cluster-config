@@ -49,11 +49,12 @@ in with lib; {
     };
 
     services.paperless.settings= {
-        PAPERLESS_URL = "https://${name}.${config.homelab.domain}";
+        PAPERLESS_URL = "https://paperless-ngx.${config.homelab.domain}";
         PAPERLESS_PROXY_SSL_HEADER= ["HTTP_X_FORWARDED_PROTO" "https"];
         PAPERLESS_DBENGINE= "postgres";
         PAPERLESS_DBUSER= "paperless-ngx";
         PAPERLESS_DBNAME= "paperless-ngx";
+        PAPERLESS_APPS="allauth.socialaccount.providers.openid_connect";
 
     };
     services.paperless.environmentFile = config.sops.templates."paperless.env".path;
@@ -73,7 +74,7 @@ PAPERLESS_SOCIALACCOUNT_PROVIDERS=${config.sops.placeholder.paperless_socialacco
     };
 
     services.traefik.dynamicConfigOptions.http.routers.paperless = mkIf cfg.expose_with_traefik {
-        rule = "Host(`${name}.${config.homelab.domain}`)";
+        rule = "Host(`paperless-ngx.${config.homelab.domain}`)";
         service = "${name}@file";
     };
     services.traefik.dynamicConfigOptions.http.services.paperless = mkIf cfg.expose_with_traefik {
@@ -92,6 +93,8 @@ PAPERLESS_SOCIALACCOUNT_PROVIDERS=${config.sops.placeholder.paperless_socialacco
       name = "paperless-ngx";
       ensureDBOwnership = true;
     }];
+
+    services.restic.backups.persist.paths = [config.services.paperless.dataDir];
 
   };
 }
