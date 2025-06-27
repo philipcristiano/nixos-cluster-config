@@ -35,7 +35,6 @@ SERVICES=(
   "timeline"
   "ytdl-sub"
   "llm-web"
-  "paperless-ngx"
 )
 
 for SERVICE in ${SERVICES[@]}; do
