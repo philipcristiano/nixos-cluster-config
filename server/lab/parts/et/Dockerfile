@@ -1,1 +1,1 @@
-FROM philipcristiano/et:2.8.1
+FROM philipcristiano/et:2.8.2
