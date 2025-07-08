@@ -64,6 +64,7 @@ in with lib; {
 
     [features]
     charts = true
+    apply_rules = true
 
   '';
     users.groups."${name}" = {};
