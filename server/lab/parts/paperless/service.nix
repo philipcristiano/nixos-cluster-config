@@ -63,6 +63,8 @@ in with lib; {
 PAPERLESS_DBPASS="${config.sops.placeholder.paperless_dbpass}"
 PAPERLESS_DBHOST="${config.sops.placeholder.paperless_dbhost}"
 
+PAPERLESS_DATE_ORDER=MDY
+
 PAPERLESS_SOCIALACCOUNT_PROVIDERS=${config.sops.placeholder.paperless_socialaccount_providers}
 
 
