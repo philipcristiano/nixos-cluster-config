@@ -9,6 +9,7 @@ with lib;
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
     ./parts/miniflux/service.nix
+    ./parts/rotki/service.nix
     ./parts/w2z/service.nix
     ./parts/paperless/service.nix
   ];
@@ -52,6 +53,7 @@ with lib;
     lab_anki_sync.enable = true;
     lab_et.enable = true;
     lab_miniflux.enable = true;
+    lab_rotki.enable = true;
     lab_w2z.enable = true;
     lab_paperless.enable = true;
     services.traefik.dynamicConfigOptions.http.routers.router1 = {
