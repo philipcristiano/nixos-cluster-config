@@ -1,3 +1,0 @@
-path "kv/data/simplefin-rotki" {
-  capabilities = ["read"]
-}

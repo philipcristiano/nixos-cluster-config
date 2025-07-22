@@ -10,6 +10,7 @@ with lib;
     ./parts/et/service.nix
     ./parts/miniflux/service.nix
     ./parts/rotki/service.nix
+    ./parts/simplefin-rotki/service.nix
     ./parts/w2z/service.nix
     ./parts/paperless/service.nix
   ];
@@ -54,6 +55,7 @@ with lib;
     lab_et.enable = true;
     lab_miniflux.enable = true;
     lab_rotki.enable = true;
+    lab_simplefin_rotki.enable = true;
     lab_w2z.enable = true;
     lab_paperless.enable = true;
     services.traefik.dynamicConfigOptions.http.routers.router1 = {
