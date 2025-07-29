@@ -1,1 +1,1 @@
-FROM apache/tika:3.2.0.0-full
+FROM apache/tika:3.2.1.0-full
