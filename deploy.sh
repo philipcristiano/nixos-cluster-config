@@ -14,7 +14,6 @@ SERVICES=(
   "ntfy"
   "grafana-to-ntfy"
   "loki"
-  "mimir"
   "rmqtt"
   "frigate"
   "miniflux"

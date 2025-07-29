@@ -9,8 +9,10 @@ with lib;
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
     ./parts/miniflux/service.nix
+    ./parts/mimir/service.nix
     ./parts/rotki/service.nix
     ./parts/simplefin-rotki/service.nix
+    ./parts/tempo/service.nix
     ./parts/w2z/service.nix
     ./parts/paperless/service.nix
   ];
@@ -53,9 +55,11 @@ with lib;
     lab_restic_s3.enable = true;
     lab_anki_sync.enable = true;
     lab_et.enable = true;
+    lab_mimir.enable = true;
     lab_miniflux.enable = true;
     lab_rotki.enable = true;
     lab_simplefin_rotki.enable = true;
+    lab_tempo.enable = true;
     lab_w2z.enable = true;
     lab_paperless.enable = true;
     services.traefik.dynamicConfigOptions.http.routers.router1 = {
