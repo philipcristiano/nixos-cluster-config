@@ -1,1 +1,1 @@
-FROM rhasspy/wyoming-piper:1.5.4
+FROM rhasspy/wyoming-piper:1.6.3
