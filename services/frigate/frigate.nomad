@@ -151,6 +151,9 @@ mqtt:
   user: {{key "credentials/frigate/mqtt_username"}}
   password: "{{key "credentials/frigate/mqtt_password"}}"
 
+detect:
+  enabled: true
+
 objects:
   # Optional: list of objects to track from labelmap.txt
   track:
