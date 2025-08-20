@@ -16,7 +16,6 @@ SERVICES=(
   "loki"
   "rmqtt"
   "frigate"
-  "miniflux"
   "homeassistant"
   "hello_idc"
   "timeline"
@@ -31,7 +30,6 @@ SERVICES=(
   "regctl"
   "actual"
   "handbrake"
-  "timeline"
   "ytdl-sub"
   "llm-web"
 )
