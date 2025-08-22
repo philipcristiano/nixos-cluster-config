@@ -13,7 +13,6 @@ SERVICES=(
   "grafana"
   "ntfy"
   "grafana-to-ntfy"
-  "loki"
   "rmqtt"
   "frigate"
   "homeassistant"
