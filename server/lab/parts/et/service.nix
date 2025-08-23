@@ -80,6 +80,11 @@ in with lib; {
             volumes =  ["${config.sops.templates."et.toml".path}:/etc/et.toml"];
             entrypoint = "et-migrate";
             networks = ["host"];
+            environment = {
+              OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://tempo-otlp-grpc.${config.homelab.domain}:443";
+              OTEL_EXPORTER_OTLP_PROTOCOL="grpc";
+              OTEL_SERVICE_NAME="et";
+            };
             #autoRemoveOnStop = false;
             cmd = ["--config-file=/etc/et.toml"
                    "migrate"];
@@ -91,6 +96,11 @@ in with lib; {
             #ports = [ "127.0.0.1:3002:3000" ];
             volumes =  ["${config.sops.templates."et.toml".path}:/etc/et.toml"];
             networks = ["host"];
+            environment = {
+              OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://tempo-otlp-grpc.${config.homelab.domain}:443";
+              OTEL_EXPORTER_OTLP_PROTOCOL="grpc";
+              OTEL_SERVICE_NAME="et";
+            };
             cmd = ["--bind-addr=0.0.0.0:3002"
                    "--config-file=/etc/et.toml"];
         };
