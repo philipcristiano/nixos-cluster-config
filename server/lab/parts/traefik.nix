@@ -34,6 +34,9 @@ with lib; {
             address = ":443";
             asDefault = true;
             http.tls.certResolver = "letsencrypt";
+            transport.respondingTimeouts = {
+              readTimeout = "905s";
+            };
           };
         };
 
@@ -42,6 +45,15 @@ with lib; {
           level = "INFO";
           filePath = "${config.services.traefik.dataDir}/traefik.log";
           format = "json";
+        };
+
+        accessLog = {
+          format = "json";
+          filters = {
+            statusCodes = ["300-302" "400-499" "500-599"];
+            retryAttempts = true;
+            minDuration = "100ms";
+          };
         };
 
         certificatesResolvers.letsencrypt.acme = {
@@ -53,6 +65,8 @@ with lib; {
         api.dashboard = true;
         # Access the Traefik dashboard on <Traefik IP>:8080 of your server
         # api.insecure = true;
+
+        tracing.otlp.grpc.endpoint = "https://tempo-otlp-grpc.${config.homelab.domain}:443";
       };
 
       dynamicConfigOptions.http.routers.dashboard = {
