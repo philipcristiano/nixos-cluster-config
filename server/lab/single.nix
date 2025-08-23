@@ -8,6 +8,7 @@ with lib;
     ./parts/postgres/service.nix
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
+    ./parts/loki/service.nix
     ./parts/miniflux/service.nix
     ./parts/mimir/service.nix
     ./parts/rotki/service.nix
@@ -55,6 +56,7 @@ with lib;
     lab_restic_s3.enable = true;
     lab_anki_sync.enable = true;
     lab_et.enable = true;
+    lab_loki.enable = true;
     lab_mimir.enable = true;
     lab_miniflux.enable = true;
     lab_rotki.enable = true;
