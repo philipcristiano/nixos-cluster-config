@@ -14,6 +14,11 @@ variable "image_id" {
   description = "The docker image used for task."
 }
 
+variable "metadata_api_image_id" {
+  type        = string
+  description = "The docker image used for metadata task."
+}
+
 job "calibre-web" {
   datacenters = ["dc1"]
   type        = "service"
@@ -26,8 +31,8 @@ job "calibre-web" {
 
       tags = [
         "traefik.enable=true",
-	    "traefik.http.routers.calibre.tls=true",
-	    "traefik.http.routers.calibre.tls.certresolver=home",
+	      "traefik.http.routers.calibre.tls=true",
+	      "traefik.http.routers.calibre.tls.certresolver=home",
       ]
 
       check {
@@ -39,10 +44,33 @@ job "calibre-web" {
       }
     }
 
+    service {
+      name = "calibre-metadata-api"
+      port = "metadata-api"
+
+      tags = [
+        "traefik.enable=true",
+	      "traefik.http.routers.calibre-metadata-api.tls=true",
+	      "traefik.http.routers.calibre-metadata-api.tls.certresolver=home",
+      ]
+
+      check {
+        name     = "metadata-api-healthy"
+        type     = "http"
+        port     = "metadata-api"
+        path     = "/_health"
+        interval = "10s"
+        timeout  = "2s"
+      }
+    }
+
 
     network {
       port "http" {
-	    to = 8083
+	      to = 8083
+      }
+      port "metadata-api" {
+	      to = 3002
       }
     }
 
@@ -102,6 +130,7 @@ job "calibre-web" {
         volume      = "storage"
         destination = "/config/"
       }
+
       template {
 	destination = "/etc/local-config.yaml"
         data =  <<EOF
@@ -117,6 +146,51 @@ EOF
 {{- end -}}
 EOF
       }
+    }
+
+    task "metadata" {
+      driver = "docker"
+
+      vault {
+        policies = ["service-calibre-web"]
+      }
+
+      config {
+        image = "${var.docker_registry}${var.metadata_api_image_id}"
+        ports = ["metadata-api"]
+        # entrypoint = ["sleep", "10000"]
+        args = [
+          "--bind-addr", "0.0.0.0:3002",
+          "--config-file", "/local/cma.toml",
+          "--log-level", "DEBUG",
+        ]
+      }
+
+      resources {
+        cpu    = 50
+        memory = 128
+        memory_max = 512
+      }
+
+      template {
+	      destination = "/local/cma.toml"
+        data =  <<EOF
+database_url = "/config/books/metadata.db"
+
+EOF
+      }
+
+      volume_mount {
+        volume      = "storage"
+        destination = "/config/"
+      }
+
+      template {
+      	  destination = "local/otel.env"
+          env = true
+          data = file("../template_fragments/otel_grpc.env.tmpl")
+      }
+
     }
   }
 }
