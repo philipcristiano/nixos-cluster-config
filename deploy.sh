@@ -16,7 +16,6 @@ SERVICES=(
   "rmqtt"
   "frigate"
   "homeassistant"
-  "hello_idc"
   "timeline"
   "hvac-iot"
   "tika"
