@@ -49,11 +49,12 @@ in with lib; {
           restartUnits = ["docker-${name}.service"];
     };
     sops.templates."hello_idc.toml".owner = name;
+    sops.templates."hello_idc.toml".restartUnits = ["docker-${name}.service"];
     sops.templates."hello_idc.toml".content = ''
 
     [auth]
     issuer_url = "https://kanidm.${config.homelab.domain}/oauth2/openid/${config.sops.placeholder.hello_idc-client-id}"
-    redirect_url = "https://hello_idc.${config.homelab.domain}/oidc/login_auth"
+    redirect_url = "https://hello-idc.${config.homelab.domain}/oidc/login_auth"
     client_secret = "${config.sops.placeholder.hello_idc-client-secret}"
     client_id = "${config.sops.placeholder.hello_idc-client-id}"
     key = "${config.sops.placeholder.hello_idc-key}"
