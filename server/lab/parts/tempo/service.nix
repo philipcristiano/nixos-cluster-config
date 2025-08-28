@@ -127,23 +127,23 @@ compactor:
 
     services.traefik.dynamicConfigOptions.http.routers.tempo_otlp_grpc = mkIf config.lab_tempo.expose_with_traefik {
         rule = "Host(`tempo-otlp-grpc.${config.homelab.domain}`)";
-        service = "tempo@file";
+        service = "tempo_otlp_grpc@file";
     };
     services.traefik.dynamicConfigOptions.http.services.tempo_otlp_grpc = mkIf config.lab_tempo.expose_with_traefik {
       loadBalancer = {
         servers = [
           {
-            url = "http://127.0.0.1:4317";
+            url = "h2c://127.0.0.1:4317";
           }
         ];
       };
     };
 
-    services.traefik.dynamicConfigOptions.http.routers.temp_otlp_http = mkIf config.lab_tempo.expose_with_traefik {
+    services.traefik.dynamicConfigOptions.http.routers.tempo_otlp_http = mkIf config.lab_tempo.expose_with_traefik {
         rule = "Host(`tempo-otlp-http.${config.homelab.domain}`)";
-        service = "tempo@file";
+        service = "tempo_otlp_http@file";
     };
-    services.traefik.dynamicConfigOptions.http.services.temp_otlp_http = mkIf config.lab_tempo.expose_with_traefik {
+    services.traefik.dynamicConfigOptions.http.services.tempo_otlp_http = mkIf config.lab_tempo.expose_with_traefik {
       loadBalancer = {
         servers = [
           {
