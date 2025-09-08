@@ -24,7 +24,6 @@ SERVICES=(
   "calibre-web"
   "rotki"
   "simplefin-rotki"
-  "zwavejs2mqtt"
   "regctl"
   "actual"
   "handbrake"
