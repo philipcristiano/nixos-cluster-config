@@ -16,6 +16,7 @@ with lib;
     ./parts/simplefin-rotki/service.nix
     ./parts/tempo/service.nix
     ./parts/w2z/service.nix
+    ./parts/zwavejs/service.nix
     ./parts/paperless/service.nix
   ];
 
@@ -65,6 +66,7 @@ with lib;
     lab_simplefin_rotki.enable = true;
     lab_tempo.enable = true;
     lab_w2z.enable = true;
+    lab_zwavejs.enable = true;
     lab_paperless.enable = true;
     services.traefik.dynamicConfigOptions.http.routers.router1 = {
       rule = "Host(`s1.${config.homelab.domain}`)";

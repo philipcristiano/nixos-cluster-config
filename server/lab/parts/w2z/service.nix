@@ -128,6 +128,11 @@ in with lib; {
             autoStart = true;
             ports = [ "127.0.0.1:3003:3000" ];
             volumes =  ["${config.sops.templates."w2z.toml".path}:/etc/w2z.toml"];
+            environment = {
+              OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://tempo-otlp-grpc.${config.homelab.domain}:443";
+              OTEL_EXPORTER_OTLP_PROTOCOL="grpc";
+              OTEL_SERVICE_NAME="w2z";
+            };
             cmd = ["--bind-addr=0.0.0.0:3000"
                    "--config-file=/etc/w2z.toml"];
         };
