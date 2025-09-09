@@ -70,6 +70,8 @@ in with lib; {
         "d /var/lib/${name} 0750 ${name} ${name} - "
     ];
 
+    services.restic.backups.persist.paths = ["/var/lib/${name}/backups"];
+
     services.traefik.dynamicConfigOptions.http.routers.zwavejs = mkIf config.lab_zwavejs.expose_with_traefik {
         rule = "Host(`zwavejs.${config.homelab.domain}`)";
         service = "zwavejs@file";
