@@ -1,3 +1,0 @@
-path "kv/data/electrs" {
-  capabilities = ["read"]
-}

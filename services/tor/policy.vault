@@ -1,7 +1,0 @@
-path "pki_int/issue/tor" {
-  capabilities = ["update"]
-}
-
-path "kv/data/tor" {
-  capabilities = ["read"]
-}

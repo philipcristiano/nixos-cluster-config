@@ -1,7 +1,0 @@
-path "kv/data/forgejo" {
-  capabilities = ["read"]
-}
-
-path "kv/data/forgejo-postgres" {
-  capabilities = ["read"]
-}
