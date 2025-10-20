@@ -12,6 +12,7 @@ with lib;
     ./parts/loki/service.nix
     ./parts/mimir/service.nix
     ./parts/miniflux/service.nix
+    ./parts/radicle/service.nix
     ./parts/rotki/service.nix
     ./parts/simplefin-rotki/service.nix
     ./parts/tempo/service.nix
@@ -62,6 +63,7 @@ with lib;
     lab_loki.enable = true;
     lab_mimir.enable = true;
     lab_miniflux.enable = true;
+    lab_radicle.enable = true;
     lab_rotki.enable = true;
     lab_simplefin_rotki.enable = true;
     lab_tempo.enable = true;
