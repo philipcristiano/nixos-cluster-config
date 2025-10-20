@@ -16,7 +16,14 @@ in with lib; {
           Enable radicle?
         '';
       };
-      expose_with_traefik = mkOption {
+      enable_http = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Enable radicle http interface?
+        '';
+      };
+      expose_http_with_traefik = mkOption {
         type = types.bool;
         default = true;
         description = ''
@@ -48,6 +55,8 @@ in with lib; {
         node.openFirewall = true;
         node.listenAddress = "0.0.0.0";
         node.listenPort = 8776;
+
+        httpd.enable = config.lab_radicle.enable_http;
     };
 
     services.radicle.settings = {
@@ -62,15 +71,15 @@ in with lib; {
     };
 
 
-    services.traefik.dynamicConfigOptions.http.routers.${name} = mkIf config.lab_radicle.expose_with_traefik {
+    services.traefik.dynamicConfigOptions.http.routers.${name} = mkIf config.lab_radicle.expose_http_with_traefik {
         rule = "Host(`radicle.${config.homelab.domain}`)";
         service = "radicle@file";
     };
-    services.traefik.dynamicConfigOptions.http.services.${name} = mkIf config.lab_radicle.expose_with_traefik {
+    services.traefik.dynamicConfigOptions.http.services.${name} = mkIf config.lab_radicle.expose_http_with_traefik {
       loadBalancer = {
         servers = [
           {
-            url = "http://127.0.0.1:8776";
+            url = "http://127.0.0.1:${toString config.services.radicle.httpd.listenPort}";
           }
         ];
       };
