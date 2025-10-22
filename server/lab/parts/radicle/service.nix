@@ -87,6 +87,9 @@ in with lib; {
                  port = 8001;
             }
             ];
+            locations."/adapters/" = {
+                root = "/var/lib/radicle-ci/";
+            };
         };
     };
     services.traefik.dynamicConfigOptions.http.routers.ci = mkIf config.lab_radicle.enable_native_ci {
@@ -141,6 +144,7 @@ in with lib; {
         adapters.native.instances = {
             native = {
                 enable = true;
+                settings.base_url = "/adapters/native/native/";
             };
         };
 
