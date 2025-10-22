@@ -151,7 +151,7 @@ in with lib; {
     };
     systemd.tmpfiles.rules = [
         "d /var/log/radicle-ci/adapters/ 0750 ${name} ${name} - "
-        "d /var/log/radicle-ci/adapters/native/ 0750 ${name} ${name} - "
+        "d /var/log/radicle-ci/adapters/native/ 0755 ${name} ${name} - "
     ];
     services.traefik.dynamicConfigOptions.http.routers.${name} = mkIf config.lab_radicle.expose_http_with_traefik {
         rule = "Host(`radicle.${config.homelab.domain}`)";
