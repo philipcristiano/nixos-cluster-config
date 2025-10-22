@@ -23,6 +23,13 @@ in with lib; {
           Enable radicle http interface?
         '';
       };
+      enable_native_ci = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Enable radicle native ci?
+        '';
+      };
       expose_http_with_traefik = mkOption {
         type = types.bool;
         default = true;
@@ -60,7 +67,8 @@ in with lib; {
     };
 
     services.radicle.settings = {
-        node.alias = "test-node";
+        node.alias = "hazzard";
+        node.log = "DEBUG";
         seedingPolicy.default = "block";
     };
 
@@ -70,7 +78,77 @@ in with lib; {
       isSystemUser = true;
     };
 
+    services.nginx = {
+        enable = config.lab_radicle.enable_native_ci;
+        virtualHosts."ci.${config.homelab.domain}" = {
+            root = "/var/lib/radicle-ci/reports";
+            listen = [
+                {addr = "0.0.0.0";
+                 port = 8001;
+            }
+            ];
+        };
+    };
+    services.traefik.dynamicConfigOptions.http.routers.ci = mkIf config.lab_radicle.enable_native_ci {
+        rule = "Host(`ci.${config.homelab.domain}`)";
+        service = "ci@file";
+    };
+    services.traefik.dynamicConfigOptions.http.services.ci = mkIf config.lab_radicle.enable_native_ci {
+      loadBalancer = {
+        servers = [
+          {
+            url = "http://127.0.0.1:8001";
+          }
+        ];
+      };
+    };
 
+    services.radicle.ci = mkIf (config.lab_radicle.enable_native_ci) {
+        broker.enable = true;
+        broker.settings = {
+          adapters.native = {
+            command = lib.getExe pkgs.radicle-native-ci;
+            config = { };
+            config_env = "RADICLE_NATIVE_CI";
+            #env.PATH = lib.makeBinPath (with pkgs; [ bash coreutils ]);
+          };
+
+          triggers = [
+            {
+              adapter = "native";
+              filters = [
+                {
+                  And = [
+                    { HasFile = ".radicle/native.yaml"; }
+                    { Or =  [
+                        { Node = "z6Mkr8mq1Ji1rH1yY81dpnWdVBLzMiwroPwLBMi72GoyRH5Y"; }
+                        { Node = "z6Mkm2rZRiLM8Xvb48Fsnrs5iLZ7eu8Rr8wuooyTW4re3o1c"; }
+                        ];
+                    }
+                    {
+                      Or = [
+                        "DefaultBranch"
+                        "PatchCreated"
+                        "PatchUpdated"
+                      ];
+                    }
+                  ];
+                }
+              ];
+            }
+          ];
+        };
+        adapters.native.instances = {
+            native = {
+                enable = true;
+            };
+        };
+
+    };
+    systemd.tmpfiles.rules = [
+        "d /var/log/radicle-ci/adapters/ 0750 ${name} ${name} - "
+        "d /var/log/radicle-ci/adapters/native/ 0750 ${name} ${name} - "
+    ];
     services.traefik.dynamicConfigOptions.http.routers.${name} = mkIf config.lab_radicle.expose_http_with_traefik {
         rule = "Host(`radicle.${config.homelab.domain}`)";
         service = "radicle@file";

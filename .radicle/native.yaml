@@ -1,0 +1,4 @@
+shell: |
+  ls
+  bash -c 'echo "Hello World!"'
+
