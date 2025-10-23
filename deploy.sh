@@ -25,10 +25,8 @@ SERVICES=(
   "rotki"
   "simplefin-rotki"
   "regctl"
-  "actual"
   "handbrake"
   "ytdl-sub"
-  "llm-web"
 )
 
 for SERVICE in ${SERVICES[@]}; do
