@@ -9,6 +9,7 @@ with lib;
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
     ./parts/hello-idc/service.nix
+    ./parts/forgejo/service.nix
     ./parts/loki/service.nix
     ./parts/mimir/service.nix
     ./parts/miniflux/service.nix
@@ -59,6 +60,7 @@ with lib;
     lab_restic_s3.enable = true;
     lab_anki_sync.enable = true;
     lab_et.enable = true;
+    lab_forgejo.enable = true;
     lab_hello_idc.enable = true;
     lab_loki.enable = true;
     lab_mimir.enable = true;
