@@ -30,6 +30,13 @@ in with lib; {
           Local listen port
         '';
       };
+      #use_docker_in_docker = mkOption {
+      #  type = types.bool;
+      #  default = true;
+      #  description = ''
+      #    Use docker-in-docker (should be enabled outside of this module)
+      #  '';
+      #};
     };
   };
   config = mkIf config.lab_forgejo.enable {
@@ -69,27 +76,44 @@ TOKEN=${config.sops.placeholder.forgejo_runner_secret}
         #};
     };
     services.gitea-actions-runner = {
-    package = pkgs.forgejo-actions-runner;
-    instances.default = {
-      enable = true;
-      name = "monolith";
-      url = "https://forgejo.${config.homelab.domain}/";
+        package = pkgs.forgejo-actions-runner;
+        instances.default = {
+          enable = true;
+          name = "monolith";
+          url = "https://forgejo.${config.homelab.domain}/";
 
-      # Obtaining the path to the runner token file may differ
-      # tokenFile should be in format TOKEN=<secret>, since it's EnvironmentFile for systemd
-      tokenFile = config.sops.templates."forgejo-runner.env".path;
-      labels = [
-        "ubuntu-latest:docker://node:16-bullseye"
-        "ubuntu-22.04:docker://node:16-bullseye"
-        "ubuntu-20.04:docker://node:16-bullseye"
-        "ubuntu-18.04:docker://node:16-buster"
-        ## optionally provide native execution on the host:
-        # "native:host"
-      ];
+          # Obtaining the path to the runner token file may differ
+          # tokenFile should be in format TOKEN=<secret>, since it's EnvironmentFile for systemd
+          settings = {
+              runner = {
+                  envs = {
+                      "DOCKER_HOST" = "tcp://docker_in_docker.docker.internal:${toString config.lab_docker_in_docker.docker_port}";
+
+                  };
+              };
+              container = {
+                  docker_host = "tcp://127.0.0.1:${toString config.lab_docker_in_docker.local_port}";
+                  option = "--add-host=docker_in_docker.docker.internal:host-gateway";
+
+              };
+          };
+          tokenFile = config.sops.templates."forgejo-runner.env".path;
+          labels = [
+            "ubuntu-latest:docker://node:16-bullseye"
+            "ubuntu-22.04:docker://node:16-bullseye"
+            "ubuntu-20.04:docker://node:16-bullseye"
+            "ubuntu-18.04:docker://node:16-buster"
+            ## optionally provide native execution on the host:
+            # "native:host"
+            ];
+      };
     };
-  };
-
-
+    systemd.services."gitea-runner-default".requires = [
+      "docker-docker_in_docker.service"
+    ];
+    systemd.services."gitea-runner-default".after = [
+      "docker-docker_in_docker.service"
+    ];
     services.traefik.dynamicConfigOptions.http.routers.forgejo = mkIf config.lab_forgejo.expose_with_traefik {
         rule = "Host(`forgejo.${config.homelab.domain}`)";
         service = "forgejo@file";
