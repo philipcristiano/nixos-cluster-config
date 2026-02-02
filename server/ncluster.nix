@@ -23,7 +23,7 @@
                                  pkgs.nfs-utils
                                  pkgs.consul
                                  pkgs.linuxPackages.gasket # libedgetpu driver
-                                 pkgs.nomad
+                                 pkgs.nomad_1_9
                                  pkgs.libusb1
                                  #nomad_usb_device_plugin
                                  pkgs.vault
@@ -222,7 +222,7 @@ vault {
   services.consul.interface.bind = "enp2s0";
   services.nomad = {
     enable = true;
-    package = pkgs.nomad;
+    package = pkgs.nomad_1_9;
   };
 
   # https://github.com/NixOS/nixpkgs/issues/147415
@@ -282,6 +282,8 @@ storage \"raft\" {
         cluster_addr = \"https://{{ GetInterfaceIP \\\"enp2s0\\\" }}:8201\"
         api_addr = \"https://{{ GetInterfaceIP \\\"enp2s0\\\" }}:8200\"
         log_level = \"debug\"
+        disable_mlock = true
+
 
         service_registration \"consul\" {
             address      = \"http://127.0.0.1:8500\"

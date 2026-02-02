@@ -32,7 +32,7 @@ in with lib; {
         '';
       };
       docker_image = mkOption {
-        type = types.string;
+        type = types.str;
         default = "docker:dind";
         description = ''
             Docker image to use for dind

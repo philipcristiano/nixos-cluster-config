@@ -18,7 +18,6 @@
         {
           devShells.default = mkShell {
             buildInputs = [
-                darwin.apple_sdk.frameworks.Security # Should only be for darwin
                 pkgs.sops
                 pkgs.age
                 pkgs.git

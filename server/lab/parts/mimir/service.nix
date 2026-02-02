@@ -104,6 +104,9 @@ server:
   http_listen_address: 127.0.0.1
   http_listen_port: 9080
 
+memberlist:
+  bind_port: 7947
+
 limits:
   # Allow ingestion of out-of-order samples up to 5 minutes since the latest received sample for the series.
   out_of_order_time_window: 1m

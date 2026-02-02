@@ -76,7 +76,7 @@ TOKEN=${config.sops.placeholder.forgejo_runner_secret}
         #};
     };
     services.gitea-actions-runner = {
-        package = pkgs.forgejo-actions-runner;
+        package = pkgs.forgejo-runner;
         instances.default = {
           enable = true;
           name = "monolith";
