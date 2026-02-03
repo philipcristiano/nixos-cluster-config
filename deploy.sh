@@ -15,7 +15,6 @@ SERVICES=(
   "grafana-to-ntfy"
   "rmqtt"
   "frigate"
-  "homeassistant"
   "timeline"
   "hvac-iot"
   "tika"

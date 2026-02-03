@@ -10,6 +10,7 @@ with lib;
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
     ./parts/hello-idc/service.nix
+    ./parts/homeassistant/service.nix
     ./parts/forgejo/service.nix
     ./parts/loki/service.nix
     ./parts/mimir/service.nix
@@ -64,6 +65,7 @@ with lib;
     lab_et.enable = true;
     lab_forgejo.enable = true;
     lab_hello_idc.enable = true;
+    lab_homeassistant.enable = true;
     lab_loki.enable = true;
     lab_mimir.enable = true;
     lab_miniflux.enable = true;
