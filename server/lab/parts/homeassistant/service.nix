@@ -47,6 +47,8 @@ in with lib; {
         "d /var/lib/${name} 0750 ${name} ${name} - "
     ];
 
+    services.restic.backups.persist.paths = ["/var/lib/${name}/backups"];
+
     services.traefik.dynamicConfigOptions.http.routers.homeassistant = mkIf cfg.expose_with_traefik {
         rule = "Host(`${name}.${config.homelab.domain}`)";
         service = "${name}@file";
