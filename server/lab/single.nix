@@ -19,6 +19,7 @@ with lib;
     ./parts/rotki/service.nix
     ./parts/simplefin-rotki/service.nix
     ./parts/tempo/service.nix
+    ./parts/telegraf/service.nix
     ./parts/w2z/service.nix
     ./parts/zwavejs/service.nix
     ./parts/paperless/service.nix
@@ -73,6 +74,7 @@ with lib;
     lab_rotki.enable = true;
     lab_simplefin_rotki.enable = true;
     lab_tempo.enable = true;
+    lab_telegraf.enable = true;
     lab_w2z.enable = true;
     lab_zwavejs.enable = true;
     lab_paperless.enable = true;

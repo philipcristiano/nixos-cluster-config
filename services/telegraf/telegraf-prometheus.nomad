@@ -80,8 +80,6 @@ nomad_client_class = "{{ env "node.class" }}"
   ## Scrape Services available in Consul Catalog
   metric_version = 1
 
-  urls = ["https://homeassistant.home.cristiano.cloud/api/prometheus"]
-
   [inputs.prometheus.consul]
     enabled = true
     agent = "http://consul.{{ key "site/domain" }}:8500"

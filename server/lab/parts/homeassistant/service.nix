@@ -63,5 +63,10 @@ in with lib; {
       };
     };
 
+    services.telegraf.extraConfig.inputs.prometheus = {
+        metric_version = 1;
+        urls = ["https://homeassistant.${config.homelab.domain}/api/prometheus"];
+    };
+
   };
 }
