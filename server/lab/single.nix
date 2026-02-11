@@ -12,6 +12,7 @@ with lib;
     ./parts/hello-idc/service.nix
     ./parts/homeassistant/service.nix
     ./parts/forgejo/service.nix
+    ./parts/jellyfin/service.nix
     ./parts/loki/service.nix
     ./parts/mimir/service.nix
     ./parts/miniflux/service.nix
@@ -67,6 +68,7 @@ with lib;
     lab_forgejo.enable = true;
     lab_hello_idc.enable = true;
     lab_homeassistant.enable = true;
+    lab_jellyfin.enable = true;
     lab_loki.enable = true;
     lab_mimir.enable = true;
     lab_miniflux.enable = true;
