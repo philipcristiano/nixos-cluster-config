@@ -1,1 +1,1 @@
-FROM homeassistant/home-assistant:2025.12.5
+FROM homeassistant/home-assistant:2026.2.1
