@@ -14,6 +14,7 @@ with lib;
     ./parts/forgejo/service.nix
     ./parts/jellyfin/service.nix
     ./parts/loki/service.nix
+    ./parts/mathesar/service.nix
     ./parts/mimir/service.nix
     ./parts/miniflux/service.nix
     ./parts/radicle/service.nix
@@ -70,6 +71,7 @@ with lib;
     lab_homeassistant.enable = true;
     lab_jellyfin.enable = true;
     lab_loki.enable = true;
+    lab_mathesar.enable = true;
     lab_mimir.enable = true;
     lab_miniflux.enable = true;
     lab_radicle.enable = true;
@@ -80,18 +82,5 @@ with lib;
     lab_w2z.enable = true;
     lab_zwavejs.enable = true;
     lab_paperless.enable = true;
-    services.traefik.dynamicConfigOptions.http.routers.router1 = {
-      rule = "Host(`s1.${config.homelab.domain}`)";
-      service = "service1";
-    };
-    services.traefik.dynamicConfigOptions.http.services.service1 = {
-      loadBalancer = {
-        servers = [
-          {
-            url = "http://localhost:8080";
-          }
-        ];
-      };
-    };
   };
 }

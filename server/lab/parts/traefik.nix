@@ -38,8 +38,15 @@ with lib; {
               readTimeout = "905s";
             };
           };
-        };
 
+          postgres = {
+            address = ":5431";
+            asDefault = false;
+            transport.respondingTimeouts = {
+              readTimeout = "905s";
+            };
+          };
+        };
 
         log = {
           level = "INFO";
@@ -63,8 +70,6 @@ with lib; {
         };
 
         api.dashboard = true;
-        # Access the Traefik dashboard on <Traefik IP>:8080 of your server
-        # api.insecure = true;
 
         tracing.otlp.grpc.endpoint = "https://tempo-otlp-grpc.${config.homelab.domain}:443";
       };
@@ -73,6 +78,7 @@ with lib; {
         rule = "Host(`traefik.${config.homelab.domain}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))";
         service = "api@internal";
       };
+      dynamicConfigOptions.tls.options.default.alpnProtocols = [ "h2" "http/1.1" "postgresql" ];
 
     };
   };
