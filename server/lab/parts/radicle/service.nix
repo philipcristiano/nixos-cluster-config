@@ -72,14 +72,16 @@ in with lib; {
         seedingPolicy.default = "block";
     };
 
-    users.groups."${name}" = {};
+    users.groups."${name}" = { };
     users.users."${name}" = {
       group = name;
       isSystemUser = true;
+      extraGroups = ["docker"];
     };
 
     services.nginx = {
         enable = config.lab_radicle.enable_native_ci;
+
         virtualHosts."ci.${config.homelab.domain}" = {
             root = "/var/lib/radicle-ci/reports";
             listen = [
@@ -145,6 +147,17 @@ in with lib; {
             native = {
                 enable = true;
                 settings.base_url = "/adapters/native/native/";
+                runtimePackages = [
+                    pkgs.bash
+                    pkgs.coreutils
+                    pkgs.curl
+                    pkgs.docker
+                    pkgs.gawk
+                    pkgs.gitMinimal
+                    pkgs.gnused
+                    pkgs.nix
+                    pkgs.wget
+                ];
             };
         };
 
