@@ -6,6 +6,7 @@ with lib;
 
     ./parts/restic-s3/service.nix
     ./parts/postgres/service.nix
+    ./parts/calibre-web/service.nix
     ./parts/docker-in-docker/service.nix
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
@@ -64,6 +65,7 @@ with lib;
     lab_traefik.enable = true;
     lab_restic_s3.enable = true;
     lab_anki_sync.enable = true;
+    lab_calibre_web.enable = true;
     lab_docker_in_docker.enable = true;
     lab_et.enable = true;
     lab_forgejo.enable = true;

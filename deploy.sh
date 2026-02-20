@@ -19,7 +19,6 @@ SERVICES=(
   "hvac-iot"
   "tika"
   "gotenberg"
-  "calibre-web"
   "regctl"
   "handbrake"
   "ytdl-sub"
