@@ -10,10 +10,11 @@ with lib;
     ./parts/docker-in-docker/service.nix
     ./parts/anki-sync/service.nix
     ./parts/et/service.nix
+    ./parts/forgejo/service.nix
     ./parts/hello-idc/service.nix
     ./parts/homeassistant/service.nix
-    ./parts/forgejo/service.nix
     ./parts/jellyfin/service.nix
+    ./parts/kanidm/service.nix
     ./parts/loki/service.nix
     ./parts/mathesar/service.nix
     ./parts/mimir/service.nix
@@ -72,6 +73,7 @@ with lib;
     lab_hello_idc.enable = true;
     lab_homeassistant.enable = true;
     lab_jellyfin.enable = true;
+    lab_kanidm.enable = true;
     lab_loki.enable = true;
     lab_mathesar.enable = true;
     lab_mimir.enable = true;
