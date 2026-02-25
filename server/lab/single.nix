@@ -19,6 +19,7 @@ with lib;
     ./parts/mathesar/service.nix
     ./parts/mimir/service.nix
     ./parts/miniflux/service.nix
+    ./parts/owntracks-recorder/service.nix
     ./parts/radicle/service.nix
     ./parts/rotki/service.nix
     ./parts/simplefin-rotki/service.nix
@@ -77,6 +78,7 @@ with lib;
     lab_loki.enable = true;
     lab_mathesar.enable = true;
     lab_mimir.enable = true;
+    lab_owntracks_recorder.enable = true;
     lab_miniflux.enable = true;
     lab_radicle.enable = true;
     lab_rotki.enable = true;
